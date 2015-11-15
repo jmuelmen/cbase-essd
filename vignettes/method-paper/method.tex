@@ -1,0 +1,149 @@
+%% $Id$
+
+%% description of the retrieval method and the evaluation using various
+%% ground-based observations
+
+\documentclass{article}
+\usepackage{fullpage}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+\section{Introduction}
+\label{sec:intro}
+Cloud base height is one of the most important parameters of a cloud.  It
+controls how much downwelling longwave radiation the cloud emits.  Aerosol
+concentration and updraft speed at that level control the microphysics of the
+cloud.  It is one of the parameters that is necessary to calculate the
+subadiabaticity of the cloud.  However, it is also one of the most difficult
+parameters to retrieve from satellite.  Passive sensors: forget it.  CloudSat
+misses the small droplets at the base and cannot retrieve in the ground clutter
+region.  Calipso only detects the bases of only the thinnest clouds ($\tau < 5$,
+according to Mace and Zhang, 10.1002/2013JD021374); frequently, these are not
+the clouds you are looking for.
+
+Because cloud base height varies slowly in space within an airmass, the cloud
+bases retried by CALIOP for thin clouds may be a good proxy for the cloud base
+heights of the entire cloud cluster, including the optically thicker clouds
+within the cluster.  In this paper we investigate this hypothesis by evaluating
+cloud base heights thus inferred against cloud base heights retrieved by
+ground-based ceilometers.  
+
+Section~\ref{sec:retrieval} describes the details of the retrieval algorithm.
+In Section~\ref{sec:eval} we give a quantitative evaluation of the algorithm
+including retrieval error statistics.  We conclude in
+Section~\ref{sec:conclusions} with an outlook on the longstanding questions that
+this retrieval can help address.
+
+Literature: Meerk\"otter and Zinner (2007) (10.1029/2007GL030347) retrievals
+using cloud top properties and adiabatic assumption; presumably there are
+others.  Rosenfeld (2014) for cloud base temperature using the thinnest cloud in
+a cloud cluster.  Mace and Zhang (2014) using CPR and CALIOP.  At least one more
+using CloudSat; check Stephens et al (2012) energy-balance paper.
+
+\section{Retrieval method}
+\label{sec:retrieval}
+Two sources of local cloud base: 
+\begin{enumerate}
+\item DARDAR method:
+  \begin{itemize}
+  \item Cloud top below 5 km MSL
+  \item Cloud phase liquid or any
+  \item CALIOP surface return indicates that the cloud is thin enough to trust
+    the cloud base height
+  \end{itemize}
+\item 2B-GEOPROF-LIDAR method:
+take the CALIPSO-only or CALIPSO+CloudSat retrievals of cloud base height.
+\end{enumerate}
+
+These cloud base retrievals only exist sporadically ($x$\% of columns), when
+CALIOP happens to hit a sufficiently thin cloud.  To infer the cloud base height
+$\hat{z}_i$ in a column $i$ away from the retrieval locations, we calculate the
+weighted average of retrievals $z_j$ in columns $j$ within a given distance $N$
+(specified in CloudSat footprints) of the desired location:
+\begin{equation}
+  \label{eq:z}
+  \hat{z}_i = \frac{\sum\limits_{|i - j| < N} z_j w_{ij}}
+  {\sum\limits_{|i - j| < N} w_{ij}}
+\end{equation}
+where the weight $w_{ij}$ given to each retrieval depends on the distance from
+the desired position:
+\begin{equation}
+  \label{eq:w}
+  w_{ij} = \left\{
+    \begin{array}{cl}
+      0 & \mbox{if no retrieval in column }j\\
+      \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac12\frac{(i -
+          j)^2}{\sigma^2}\right) & \mbox{otherwise}
+    \end{array}\right.
+\end{equation}
+The accuracy of the $\hat{z}_i$ interpolated according to
+(\ref{eq:z})--~(\ref{eq:w}) can be anticipated to decrease as the distance to
+the available retrievals $z_j$ increases.  To be able to quantify this
+dependence later on, we define a mean distance squared (MDS)
+\begin{equation}
+  \label{eq:d}
+  \hat{d}^2_i = \frac{\sum\limits_{|i - j| < N} (i-j)^2 w_{ij}}
+  {\sum\limits_{|i - j| < N} w_{ij}}
+\end{equation}
+
+Apart from the selection of the cloud base retrievals that form the input
+for the interpolation, the algorithm has two tunable parameters.  The first is
+the maximum distance from the desired location within which cloud base
+retrievals will be used.  As long as sufficiently large values are chosen, this
+parameter mainly governs computation time.  We have set this parameter to 200
+CloudSat columns (approximately 280~km) to either side of the desired location
+along the CloudSat track throughout the article.  The second tunable parameter
+is the width of the Gaussian weighting function.  The choice of tunable
+parameters is made on the basis of the evaluation
+in Section~\ref{sec:eval-results}.  Once parameters have been chosen, the
+evaluation is performed again on a \emph{different} evaluation data set to
+ensure that the results can be generalized.
+
+\subsection{Bias correction}
+In addition to MDS, the quality of the retrieval also depends on the homogeneity
+of the cloud scene, as will be shown in Section~\ref{sec:eval-results}.  To
+account for this effect, the retrieval bias as defined in
+Section~\ref{sec:eval-results} is calculated for different classes of cloud
+fraction based on a subset of the evaluation data.  The retrieval is then
+linearly corrected to eliminate the bias.  A new bias evaluation is performed on
+a \emph{different} evaluation data set to ensure that the results can be
+generalized. 
+
+\section{Evaluation method}
+\label{sec:eval}
+\par Evaluation metrics:
+\begin{itemize}
+\item correlation coefficient between satellite retrieval and ground-based
+  observation (ideally 1)
+\item regression slope (ideally 1) and intercept (ideally 0) between satellite
+  retrieval and ground-based observation
+\item RMS retrieval error (ideally 0)
+\item retrieval bias (ideally 0)
+\item ``efficiency'', i.e., probability of retrieval where you want it
+\end{itemize}
+
+\par Evaluation datasets:
+\begin{itemize}
+\item METARs (ceilometer cloud bases)
+\item ICOADS (mixture of ceilometer and human observer)
+\item Polarstern (ceilometer)
+\item MAGIC (ceilometer)
+\end{itemize}
+
+\section{Evaluation results}
+\label{sec:eval-results}
+
+\subsection{Variables controlling the retrieval quality}
+
+
+
+\section{Conclusions}
+\label{sec:conclusions}
+\par Summary.  How useful is the cloud-base retrieval for various purposes?
+There are two main cases: where accuracy is more important than efficiency, and
+the other way around.  For surface radiative flux, accuracy is more important.
+For cloud properties, efficiency.
+
+\par 
+\end{document}
