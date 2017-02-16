@@ -52,3 +52,39 @@ trim <- function( x ) {
 convert.date <- function(time) {
     date <- format(time, "%Y/%m/%d")
 }
+
+#' Apply gaussian filter to vector 
+#'
+#' 
+#'
+#' @param x
+#' @param half.len
+#' @param sd
+#' @return Data frame
+#'
+#' @export
+#'
+#' @examples
+#' 
+running.gaussian <- function(x, half.len, sd) {
+    y <- replace(x, is.na(x), 0)
+    filt <- dnorm(-half.len:half.len, 0, sd)
+    ## effective number of observations
+    nobs <- ## stats::filter(as.numeric(!is.na(x)), filt)
+        pvec(as.numeric(!is.na(x)), stats::filter, filt, mc.cores = 32)
+    attributes(nobs) <- NULL
+    ## rolling mean of y, gaussian filter
+    mean.y <- ## stats::filter(y, filt) / nobs
+        pvec(y, stats::filter, filt, mc.cores = 32) / nobs
+    attributes(mean.y) <- NULL
+    ## corresponding mean square distance -- trick to getting the
+    ## distance is to invert filt 
+    mean.dist2 <- ## stats::filter(!is.na(x),
+        ##           filt * (-2 * sd^2 * log(filt * sqrt(2 * pi * sd^2)))) /
+        ## nobs
+        pvec(!is.na(x), stats::filter, filt * (-2 * sd^2 * log(filt * sqrt(2 * pi * sd^2))),
+             mc.cores = 32) / nobs
+    attributes(mean.dist2) <- NULL
+    data.frame(nobs = nobs * sqrt(2 * pi) * sd, mean = mean.y, dist2 = mean.dist2)
+}
+
