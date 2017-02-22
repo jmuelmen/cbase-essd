@@ -2,9 +2,10 @@
 #'
 #' Combine METARs with C-BASE retrievals
 #' 
-#' @param path Character.  Apply algorithm to all HDF files in this path
-#' @return A data frame containing cloud bases
+#' @param df.cbase Data.frame.  Data frame to be evaluated.
+#' @param df.eval Data.frame.  Data frame to evaluate against.
+#' @return A data frame containing information from both
 #' @export
-combine.metar.cbase <- function() {
+combine.cbase <- function() {
     
 }
