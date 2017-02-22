@@ -1,23 +1,26 @@
 #' C-BASE generator functions
 #' @param path Character.  Apply algorithm to all HDF files in this path
+#' @param out.name Character.  Output file name
 #' @return A data frame containing cloud bases
 #' @name C-BASE_gen
 NULL
 
 #' @describeIn C-BASE_gen Bases by non-attenuated CALIOP in thin clouds
 #' @export
-bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007") {
+bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
+                        out.name = "cloud-bases.rds") {
     lf <- ## "/tmp/CER-NEWS_CCCM_Aqua-FM3-MODIS-CAL-CS_RelB1_905906.20071226.hdf"
         list.files(path = path, pattern = "DARDAR-MASK.*hdf", recursive = TRUE, full.names = TRUE)
 
     sds <- hdf::h4list(lf[1])
     height <- hdf::h4read(lf[1],sds,"CS_TRACK_Height")
 
+    doParallel::registerDoParallel(cores = 20)
     res <- plyr::adply(lf, 1, function(fname) {
         print(fname)
         gc()
 
-        out.fname <- paste("odran-bases", gsub(".hdf", ".rds", basename(fname)), sep = "/")
+        out.fname <- paste("cloud-bases", gsub(".hdf", ".rds", basename(fname)), sep = "/")
         ## if (length(list.files("odran-bases", gsub(".hdf", ".rds", basename(fname)))) != 0)
         ##     return(readRDS(out.fname))
         
@@ -54,25 +57,16 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
         z.base.cal.med <- array(NA,length(cal.med.cld))
         z.base.cal.med[cal.med.idx.ok] <- sapply(cal.med.idx.ok, function(x) tail(height[which(calmask.cloud[,x] %in% 3:4)],1))
 
-        
-        res <- data_frame(dardar.time, lon, lat, surf, cld, z.base, cal.cld, z.base.cal, cal.med.cld, z.base.cal.med)
+        res <- dplyr::data_frame(dardar.time, lon = as.vector(lon), lat = as.vector(lat),
+                                 surf, cld, z.base, cal.cld, z.base.cal, cal.med.cld,
+                                 z.base.cal.med)
+        ## str(res)
         saveRDS(res, file = out.fname)
         return(res)
-    }, .parallel = FALSE)
-
-    ## saveRDS(res, "odran-bases-2008.rds")
-    ## saveRDS(res, "odran-bases-2009.rds")
-
-    ## res <- readRDS("odran-bases-2008.rds")
-    attributes(res$lon) <- NULL
-    attributes(res$lat) <- NULL
-
-    select(res, -X1)
-
-    ## res2 <- as_data_frame(res) %>% filter(!is.na(z.base)) %>% select(-(surf:cld))
-    ## ##saveRDS(res2, "odran-bases-2007-summary.rds")
-    ## res2
-
+    }, .parallel = TRUE)
+    res <- select(res, -X1)
+    saveRDS(res, out.name)
+    return(res)
 }
 
 #' @describeIn C-BASE_gen Bases by 2B-GEOPROF-LIDAR CloudSat/CALIOP combination

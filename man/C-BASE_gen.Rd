@@ -7,13 +7,16 @@
 \title{C-BASE generator functions}
 \usage{
 
-  bases.cbase(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007")
+  bases.cbase(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
+  out.name = "cloud-bases.rds")
 
 
   bases.2b.geoprof.lidar(path = "/projekt3/climate/DATA/SATELLITE/CLOUDSAT/2B-GEOPROF-LIDAR/2008")
 }
 \arguments{
 \item{path}{Character.  Apply algorithm to all HDF files in this path}
+
+\item{out.name}{Character.  Output file name}
 }
 \value{
 A data frame containing cloud bases
