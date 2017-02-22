@@ -10,10 +10,10 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
     lf <- ## "/tmp/CER-NEWS_CCCM_Aqua-FM3-MODIS-CAL-CS_RelB1_905906.20071226.hdf"
         list.files(path = path, pattern = "DARDAR-MASK.*hdf", recursive = TRUE, full.names = TRUE)
 
-    sds <- h4list(lf[1])
-    height <- h4read(lf[1],sds,"CS_TRACK_Height")
+    sds <- hdf::h4list(lf[1])
+    height <- hdf::h4read(lf[1],sds,"CS_TRACK_Height")
 
-    res <- adply(lf, 1, function(fname) {
+    res <- plyr::adply(lf, 1, function(fname) {
         print(fname)
         gc()
 
@@ -21,13 +21,13 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
         ## if (length(list.files("odran-bases", gsub(".hdf", ".rds", basename(fname)))) != 0)
         ##     return(readRDS(out.fname))
         
-        mask.cal <- h4read(fname,sds,"CALIPSO_Mask")
-        darmask.liq <- h4read(fname,sds,"DARMASK_Liquid")
-        calmask.cloud <- h4read(fname,sds,"CALIPSO_Mask")
+        mask.cal <- hdf::h4read(fname,sds,"CALIPSO_Mask")
+        darmask.liq <- hdf::h4read(fname,sds,"DARMASK_Liquid")
+        calmask.cloud <- hdf::h4read(fname,sds,"CALIPSO_Mask")
 
-        lat <- h4read(fname,sds,"CLOUDSAT_Latitude")
-        lon <- h4read(fname,sds,"CLOUDSAT_Longitude")
-        time <- h4read(fname,sds,"CLOUDSAT_UTC_Time")
+        lat <- hdf::h4read(fname,sds,"CLOUDSAT_Latitude")
+        lon <- hdf::h4read(fname,sds,"CLOUDSAT_Longitude")
+        time <- hdf::h4read(fname,sds,"CLOUDSAT_UTC_Time")
 
         dardar.datestring <- strsplit(basename(fname), "_")[[1]][3]
         dardar.date <- as.POSIXlt(dardar.datestring, format = "%Y%j", tz = "UTC") ## strips off the %H%M%S --> 00:00:00 UTC
@@ -81,9 +81,9 @@ bases.2b.geoprof.lidar <- function(path = "/projekt3/climate/DATA/SATELLITE/CLOU
     lf <- ## "/tmp/CER-NEWS_CCCM_Aqua-FM3-MODIS-CAL-CS_RelB1_905906.20071226.hdf"
         list.files(path = path, pattern = ".*hdf", recursive = TRUE, full.names = TRUE)
 
-    sds <- h4list(lf[1], FALSE)
+    sds <- hdf::h4list(lf[1], FALSE)
 
-    res <- adply(lf, 1, function(fname) {
+    res <- plyr::adply(lf, 1, function(fname) {
         print(fname)
         gc()
 
@@ -91,13 +91,13 @@ bases.2b.geoprof.lidar <- function(path = "/projekt3/climate/DATA/SATELLITE/CLOU
         ## if (length(list.files("odran-bases", gsub(".hdf", ".rds", basename(fname)))) != 0)
         ##     return(readRDS(out.fname))
 
-        base <- h4read(fname,sds,"LayerBase")
+        base <- hdf::h4read(fname,sds,"LayerBase")
         base <- replace(base, base == -99, NA)
-        flag.base <- h4read(fname,sds,"FlagBase")
+        flag.base <- hdf::h4read(fname,sds,"FlagBase")
         flag.base <- replace(flag.base, flag.base == -9, NA)
-        lon <-  h4read(fname,sds,"Longitude")
-        lat <-  h4read(fname,sds,"Latitude")
-        time <- h4read(fname,sds,"Profile_time") + h4read(fname,sds,"UTC_start")
+        lon <-  hdf::h4read(fname,sds,"Longitude")
+        lat <-  hdf::h4read(fname,sds,"Latitude")
+        time <- hdf::h4read(fname,sds,"Profile_time") + hdf::h4read(fname,sds,"UTC_start")
 
         dardar.datestring <- strsplit(basename(fname), "_")[[1]][1]
         dardar.date <- as.POSIXlt(dardar.datestring, format = "%Y%j", tz = "UTC") ## strips off the %H%M%S --> 00:00:00 UTC
