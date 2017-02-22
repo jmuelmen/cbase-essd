@@ -58,7 +58,7 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
         res <- data_frame(dardar.time, lon, lat, surf, cld, z.base, cal.cld, z.base.cal, cal.med.cld, z.base.cal.med)
         saveRDS(res, file = out.fname)
         return(res)
-    }, .parallel = TRUE)
+    }, .parallel = FALSE)
 
     ## saveRDS(res, "odran-bases-2008.rds")
     ## saveRDS(res, "odran-bases-2009.rds")
