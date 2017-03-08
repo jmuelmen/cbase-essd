@@ -64,7 +64,7 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
         saveRDS(res, file = out.fname)
         return(res)
     }, .parallel = TRUE)
-    res <- select(res, -X1)
+    res <- dplyr::select(res, -X1)
     saveRDS(res, out.name)
     return(res)
 }
