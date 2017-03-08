@@ -5,10 +5,10 @@
 #' @name C-BASE_gen
 NULL
 
-#' @describeIn C-BASE_gen Bases by non-attenuated CALIOP in thin clouds
+#' @describeIn C-BASE_gen Bases by non-attenuated CALIOP in thin clouds (using DARDAR mask)
 #' @export
-bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
-                        out.name = "cloud-bases.rds") {
+bases.cbase.dardar <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
+                               out.name = "cloud-bases.rds") {
     lf <- ## "/tmp/CER-NEWS_CCCM_Aqua-FM3-MODIS-CAL-CS_RelB1_905906.20071226.hdf"
         list.files(path = path, pattern = "DARDAR-MASK.*hdf", recursive = TRUE, full.names = TRUE)
 
