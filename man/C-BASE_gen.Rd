@@ -4,10 +4,15 @@
 \alias{C-BASE_gen}
 \alias{bases.2b.geoprof.lidar}
 \alias{bases.cbase}
+\alias{bases.cbase.dardar}
 \title{C-BASE generator functions}
 \usage{
 
   bases.cbase(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
+  out.name = "cloud-bases.rds")
+
+
+  bases.cbase.dardar(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
   out.name = "cloud-bases.rds")
 
 
@@ -26,7 +31,10 @@ C-BASE generator functions
 }
 \section{Functions}{
 \itemize{
-\item \code{bases.cbase}: Bases by non-attenuated CALIOP in thin clouds
+\item \code{bases.cbase}: Bases by non-attenuated CALIOP in thin
+clouds (using CALIOP VFM)
+
+\item \code{bases.cbase.dardar}: Bases by non-attenuated CALIOP in thin clouds (using DARDAR mask)
 
 \item \code{bases.2b.geoprof.lidar}: Bases by 2B-GEOPROF-LIDAR CloudSat/CALIOP combination
 }}

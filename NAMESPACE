@@ -3,6 +3,7 @@
 export(add.metar.episodes)
 export(bases.2b.geoprof.lidar)
 export(bases.cbase)
+export(bases.cbase.dardar)
 export(combine.cbase)
 export(convert.date)
 export(dist.gc)
