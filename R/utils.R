@@ -88,3 +88,20 @@ running.gaussian <- function(x, half.len, sd) {
     data.frame(nobs = nobs * sqrt(2 * pi) * sd, mean = mean.y, dist2 = mean.dist2)
 }
 
+label.vertical.features <- function(vfm) {
+    x <- vfm
+    if (length(x) == 0)
+        return(x)
+    diff.x <- diff(c(-1, x)) ## guarantee that the first group of 1's is preceded by a transition
+    labels <- cumsum(diff.x != 0) ## count up the edges
+    labels
+}
+
+vertical.features.stack <- function(vfm) {
+    x <- vfm
+    if (length(x) == 0)
+        return(x)
+    diff.x <- diff(c(-1, x)) ## guarantee that the first group of 1's is preceded by a transition
+    stack <- vfm[diff.x != 0] ## count up the edges
+    stack
+}
