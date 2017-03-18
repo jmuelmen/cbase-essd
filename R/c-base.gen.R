@@ -9,128 +9,140 @@ NULL
 #'     clouds (using CALIOP VFM)
 #' @export
 bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
-                               out.name = "cloud-bases.rds") {
+                        out.name = "cloud-bases.rds") {
+    path <- "."
     lf <- ## "/tmp/CER-NEWS_CCCM_Aqua-FM3-MODIS-CAL-CS_RelB1_905906.20071226.hdf"
         list.files(path = path, pattern = "CAL_LID_.*hdf", recursive = TRUE, full.names = TRUE)
 
     sds <- hdf::h4list(lf[1])
 
-    fname <- lf[1]
-    cal.datestring <- strsplit(basename(fname), "\\.")[[1]][2]
-    cal.date <- as.POSIXlt(cal.datestring, format = "%Y-%m-%d", tz = "UTC") +
-        (hdf::h4read(fname,sds,"Profile_UTC_Time")[1] %% 1) * 86400
-    
-    Feature_Classification_Flags <- hdf::h4read(fname, sds, "Feature_Classification_Flags")[1166:5515,] ## lower troposphere
-    dim(Feature_Classification_Flags) <- dim(Feature_Classification_Flags) * c(1/15, 15) ## rearrange the packed structure
+    doParallel::registerDoParallel(cores = 20)
+    res <- plyr::adply(lf, 1, function(fname) {
+        cal.datestring <- strsplit(basename(fname), "\\.")[[1]][2]
+        cal.date <- as.POSIXlt(cal.datestring, format = "%Y-%m-%d", tz = "UTC") +
+            (hdf::h4read(fname,sds,"Profile_UTC_Time")[1] %% 1) * 86400
+        
+        Feature_Classification_Flags <- hdf::h4read(fname, sds, "Feature_Classification_Flags")[1166:5515,] ## lower troposphere
+        dim(Feature_Classification_Flags) <- dim(Feature_Classification_Flags) * c(1/15, 15) ## rearrange the packed structure
 
-    altitude <- seq(-0.5, 8.17, by = 30e-3) %>% rev()
-    time <- hdf::h4read(fname,sds,"Profile_Time")
-    time.interp <- approx(seq_len(length(time)) - 1,
-                          time - time[1],
-                          (seq_len(length(time) * 15) - 1) / 15)$y + cal.date
-                                                               
+        altitude <- seq(-0.5, 8.17, by = 30e-3) %>% rev()
+        time <- hdf::h4read(fname,sds,"Profile_Time")
+        time.interp <- approx(seq_len(length(time)) - 1,
+                              time - time[1],
+                              (seq_len(length(time) * 15) - 1) / 15)$y + cal.date
+        
 
-    Feature_Type <- bitwAnd(Feature_Classification_Flags, 7)  %>%
-        factor(levels = 0:7, labels = c("invalid",
-                                        "clear air",
-                                        "cloud",
-                                        "aerosol",
-                                        "stratospheric feature",
-                                        "surface",
-                                        "subsurface",
-                                        "no signal"))
-    ## dim(Feature_Type) <- dim(Feature_Classification_Flags)
-    
-    Feature_Type_QA <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,3)) %>% bitwShiftR(3) %>%
-        factor(levels = 0:3, labels = c("none",
-                                        "low",
-                                        "medium",
-                                        "high"), ordered = TRUE)
-    ## dim(Feature_Type_QA) <- dim(Feature_Classification_Flags)
+        Feature_Type <- bitwAnd(Feature_Classification_Flags, 7)  %>%
+            factor(levels = 0:7, labels = c("invalid",
+                                            "clear air",
+                                            "cloud",
+                                            "aerosol",
+                                            "stratospheric feature",
+                                            "surface",
+                                            "subsurface",
+                                            "no signal"))
+        ## dim(Feature_Type) <- dim(Feature_Classification_Flags)
+        
+        Feature_Type_QA <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,3)) %>% bitwShiftR(3) %>%
+            factor(levels = 0:3, labels = c("none",
+                                            "low",
+                                            "medium",
+                                            "high"), ordered = TRUE)
+        ## dim(Feature_Type_QA) <- dim(Feature_Classification_Flags)
 
-    Ice_Water_Phase <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,5)) %>% bitwShiftR(5) %>%
-        factor(levels = 0:3, labels = c("unknown",
-                                        "randomly oriented ice",
-                                        "water",
-                                        "horizontally oriented ice"))
-    ## dim(Ice_Water_Phase) <- dim(Feature_Classification_Flags)
+        Ice_Water_Phase <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,5)) %>% bitwShiftR(5) %>%
+            factor(levels = 0:3, labels = c("unknown",
+                                            "randomly oriented ice",
+                                            "water",
+                                            "horizontally oriented ice"))
+        ## dim(Ice_Water_Phase) <- dim(Feature_Classification_Flags)
 
-    Ice_Water_Phase_QA <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,7)) %>% bitwShiftR(7) %>%
-        factor(levels = 0:3, labels = c("none",
-                                        "low",
-                                        "medium",
-                                        "high"), ordered = TRUE)
-    ## dim(Ice_Water_Phase_QA) <- dim(Feature_Classification_Flags)
+        Ice_Water_Phase_QA <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,7)) %>% bitwShiftR(7) %>%
+            factor(levels = 0:3, labels = c("none",
+                                            "low",
+                                            "medium",
+                                            "high"), ordered = TRUE)
+        ## dim(Ice_Water_Phase_QA) <- dim(Feature_Classification_Flags)
 
-    mask <- aaply(array(Feature_Type, dim(Feature_Classification_Flags)), 2, function(x) {
-        any(x == "surface") && any(x == "cloud")
-    }, .progress = "text")
+        ## mask <- aaply(array(Feature_Type, dim(Feature_Classification_Flags)), 2, function(x) {
+        ##     any(x == "surface") && any(x == "cloud")
+        ## }, .progress = "text")
 
-    which(mask) %>%
-        head(30) %>%
-        as.vector()
-    
-    df <- expand.grid(altitude = altitude, time = time.interp) %>% 
-        mutate(Feature_Type = (Feature_Type),
-               Feature_Type_QA = (Feature_Type_QA),
-               Ice_Water_Phase = (Ice_Water_Phase),
-               Ice_Water_Phase_QA = (Ice_Water_Phase_QA))
+        ## which(mask) %>%
+        ##     head(30) %>%
+        ##     as.vector()
+        
+        df <- expand.grid(altitude = altitude, time = time.interp) %>% 
+            mutate(Feature_Type = (Feature_Type),
+                   Feature_Type_QA = (Feature_Type_QA),
+                   Ice_Water_Phase = (Ice_Water_Phase),
+                   Ice_Water_Phase_QA = (Ice_Water_Phase_QA))
 
-    ## helper function to identify feature above surface
-    feature.above.surface <- function(vfm) {
-        stack <- vertical.features.stack(vfm)
-        stack.idx.surface <- which(stack == "surface")
-        if (stack.idx.surface > 1)
-            stack[stack.idx.surface - 1]
-        else NA
-    }
-    
-    df %>%
-        group_by(time) %>%
-        filter(any(Feature_Type == "surface"), any(Feature_Type == "cloud")) %>%
-        ## summarize(date = time[1] - time.interp[1]) %>%
-        ## as.data.frame() %>%
-        ## select(-time) %>%
-        ## head(290)
-        mutate(
-            ## label layers
-            labels = label.vertical.features(Feature_Type)
-            ## ## find surface label
-            ## label.sfc = labels[Feature_Type == "surface"][1],
-            ## ## find label of lowest cloud layer
-            ## label.lowest.cloud = max(labels[Feature_Type == "cloud"]),
-            ## ## find (minimum) QA flag of lowest layer
-            ## feature.qa.lowest.cloud = min(Feature_Type_QA[labels == label.lowest.cloud]),
-            ## ## find level number of lowest level of lowest cloud
-            ## lev.lowest.cloud = max(which(labels == label.lowest.cloud)),
-            ## ## find phase of lowest level of lowest cloud
-            ## phase.lowest.cloud = Ice_Water_Phase[lev.lowest.cloud],
-            ## phase.qa.lowest.cloud = Ice_Water_Phase_QA[lev.lowest.cloud],
-            ## ## find feature type above surface
-            ## feature.above.surface = feature.above.surface(Feature_Type)
-        ) %>%
-        summarize(
-            ## find surface label
-            label.sfc = labels[Feature_Type == "surface"][1],
-            ## find label of lowest cloud layer
-            label.lowest.cloud = max(labels[Feature_Type == "cloud"]),
-            ## find (minimum) QA flag of lowest layer
-            feature.qa.lowest.cloud = min(Feature_Type_QA[labels == label.lowest.cloud]),
-            ## find level number of lowest level of lowest cloud
-            lev.lowest.cloud = max(which(labels == label.lowest.cloud)),
-            ## find phase of lowest level of lowest cloud
-            phase.lowest.cloud = Ice_Water_Phase[lev.lowest.cloud],
-            phase.qa.lowest.cloud = Ice_Water_Phase_QA[lev.lowest.cloud],
-            ## find feature type above surface
-            feature.above.surface = feature.above.surface(Feature_Type),
-            ## find cloud base altitude
-            cloud.base.altitude = altitude[lev.lowest.cloud]
-        ) %>%
-        select(time,
-               feature.qa.lowest.cloud,
-               phase.lowest.cloud, phase.qa.lowest.cloud,
-               feature.above.surface,
-               cloud.base.altitude)
+        ## helper function to identify feature above surface
+        feature.above.surface <- function(vfm) {
+            stack <- vertical.features.stack(vfm)
+            stack.idx.surface <- which(stack == "surface")
+            if (stack.idx.surface > 1)
+                stack[stack.idx.surface - 1]
+            else NA
+        }
+        
+        df %>%
+            group_by(time) %>%
+            filter(any(Feature_Type == "surface"), any(Feature_Type == "cloud")) %>%
+            ## summarize(date = time[1] - time.interp[1]) %>%
+            ## as.data.frame() %>%
+            ## select(-time) %>%
+            ## head(290)
+            mutate(
+                ## label layers
+                labels = label.vertical.features(Feature_Type)
+                ## ## find surface label
+                ## label.sfc = labels[Feature_Type == "surface"][1],
+                ## ## find label of lowest cloud layer
+                ## label.lowest.cloud = max(labels[Feature_Type == "cloud"]),
+                ## ## find (minimum) QA flag of lowest layer
+                ## feature.qa.lowest.cloud = min(Feature_Type_QA[labels == label.lowest.cloud]),
+                ## ## find level number of lowest level of lowest cloud
+                ## lev.lowest.cloud = max(which(labels == label.lowest.cloud)),
+                ## ## find phase of lowest level of lowest cloud
+                ## phase.lowest.cloud = Ice_Water_Phase[lev.lowest.cloud],
+                ## phase.qa.lowest.cloud = Ice_Water_Phase_QA[lev.lowest.cloud],
+                ## ## find feature type above surface
+                ## feature.above.surface = feature.above.surface(Feature_Type)
+            ) %>%
+            summarize(
+                ## find surface label
+                label.sfc = labels[Feature_Type == "surface"][1],
+                ## find label of lowest cloud layer
+                label.lowest.cloud = max(labels[Feature_Type == "cloud"]),
+                ## find (minimum) QA flag of lowest layer
+                feature.qa.lowest.cloud = min(Feature_Type_QA[labels == label.lowest.cloud]),
+                ## find level number of lowest level of lowest cloud
+                lev.lowest.cloud = max(which(labels == label.lowest.cloud)),
+                ## find phase of lowest level of lowest cloud
+                phase.lowest.cloud = Ice_Water_Phase[lev.lowest.cloud],
+                phase.qa.lowest.cloud = Ice_Water_Phase_QA[lev.lowest.cloud],
+                ## find feature type above surface
+                feature.above.surface = feature.above.surface(Feature_Type),
+                ## find cloud base altitude
+                cloud.base.altitude = altitude[lev.lowest.cloud]
+            ) %>%
+            select(time,
+                   feature.qa.lowest.cloud,
+                   phase.lowest.cloud, phase.qa.lowest.cloud,
+                   feature.above.surface,
+                   cloud.base.altitude) -> res
+        
+        out.fname <- paste("cloud-bases", gsub(".hdf", ".rds", basename(fname)), sep = "/")
+        ## str(res)
+        ## print(out.fname)
+        saveRDS(res, file = out.fname)
+        return(res)
+    }, .parallel = TRUE)
+
+    saveRDS(res, out.name)
+    return(res)
 
     ## %>%
     ##     ## ungroup() %>%
