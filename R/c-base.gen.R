@@ -26,21 +26,21 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
         dim(Feature_Classification_Flags) <- dim(Feature_Classification_Flags) * c(1/15, 15) ## rearrange the packed structure
 
         altitude <- seq(-0.5, 8.17, by = 30e-3) %>% rev()
-        lon <- hdf::h4read(fname,sds,"Longitude")
-        lat <- hdf::h4read(fname,sds,"Latitude")
-        time <- hdf::h4read(fname,sds,"Profile_Time")
-        lon.interp <- approx(x = seq_len(length(lon)) - 1,
-                             y = lon,
-                             xout = (seq_len((length(lon)) * 15) - 8) / 15)$y 
-        lat.interp <- approx(x = seq_len(length(lat)) - 1,
-                             y = lat,
-                             xout = (seq_len((length(lat)) * 15) - 8) / 15)$y 
-        time.interp <- spline(x = seq_len(length(time)) - 1,
-                              y = time - time[1],
-                              xout = (seq_len((length(time)) * 15) - 8) / 15,
-                              method = "hyman")$y + cal.date
+        lon <- hdf::h4read(fname,sds,"Longitude") %>% rep(each = 15)
+        lat <- hdf::h4read(fname,sds,"Latitude") %>% rep(each = 15)
+        time <- hdf::h4read(fname,sds,"Profile_Time") %>% rep(each = 15)
+        profile <- rep(1:15, length.out = length(time))
+        ## lon.interp <- approx(x = seq_len(length(lon)) - 1,
+        ##                      y = lon,
+        ##                      xout = (seq_len((length(lon)) * 15) - 8) / 15)$y 
+        ## lat.interp <- approx(x = seq_len(length(lat)) - 1,
+        ##                      y = lat,
+        ##                      xout = (seq_len((length(lat)) * 15) - 8) / 15)$y 
+        ## time.interp <- spline(x = seq_len(length(time)) - 1,
+        ##                       y = time - time[1],
+        ##                       xout = (seq_len((length(time)) * 15) - 8) / 15,
+        ##                       method = "hyman")$y + cal.date
         
-
         Feature_Type <- bitwAnd(Feature_Classification_Flags, 7)  %>%
             factor(levels = 0:7, labels = c("invalid",
                                             "clear air",
@@ -81,8 +81,11 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
         ##     head(30) %>%
         ##     as.vector()
         
-        df <- expand.grid(altitude = altitude, time = time.interp) %>% 
-            mutate(Feature_Type = (Feature_Type),
+        df <- expand.grid(altitude = altitude, time = time - time[1] + cal.date) %>% 
+            mutate(profile = rep(profile, each = 290),
+                   lon = rep(lon, each = 290),
+                   lat = rep(lat, each = 290),
+                   Feature_Type = (Feature_Type),
                    Feature_Type_QA = (Feature_Type_QA),
                    Ice_Water_Phase = (Ice_Water_Phase),
                    Ice_Water_Phase_QA = (Ice_Water_Phase_QA))
@@ -97,12 +100,8 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
         }
         
         df %>%
-            group_by(time) %>%
+            group_by(time, profile) %>%
             filter(any(Feature_Type == "surface"), any(Feature_Type == "cloud")) %>%
-            ## summarize(date = time[1] - time.interp[1]) %>%
-            ## as.data.frame() %>%
-            ## select(-time) %>%
-            ## head(290)
             mutate(
                 ## label layers
                 labels = label.vertical.features(Feature_Type)
@@ -135,9 +134,13 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
                 ## find feature type above surface
                 feature.above.surface = feature.above.surface(Feature_Type),
                 ## find cloud base altitude
-                cloud.base.altitude = altitude[lev.lowest.cloud]
+                cloud.base.altitude = altitude[lev.lowest.cloud],
+                lon = lon[1], lat = lat[1],
+                len = n()
             ) %>%
-            select(time,
+            ungroup() %>%
+            select(time, profile, len,
+                   lon, lat,
                    feature.qa.lowest.cloud,
                    phase.lowest.cloud, phase.qa.lowest.cloud,
                    feature.above.surface,
