@@ -26,10 +26,19 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
         dim(Feature_Classification_Flags) <- dim(Feature_Classification_Flags) * c(1/15, 15) ## rearrange the packed structure
 
         altitude <- seq(-0.5, 8.17, by = 30e-3) %>% rev()
+        lon <- hdf::h4read(fname,sds,"Longitude")
+        lat <- hdf::h4read(fname,sds,"Latitude")
         time <- hdf::h4read(fname,sds,"Profile_Time")
-        time.interp <- approx(seq_len(length(time)) - 1,
-                              time - time[1],
-                              (seq_len(length(time) * 15) - 1) / 15)$y + cal.date
+        lon.interp <- approx(x = seq_len(length(lon)) - 1,
+                             y = lon,
+                             xout = (seq_len((length(lon)) * 15) - 8) / 15)$y 
+        lat.interp <- approx(x = seq_len(length(lat)) - 1,
+                             y = lat,
+                             xout = (seq_len((length(lat)) * 15) - 8) / 15)$y 
+        time.interp <- spline(x = seq_len(length(time)) - 1,
+                              y = time - time[1],
+                              xout = (seq_len((length(time)) * 15) - 8) / 15,
+                              method = "hyman")$y + cal.date
         
 
         Feature_Type <- bitwAnd(Feature_Classification_Flags, 7)  %>%
