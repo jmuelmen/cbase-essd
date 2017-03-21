@@ -10,7 +10,6 @@ NULL
 #' @export
 bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
                         out.name = "cloud-bases.rds") {
-    path <- "."
     lf <- ## "/tmp/CER-NEWS_CCCM_Aqua-FM3-MODIS-CAL-CS_RelB1_905906.20071226.hdf"
         list.files(path = path, pattern = "CAL_LID_.*hdf", recursive = TRUE, full.names = TRUE)
 
@@ -135,16 +134,20 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
                 feature.above.surface = feature.above.surface(Feature_Type),
                 ## find cloud base altitude
                 cloud.base.altitude = altitude[lev.lowest.cloud],
+                ## find level number of surface
+                lev.surface = min(which(Feature_Type == "surface")),
+                surface.elevation = altitude[lev.surface],
                 lon = lon[1], lat = lat[1],
                 len = n()
             ) %>%
             ungroup() %>%
-            select(time, profile, len,
+            select(time, profile, ## len,
                    lon, lat,
                    feature.qa.lowest.cloud,
                    phase.lowest.cloud, phase.qa.lowest.cloud,
                    feature.above.surface,
-                   cloud.base.altitude) -> res
+                   cloud.base.altitude,
+                   surface.elevation) -> res
         
         out.fname <- paste("cloud-bases", gsub(".hdf", ".rds", basename(fname)), sep = "/")
         ## str(res)
