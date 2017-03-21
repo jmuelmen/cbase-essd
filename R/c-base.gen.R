@@ -15,7 +15,7 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
 
     sds <- hdf::h4list(lf[1])
 
-    doParallel::registerDoParallel(cores = 48)
+    doParallel::registerDoParallel(cores = 72)
     res <- plyr::adply(lf, 1, function(fname) {
         cal.datestring <- strsplit(basename(fname), "\\.")[[1]][2]
         cal.date <- as.POSIXlt(cal.datestring, format = "%Y-%m-%d", tz = "UTC") +
