@@ -14,3 +14,27 @@ get.metar.2008 <- function() {
                          episode = episode,
                          metar = metar)
 }
+
+#' Get list of METAR stations
+#' 
+#' @export
+#'
+#'
+stations.metar <- function() {
+    f <- system.file("extdata", "stations.txt", package = "cbasetools", mustWork = TRUE)
+    stations <- read.csv(f, comment = "!")
+
+    strtolonlat <- function(x) {
+        sgn <- 1
+        minutes <- x[2]
+        if (any(grep("W", minutes)) || any(grep("S", minutes)))
+            sgn <- -1
+        minutes <- strsplit(minutes, c("[EWNS]"))[[1]]
+        sgn * (as.numeric(x[1]) + as.numeric(minutes) / 60)
+    }
+    
+    stations$lon <- sapply(strsplit(as.character(stations$LON), " "), strtolonlat)
+    stations$lat <- sapply(strsplit(as.character(stations$LAT), " "), strtolonlat)
+
+    stations
+}
