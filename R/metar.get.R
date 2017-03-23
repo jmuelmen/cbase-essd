@@ -4,7 +4,8 @@
 #'
 #'
 get.metar.2008 <- function() {
-    data(metar.2008) %>%
+    data(metar.2008)
+    metar.2008 %>%
         dplyr::filter(valid) %>%
         dplyr::transmute(station.icao = trim(station.icao),
                          station.name = station.name,

@@ -3,7 +3,7 @@
 #' A dataset containing METARs downloaded from wunderground.com at
 #' A-Train overpass locations in 2008
 #'
-#' @format A data frame with \math{n} variables:
+#' @format A data frame with \eqn{n} variables:
 #' \describe{
 #'   \item{lon}{longitude; -180 < lon < 180}
 #'   \item{lat}{latitude}
