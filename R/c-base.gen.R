@@ -134,7 +134,7 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
                 ## find (minimum) QA flag of lowest layer
                 feature.qa.lowest.cloud = min(Feature_Type_QA[labels == label.lowest.cloud]),
                 ## find (median) horizontal averaging of lowest layer
-                horizontal.averaging.lowest.cloud.median = median(Horizontal_averaging[labels == label.lowest.cloud]),
+                ## horizontal.averaging.lowest.cloud.median = median(Horizontal_averaging[labels == label.lowest.cloud]),
                 ## find (min) horizontal averaging of lowest layer
                 horizontal.averaging.lowest.cloud.min = min(Horizontal_averaging[labels == label.lowest.cloud]),
                 ## find (max) horizontal averaging of lowest layer
@@ -162,7 +162,7 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
             select(time, profile, ## len,
                    lon, lat,
                    feature.qa.lowest.cloud,
-                   horizontal.averaging.lowest.cloud.median,
+                   ## horizontal.averaging.lowest.cloud.median,
                    horizontal.averaging.lowest.cloud.min,
                    horizontal.averaging.lowest.cloud.max,
                    phase.lowest.cloud, phase.qa.lowest.cloud,
