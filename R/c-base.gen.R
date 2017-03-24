@@ -72,6 +72,13 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
                                             "high"), ordered = TRUE)
         ## dim(Ice_Water_Phase_QA) <- dim(Feature_Classification_Flags)
 
+        Horizontal_averaging <- bitwAnd(Feature_Classification_Flags, bitwShiftL(7,13)) %>% bitwShiftR(13) %>%
+            factor(levels = 0:5, labels = c("NA",
+                                            "1/3 km",
+                                            "1 km",
+                                            "5 km",
+                                            "20 km",
+                                            "80 km"), ordered = TRUE)
         ## mask <- aaply(array(Feature_Type, dim(Feature_Classification_Flags)), 2, function(x) {
         ##     any(x == "surface") && any(x == "cloud")
         ## }, .progress = "text")
@@ -87,7 +94,8 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
                    Feature_Type = (Feature_Type),
                    Feature_Type_QA = (Feature_Type_QA),
                    Ice_Water_Phase = (Ice_Water_Phase),
-                   Ice_Water_Phase_QA = (Ice_Water_Phase_QA))
+                   Ice_Water_Phase_QA = (Ice_Water_Phase_QA),
+                   Horizontal_averaging = Horizontal_averaging)
 
         ## helper function to identify feature above surface
         feature.above.surface <- function(vfm) {
@@ -125,15 +133,25 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
                 label.lowest.cloud = max(labels[Feature_Type == "cloud"]),
                 ## find (minimum) QA flag of lowest layer
                 feature.qa.lowest.cloud = min(Feature_Type_QA[labels == label.lowest.cloud]),
-                ## find level number of lowest level of lowest cloud
-                lev.lowest.cloud = max(which(labels == label.lowest.cloud)),
+                ## find (median) horizontal averaging of lowest layer
+                horizontal.averaging.lowest.cloud.median = median(Horizontal_averaging[labels == label.lowest.cloud]),
+                ## find (min) horizontal averaging of lowest layer
+                horizontal.averaging.lowest.cloud.min = min(Horizontal_averaging[labels == label.lowest.cloud]),
+                ## find (max) horizontal averaging of lowest layer
+                horizontal.averaging.lowest.cloud.max = max(Horizontal_averaging[labels == label.lowest.cloud]),
+                ## find level number of bottom of lowest cloud
+                lev.lowest.cloud.base = max(which(labels == label.lowest.cloud)),
+                ## find level number of top of lowest cloud
+                lev.lowest.cloud.top = min(which(labels == label.lowest.cloud)),
                 ## find phase of lowest level of lowest cloud
-                phase.lowest.cloud = Ice_Water_Phase[lev.lowest.cloud],
-                phase.qa.lowest.cloud = Ice_Water_Phase_QA[lev.lowest.cloud],
+                phase.lowest.cloud = Ice_Water_Phase[lev.lowest.cloud.base],
+                phase.qa.lowest.cloud = Ice_Water_Phase_QA[lev.lowest.cloud.base],
                 ## find feature type above surface
                 feature.above.surface = feature.above.surface(Feature_Type),
                 ## find cloud base altitude
-                cloud.base.altitude = altitude[lev.lowest.cloud],
+                cloud.base.altitude = altitude[lev.lowest.cloud.base],
+                ## find cloud top altitude
+                cloud.top.altitude = altitude[lev.lowest.cloud.top],
                 ## find level number of surface
                 lev.surface = min(which(Feature_Type == "surface")),
                 surface.elevation = altitude[lev.surface],
@@ -144,8 +162,12 @@ bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DA
             select(time, profile, ## len,
                    lon, lat,
                    feature.qa.lowest.cloud,
+                   horizontal.averaging.lowest.cloud.median,
+                   horizontal.averaging.lowest.cloud.min,
+                   horizontal.averaging.lowest.cloud.max,
                    phase.lowest.cloud, phase.qa.lowest.cloud,
                    feature.above.surface,
+                   cloud.top.altitude,
                    cloud.base.altitude,
                    surface.elevation) -> res
         
