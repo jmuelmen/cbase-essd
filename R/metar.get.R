@@ -7,8 +7,8 @@ get.metar.2008 <- function() {
     data(metar.2008)
     metar.2008 %>%
         dplyr::filter(valid) %>%
-        dplyr::transmute(station.icao = trim(station.icao),
-                         station.name = station.name,
+        dplyr::transmute(station.icao = factor(trim(station.icao)),
+                         station.name = factor(station.name),
                          date = date,
                          datetime = as.POSIXct(DateUTC, tz = "UTC"),
                          episode = episode,
