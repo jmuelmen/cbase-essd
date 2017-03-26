@@ -4,7 +4,7 @@
 \name{metar.2008}
 \alias{metar.2008}
 \title{METARs at A-Train overpass locations (2008)}
-\format{A data frame with \math{n} variables:
+\format{A data frame with \eqn{n} variables:
 \describe{
   \item{lon}{longitude; -180 < lon < 180}
   \item{lat}{latitude}
