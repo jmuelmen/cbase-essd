@@ -40,6 +40,7 @@ stations.metar <- function() {
         dplyr::filter(M == "X")  %>% ## METAR site
         dplyr::transmute(station.icao = factor(trim(as.character(ICAO))),
                          station.name = factor(trim(as.character(STATION))),
-                         elevation.m = ELEV,
-                         lon, lat)
+                         elevation.m = as.numeric(ELEV),
+                         lon, lat) %>%
+        dplyr::filter(station.icao != "")
 }
