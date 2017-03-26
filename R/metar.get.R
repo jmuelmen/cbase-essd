@@ -36,5 +36,10 @@ stations.metar <- function() {
     stations$lon <- sapply(strsplit(as.character(stations$LON), " "), strtolonlat)
     stations$lat <- sapply(strsplit(as.character(stations$LAT), " "), strtolonlat)
 
-    stations
+    stations %>%
+        dplyr::filter(M == "X")  %>% ## METAR site
+        dplyr::transmute(station.icao = factor(trim(as.character(ICAO))),
+                         station.name = factor(trim(as.character(STATION))),
+                         elevation.m = ELEV,
+                         lon, lat)
 }
