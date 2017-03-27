@@ -4,17 +4,19 @@
 \alias{combine.cbase}
 \title{Combination of retrievals for comparison}
 \usage{
-combine.cbase()
+combine.cbase(df.eval, df.ret, max.dist)
 }
 \arguments{
-\item{df.cbase}{Data.frame.  Data frame to be evaluated.}
-
 \item{df.eval}{Data.frame.  Data frame to evaluate against.}
+
+\item{df.ret}{Data.frame.  Data frame of retrievals to be evaluated.}
+
+\item{max.dist}{Numeric.  Maximum distance between retrieval and evaluation points}
 }
 \value{
 A data frame containing information from both
 }
 \description{
-Combine METARs with C-BASE retrievals
+Combine evaluation dataset with retrievals to be evaluated
 }
 
