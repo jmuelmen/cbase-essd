@@ -4,15 +4,20 @@
 #'
 #'
 get.metar.2008 <- function() {
-    data(metar.2008)
+    data(metar.2008, envir = environment())
     metar.2008 %>%
         dplyr::filter(valid) %>%
-        dplyr::transmute(station.icao = factor(trim(station.icao)),
+        dplyr::transmute(station.icao = trim(station.icao),
                          station.name = factor(station.name),
                          date = date,
                          datetime = as.POSIXct(DateUTC, tz = "UTC"),
                          episode = episode,
-                         metar = metar)
+                         metar = metar) %>%
+        dplyr::left_join(stations.metar() %>%
+                         dplyr::select(-station.name) %>%
+                         dplyr::mutate(station.icao = as.character(station.icao)),
+                         by = "station.icao") %>%
+        dplyr::mutate(station.icao = factor(station.icao))
 }
 
 #' Get list of METAR stations
