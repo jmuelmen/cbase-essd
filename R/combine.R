@@ -37,7 +37,8 @@ combine.cbase.metar <- function(metar = get.metar.2008(),
                     df %>%
                         dplyr::filter(time > x$datetime - 3600, time < x$datetime + 3600) %>%
                         dplyr::collect() %>%
-                        dplyr::filter(cbasetools::dist.gc(lon, x$lon, lat, x$lat) < 100) ## %>%
+                        dplyr::filter(cbasetools::dist.gc(lon, x$lon, lat, x$lat) < 100) %>%
+                        dplyr::bind_cols(x)
                     ## dplyr::summarize(n = n()) 
                 },
                 .progress = "text", .parallel = TRUE) 
