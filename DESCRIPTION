@@ -13,5 +13,7 @@ Imports:
     plyr,
     dplyr,
     doParallel,
+    doSNOW,
+    snow,
     hdf
 RoxygenNote: 5.0.1
