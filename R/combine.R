@@ -31,7 +31,7 @@ combine.cbase.metar <- function(metar = get.metar.2008(),
         NULL
     })
 
-    plyr::ddply(dplyr::slice(metar, 1:1000) %>% dplyr::mutate(datetime = as.numeric(datetime)),
+    plyr::ddply(dplyr::slice(metar) %>% dplyr::mutate(datetime = as.numeric(datetime)),
                 ~ station.icao + datetime + date + episode,
                 function(x) {
                     df %>%
