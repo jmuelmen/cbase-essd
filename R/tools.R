@@ -9,7 +9,7 @@
 df.to.db <- function(dd, fname, name, indexes = list("lon", "lat")) {
     db <- dplyr::src_sqlite(fname, create = TRUE)
     dplyr::copy_to(db, dd, name,
-            indexes, 
+            indexes = indexes, 
             temporary = FALSE)
     return(dplyr::tbl(db, name))
 }
