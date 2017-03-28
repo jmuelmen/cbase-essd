@@ -53,6 +53,35 @@ convert.date <- function(time) {
     date <- format(time, "%Y/%m/%d")
 }
 
+#' Parse METAR for cloud heights
+#'
+#' (up to three layers)
+#'
+#' @param metar Character.  Standard-format METAR message
+#' @return Data frame containing up to three cloud base heights (in
+#'     meters) and the corresponding coverage fractions (FEW|SCT|BKN|OVC)
+#'
+#' @export
+metar.to.cloud.heights <- function(metar) {
+    hgts <- na.omit(sapply(strsplit(metar, " ")[[1]], function(word)
+        if (any(grep("FEW|SCT|BKN|OVC", word)))
+            as.numeric(gsub("FEW|SCT|BKN|OVC", "", word))
+        else NA)) * 12 * 2.54 ## convert to m
+    covs <- na.omit(sapply(strsplit(metar, " ")[[1]], function(word)
+        if (any(grep("FEW|SCT|BKN|OVC", word)))
+            gsub("[0-9]*", "", word)
+        else as.character(NA)))
+    if (length(hgts) == 0)
+        ret <- data.frame(hgts = matrix(NA, 1, 3),
+                          covs = matrix(as.character(NA), 1, 3),
+                          lays = 0)
+    else
+        ret <- data.frame(hgts = matrix(hgts[1:3], 1, 3),
+                          covs = matrix(covs[1:3], 1, 3),
+                          lays = length(hgts))
+    ret
+}
+
 #' Apply gaussian filter to vector 
 #'
 #' 
