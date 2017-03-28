@@ -21,7 +21,7 @@ factor.feature.type <- function(x) {
 }
 
 #' @export
-factor.feature.type.qa <- function(x) {
+factor.qa <- function(x) {
     factor.relabel(x,
                    labels = c("none",
                               "low",
@@ -40,16 +40,6 @@ factor.ice.water.phase <- function(x) {
 }
 
 #' @export
-factor.ice.water.phase.qa <- function(x) {
-    factor.relabel(x,
-                   labels = c("none",
-                              "low",
-                              "medium",
-                              "high"),
-                   ordered = TRUE)
-}
-
-#' @export
 factor.horizontal.averaging <- function(x) {
     factor.relabel(x,
                    labels = c("NA",
@@ -64,10 +54,10 @@ factor.horizontal.averaging <- function(x) {
 #' @export
 factor.vfm <- function(df) {
     mutate(df,
-           feature.qa.lowest.cloud 	= factor.feature.type.qa(feature.qa.lowest.cloud),
+           feature.qa.lowest.cloud 	= factor.qa(feature.qa.lowest.cloud),
            horizontal.averaging.lowest.cloud.min = factor.horizontal.averaging(horizontal.averaging.lowest.cloud.min),
            horizontal.averaging.lowest.cloud.max = factor.horizontal.averaging(horizontal.averaging.lowest.cloud.max),
            phase.lowest.cloud 		= factor.ice.water.phase(phase.lowest.cloud),
-           phase.qa.lowest.cloud 	= factor.ice.water.phase.qa(phase.qa.lowest.cloud),
+           phase.qa.lowest.cloud 	= factor.qa(phase.qa.lowest.cloud),
            feature.above.surface 	= factor.feature.type	(feature.above.surface))
 }
