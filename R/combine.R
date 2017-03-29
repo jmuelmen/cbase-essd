@@ -17,6 +17,8 @@ combine.cbase <- function(df.eval, df.ret, max.dist) {
 combine.cbase.metar <- function(metar = get.metar.2008(),
                                 cloudbase = dbtools::db_spec("cloud-bases-2008.sqlite", "cloudbase"),
                                 n.cores = 72) {
+
+    ## set up worker processes
     cl <- snow::makeCluster(rep("localhost", n.cores), type = "SOCK", outfile = "snow.log")
     on.exit({
         snow::stopCluster(cl)
@@ -31,6 +33,7 @@ combine.cbase.metar <- function(metar = get.metar.2008(),
         NULL
     })
 
+    ## find A-Train point closest to each METAR
     plyr::ddply(dplyr::slice(metar) %>% dplyr::mutate(datetime = as.numeric(datetime)),
                 ~ station.icao + datetime + date + episode,
                 function(x) {
@@ -43,6 +46,24 @@ combine.cbase.metar <- function(metar = get.metar.2008(),
                         ## dplyr::bind_cols(., slice(x, rep(1, nrow(.))))
                     ## dplyr::summarize(n = n()) 
                 },
-                .progress = "text", .parallel = TRUE) 
-}
+                .progress = "text", .parallel = TRUE) -> ret
+
+    ## just in case things go wrong...
+    saveRDS(ret, "cbm.rds")
     
+    ## extract METAR cloud-base information
+    metar <- dplyr::bind_cols(metar, metar.to.cloud.heights(ret$metar, .parallel = TRUE))
+
+    ## return combination of METARs and A-Train
+    left_join(mutate(ret,
+                     datetime = as.POSIXct(datetime, origin = "1970-01-01", tz = "UTC")) %>%
+              rename(lon.caliop = lon,
+                     lat.caliop = lat),
+              rename(metar,
+                     lon.metar = lon,
+                     lat.metar = lat),
+              by = c("station.icao",
+                     "datetime",
+                     "date", 
+                     "episode"))
+}
