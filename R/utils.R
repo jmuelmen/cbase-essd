@@ -65,26 +65,44 @@ convert.date <- function(time) {
 #'
 #' @export
 metar.to.cloud.heights <- function(metars, ...) {
-    plyr::adply(metars, 1, function(metar) {
-        hgts <- na.omit(sapply(strsplit(metar, " ")[[1]], function(word)
+    metars <- strsplit(metars, " ")
+    plyr::ldply(metars, function(metar) {
+        hgts <- na.omit(sapply(metar, function(word)
             if (any(grep("FEW|SCT|BKN|OVC", word)))
                 as.numeric(gsub("FEW|SCT|BKN|OVC", "", word))
             else NA)) * 12 * 2.54 ## convert to m
-        covs <- na.omit(sapply(strsplit(metar, " ")[[1]], function(word)
+        covs <- na.omit(sapply(metar, function(word)
             if (any(grep("FEW|SCT|BKN|OVC", word)))
                 gsub("[0-9]*", "", word)
             else as.character(NA)))
         if (length(hgts) == 0)
             ret <- data.frame(hgts = matrix(NA, 1, 3),
                               covs = matrix(as.character(NA), 1, 3),
-                              lays = 0)
+                              lays = 0,
+                              stringsAsFactors = FALSE)
         else
             ret <- data.frame(hgts = matrix(hgts[1:3], 1, 3),
                               covs = matrix(covs[1:3], 1, 3),
-                              lays = length(hgts))
+                              lays = length(hgts),
+                              stringsAsFactors = FALSE)
         ret
     }, ...) %>%
-        dplyr::select(-X1)
+        mutate(covs.1 = parse.cov(covs.1),
+               covs.2 = parse.cov(covs.2),
+               covs.3 = parse.cov(covs.3))
+}
+
+parse.cov <- function(x) {
+    ifelse(grepl("FEW", x), "FEW",
+    ifelse(grepl("SCT", x), "SCT",
+    ifelse(grepl("BKN", x), "BKN",
+    ifelse(grepl("OVC", x), "OVC",
+           NA)))) %>%
+        factor(levels = c("FEW",
+                          "SCT",
+                          "BKN",
+                          "OVC"),
+               ordered = TRUE)
 }
 
 #' Apply gaussian filter to vector 
