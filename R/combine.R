@@ -52,7 +52,7 @@ combine.cbase.metar <- function(metar = get.metar.2008(),
     saveRDS(ret, "cbm.rds")
     
     ## extract METAR cloud-base information
-    metar <- dplyr::bind_cols(metar, metar.to.cloud.heights(ret$metar, .parallel = TRUE))
+    metar <- dplyr::bind_cols(metar, metar.to.cloud.heights(metar$metar, .parallel = TRUE))
 
     ## return combination of METARs and A-Train
     left_join(mutate(ret,
