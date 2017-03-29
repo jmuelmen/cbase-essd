@@ -4,14 +4,17 @@
 \alias{metar.to.cloud.heights}
 \title{Parse METAR for cloud heights}
 \usage{
-metar.to.cloud.heights(metar)
+metar.to.cloud.heights(metars, ...)
 }
 \arguments{
-\item{metar}{Character.  Standard-format METAR message}
+\item{metars}{Character.  Vector of standard-format METAR messages}
+
+\item{...}{Arguments passed to adply in the processing of the vector}
 }
 \value{
 Data frame containing up to three cloud base heights (in
-    meters) and the corresponding coverage fractions (FEW|SCT|BKN|OVC)
+    meters) and the corresponding coverage fractions
+    (FEW|SCT|BKN|OVC) per METAR
 }
 \description{
 (up to three layers)
