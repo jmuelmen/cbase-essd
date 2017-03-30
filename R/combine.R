@@ -41,8 +41,9 @@ combine.cbase.metar <- function(metar = get.metar.2008(),
                         dplyr::filter(time > x$datetime - 3600, time < x$datetime + 3600) %>%
                         dplyr::collect() %>%
                         dplyr::mutate(dist = cbasetools::dist.gc(lon, x$lon, lat, x$lat)) %>%
-                        dplyr::filter(dist == min(dist)) %>%
-                        dplyr::filter(dist < 100) ## %>%
+                        ## dplyr::filter(dist == min(dist)) %>%
+                        dplyr::filter(dist < 100)  %>%
+                        dplyr::filter(cloud.base.altitude == min(cloud.base.altitude))
                         ## dplyr::bind_cols(., slice(x, rep(1, nrow(.))))
                     ## dplyr::summarize(n = n()) 
                 },
