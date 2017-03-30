@@ -48,9 +48,6 @@ combine.cbase.metar <- function(metar = get.metar.2008(),
                 },
                 .progress = "text", .parallel = TRUE) -> ret
 
-    ## just in case things go wrong...
-    saveRDS(ret, "cbm.rds")
-    
     ## extract METAR cloud-base information
     metar <- dplyr::bind_cols(metar, metar.to.cloud.heights(metar$metar, .parallel = TRUE))
 
