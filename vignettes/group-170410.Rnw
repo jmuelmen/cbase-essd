@@ -1,0 +1,617 @@
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[10pt,notes=all,aspectratio=169]{beamer}
+\mode<presentation>
+\usepackage{alltt}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xifthen}
+%%\usepackage{calc}
+\usepackage[percent]{overpic}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{pgfpages}
+
+\renewcommand\d[2]{\ensuremath{\frac{d#1}{d#2}}}
+\newcommand\dd[2]{\ensuremath{\frac{\partial#1}{\partial#2}}}
+\newcommand\erfaci{ERF$_\text{aci}$}
+\newcommand\erfaer{ERF$_\text{aer}$}
+
+%%\setbeameroption{second mode text on second screen=right}
+%%\setbeameroption{show notes on second screen}
+
+\renewcommand{\sfdefault}{pfu}
+
+\title{CALIOP-based cloud base heights} \subtitle{} \date{23 January 2017}
+\author{Johannes, Odran}
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+%  \institute{% (optional, but mostly needed)
+% \inst{1} Universität Leipzig 
+% \inst{2} CICERO
+% \inst{3} Nanjing University
+% \inst{4} Kyushu University
+% \inst{5} University of Tokyo
+% \inst{6} University of Oxford
+% \inst{7} MPI~Meteorology
+% % \inst{5} NCAR
+% % \inst{6} University of Oxford
+% % \inst{7} University of Leeds
+% % \inst{8} MPI~Meteorology
+% % \inst{9} Stockholm University
+%  }
+
+% \author{Johannes M\"ulmenst\"adt, Daniel Rosenfeld, Odran Sourdeval, Julien
+%   Delano\"e, Johannes Quaas} 
+
+\renewcommand{\thefootnote}{}
+
+ % \AtBeginSection[]
+ % {
+ %   \begin{frame}<beamer>{Outline}
+ %     \tableofcontents[]
+ %     \footnote{{M\"ulmenst\"adt} et~al.~(2015), \emph{GRL}; see
+ %       also Field and Heymsfield~(2015), \emph{GRL}}
+ %   \end{frame}
+ % }
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+## set global chunk options
+opts_chunk$set(fig.path='figure/group-170410-', cache.path='cache/group-170410-', fig.align='center', fig.show='hold', par=TRUE)
+## I use = but I can replace it with <-; set code/output width to be 68
+options(formatR.arrow=TRUE, width=68, digits=4)
+## tune details of base graphics (http://yihui.name/knitr/hooks)
+knit_hooks$set(par=function(before, options, envir){
+if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
+})
+@
+
+\begin{frame}
+  \titlepage
+  %% \insertlogo{\includegraphics[height=1.4cm]{erc.jpg}\hfill
+  %%   \includegraphics[height=1.4cm]{../MACC-II-logo.png}\hfill
+  %%   \includegraphics[height=0.6cm]{/home/jmuelmen/leipzig_2000_m.jpg}\hfill
+  %%   \includegraphics[height=1.8cm]{../lim.jpg}
+  %% }
+\end{frame}
+
+% \begin{frame}{}
+%   \centering
+%   \includegraphics[width=0.75\textwidth]{{F2.large}.jpg}\footnote{Rosenfeld et
+%     al.~(2008), \emph{Science}}
+  
+
+%   %%question: can we see this globally in satellite observation?
+% \end{frame}
+
+\section{Motivation}
+\begin{frame}[fragile]{test}
+  blah blah blah
+  \begin{figure}
+<<cars-demo,dev='tikz',fig.width=3,fig.height=2.2,out.width='.45\\textwidth',message=FALSE,cache=TRUE>>=
+fit=lm(dist~speed,data=cars) # linear regression
+par(mar=c(4, 4, 1, .1), mgp=c(2,1,0))
+with(cars,plot(speed,dist,panel.last=abline(fit)))
+text(10,100,'$Y = \\beta_0 + \\beta_1x + \\epsilon$')
+library(ggplot2)
+qplot(exp(100 * speed - 3000), dist, data=cars)
+@
+
+\caption{\label{fig:cars-demo}A simple demo of possible output in \textbf{knitr}:
+  (1) multiple plots per chunk; (2) no need to \emph{print()} objects
+  in \textbf{ggplot2}; (3) device size is $4\times2.8$ (inches) but
+  output size is adjusted to \texttt{.45\textbackslash{}textwidth} in
+  chunk options; (4) base graphics and \textbf{ggplot2} can sit side
+  by side; (5) use the \emph{tikz()} device in \textbf{tikzDevice} by
+  setting chunk option \texttt{dev='tikz'} (hence can write native \protect\LaTeX{}
+  expressions in R plots); (6) code highlighting.}
+\end{figure}
+\end{frame}
+\end{document}
+
+\begin{frame}{}
+  \includegraphics[width=\textwidth]{4j.png}
+  \begin{columns}[t]
+    \begin{column}{0.33\textwidth}
+      \begin{block}{Precipitation}
+        High radar reflectivity of rain drops
+        \begin{itemize}
+        \item[$\rightarrow$] CloudSat CPR via 2C-PRECIP-COLUMN \emph{or} DARDAR\_MASK
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \begin{block}{Liquid-topped clouds}
+        High lidar backscatter at cloud top from liquid droplets        
+        \begin{itemize}
+        \item[$\rightarrow$] CALIOP via DARDAR\_MASK
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \begin{block}{Ice clouds}
+        High radar reflectivity of ice particles
+        \begin{itemize}
+        \item[$\rightarrow$] CPR via DARDAR\_MASK
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \footnote{after Rosenfeld et al.~(2008), \textit{Science}}
+\end{frame}
+
+%%\section{Warm-rain climatology}
+%%\label{sec:climatology}
+
+\begin{frame}{Rain from pure liquid clouds (``warm rain'') is very rare over the extratropical continents}
+  \begin{figure}
+    \centering
+    %%\includegraphics[width=0.33\textwidth, page=1]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}~
+    \includegraphics[width=0.6\textwidth, page=2]{{/home/jmuelmen/wcrain/rain-phase-v8-proj.pdf}}\\[-12pt]
+    %% \includegraphics[width=0.33\textwidth, page=3]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}\\
+    \includegraphics[width=0.6\textwidth]{/home/jmuelmen/wcrain/rain-phase-legend-v8-proj.pdf}\\
+    %%\caption{Fraction of raining clouds with liquid-phase tops}
+    \label{fig:liquid}
+  \end{figure}
+  % Liquid-phase fraction:
+  % % \begin{equation}
+  % %   \label{eq:phase-fraction}
+  % $\quad f_{\text{liq}}(\lambda, \phi) = {n_{\text{liq}}(\lambda, \phi)}/{\sum_i n_i(\lambda, \phi)}, \quad
+  %   i \in \{\mbox{ice, liquid, mixed}\}$ phase at top of raining cloud
+  % % \end{equation}
+  \footnote{M\"ulmenst\"adt et al. (2015), \emph{Geophys. Res. Lett.}%  {42~(15)},
+    % 6502--6509, doi:\href{http://doi.org/10.1002/2015GL064604}{10.1002/2015GL064604}
+  }
+\end{frame}
+
+% \begin{frame}{If we count lightest drizzle and virga, warm rain is still very rare}
+%   \begin{figure}
+%     \centering
+%     \includegraphics[width=0.6\textwidth, page=2]{{/home/jmuelmen/wcrain/rain-phase-v7-proj.pdf}}\\[-12pt]
+%     %% \includegraphics[width=0.9\textwidth, page=2]{{/home/jmuelmen/wcrain/rain-phase-v8-proj.pdf}}\\[-12pt]
+%     %% \includegraphics[width=0.33\textwidth, page=3]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}\\
+%     \includegraphics[width=0.6\textwidth]{/home/jmuelmen/wcrain/rain-phase-legend-v8-proj.pdf}\\
+%     %%\caption{Fraction of raining clouds with liquid-phase tops}
+%     \label{fig:liquid}
+%   \end{figure}
+%   Difference to previous plot: $Z > -17$ dBZ (instead of $-15$ dBZ); rain is not required to
+%   reach the surface (virga)
+% \end{frame}
+
+% \begin{frame}{Seasonal variation (cold rain follows the insolation)}
+%   \begin{figure}
+%     \centering
+%     \includegraphics[width=0.55\textwidth]{/home/jmuelmen/wcrain/papers/wcrain-paper/djf-jja-zon-v8.pdf}
+%     %%\caption{Difference between zonal-mean phase fraction in DJF and JJA}
+%     \label{fig:seas}
+%   \end{figure}
+% \end{frame}
+
+% \begin{frame}{Phase fraction of warm cloud (including non-raining) is lower over
+%     land than ocean \dots}
+%   \begin{figure}
+%     \centering
+%     %%\includegraphics[width=0.33\textwidth, page=1]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}~
+%     \includegraphics[width=0.6\textwidth, page=2]{{/home/jmuelmen/wcrain/cloud-phase-v7-proj.pdf}}\\[-12pt]
+%     %% \includegraphics[width=0.33\textwidth, page=3]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}\\
+%     \includegraphics[width=0.6\textwidth]{/home/jmuelmen/wcrain/cloud-phase-legend-v7-proj.pdf}\\
+%     %%\caption{Fraction of DARDAR-detectable clouds with liquid-phase cloud tops}
+%     \label{fig:cloud}
+%   \end{figure}
+% \end{frame}
+
+% \begin{frame}{\dots but the bigger effect is that rain probability of warm cloud
+%     over land is very low}
+%   \begin{figure}
+%     \centering
+%     %%\includegraphics[width=0.33\textwidth, page=1]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}~
+%     \includegraphics[width=0.6\textwidth, page=2]{{/home/jmuelmen/wcrain/rain-fraction-v8-proj.pdf}}\\[-12pt]
+%     %% \includegraphics[width=0.33\textwidth, page=3]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}\\
+%     \includegraphics[width=0.6\textwidth]{/home/jmuelmen/wcrain/rain-fraction-legend-v8-proj.pdf}\\
+%     %%\caption{Rain probability of liquid clouds}
+%     \label{fig:rainprob}
+%   \end{figure}
+% \end{frame}
+
+\begin{frame}{Hypothesis: warm-rain fraction can serve as an observational constraint on
+    the cloud lifetime effect}
+  \begin{itemize}
+  \item Aerosol influence mainly acts on autoconversion in liquid-water
+    clouds in current models
+    \vfill
+  \item The more precipitating warm clouds are simulated in a model, the more
+    opportunity aerosols have to influence the precipitation microphysics
+    \vfill
+  \item We hypothesize that the strength of the cloud lifetime effect in models
+    is therefore related to the warm-rain fraction
+    \vfill
+  \item This hypothesis can be tested in GCMs with parameterized cloud
+    lifetime effect
+    \vfill
+  \item Comparing warm-rain fraction in models against satellites may provide an
+    observational constraint on the cloud lifetime effect
+  \end{itemize}
+\end{frame}
+
+ \AtBeginSection[]
+ {
+   \begin{frame}<beamer>{Outline}
+     \tableofcontents[currentsection]
+     %%\footnote{M\"ulmenst\"adt et al., submitted to GRL}
+   \end{frame}
+ }
+
+ % \AtBeginSubsection[]
+ % {
+ %   \begin{frame}<beamer>{Outline}
+ %     \tableofcontents[currentsubsection]
+ %     %%\footnote{M\"ulmenst\"adt et al., submitted to GRL}
+ %   \end{frame}
+ % }
+
+\section{Warm-rain fraction in observations and GCMs}
+
+\begin{frame}{Compare satellite climatology to CMIP5 cfSites}
+  \centering
+  \includegraphics[height=0.9\textheight, page=1]{{/home/jmuelmen/wcrain/cfsites-land.pdf}}
+\end{frame}
+
+\begin{frame}{Compare satellite climatology to CMIP5 cfSites}
+  \centering
+  \includegraphics[height=0.9\textheight, page=2]{{/home/jmuelmen/wcrain/cfsites-land.pdf}}
+\end{frame}
+
+\begin{frame}{Compare satellite climatology to CMIP5 cfSites}
+  \centering
+  \includegraphics[height=0.9\textheight, page=2]{{/home/jmuelmen/wcrain/cfsites-pac.pdf}}
+\end{frame}
+
+\begin{frame}{Modeled warm-rain fraction is diverse}
+  \centering
+  \includegraphics[width=0.75\textwidth]{models-warmfrac-crop.pdf}
+  % \begin{columns}[T]
+  %   \begin{column}{0.45\textwidth}
+  %     \begin{block}{ECHAM--HAM}
+  %       \includegraphics[width=\textwidth]{rain-warmfrac-default-crop.pdf}
+  %     \end{block}
+  %   \end{column}
+  %   \begin{column}{0.45\textwidth}
+  %     \begin{block}{SPRINTARS}
+  %       \includegraphics[width=\textwidth]{sprintars-crop.pdf}
+  %     \end{block}
+  %   \end{column}
+  % \end{columns}
+  % \begin{columns}[T]
+  % \begin{column}{0.45\textwidth}
+  %     \begin{block}{CAM5--CLUBB}
+  %       \includegraphics[width=\textwidth]{{CAM5.3_CLUBB_all_2000-mr-crop}.pdf}
+  %     \end{block}
+  %   \end{column}
+  % \begin{column}{0.45\textwidth}
+  %     \begin{block}{Satellite}
+  %       \centering
+  %       \vfill
+  %       %% \includegraphics[width=0.33\textwidth, page=1]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}~
+  %       \includegraphics[width=\textwidth, page=2]{{/home/jmuelmen/wcrain/rain-phase-v8-proj.pdf}}\\[-12pt]
+  %       %% \includegraphics[width=0.33\textwidth, page=3]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}\\
+  %       \includegraphics[width=\textwidth]{/home/jmuelmen/wcrain/rain-phase-legend-v8-proj.pdf}\\
+  %       \vfill~
+  %     \end{block}
+  %   \end{column}
+  % \end{columns}
+\end{frame}
+  
+
+
+\section{Tuning the warm-rain fraction in ECHAM--HAM}
+
+\begin{frame}{Scale factor on autoconversion rate: $10^{-4}\times Q_\text{aut}$
+    reproduces observations}
+  % \begin{columns}[T]
+  %   \begin{column}{0.45\textwidth}
+  %     \begin{block}{KK(2000) autoconv with scale factor}
+  %       \centering
+  %       \includegraphics[height=0.95\textheight]{rain-warmfrac-crop.pdf}
+  %     \end{block}
+  %   \end{column}
+  %   \hfill
+  %   \begin{column}{0.45\textwidth}
+  %     \begin{block}{Satellite}
+  %       \centering
+  %       \vfill
+  %       %% \includegraphics[width=0.33\textwidth, page=1]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}~
+  %       \includegraphics[width=\textwidth, page=2]{{/home/jmuelmen/wcrain/rain-phase-v8-proj.pdf}}\\[-12pt]
+  %       %% \includegraphics[width=0.33\textwidth, page=3]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}\\
+  %       \includegraphics[width=\textwidth]{/home/jmuelmen/wcrain/rain-phase-legend-v8-proj.pdf}\\
+  %       \vfill~
+  %     \end{block}
+  %   \end{column}
+  % \end{columns}
+  \includegraphics[width=\textwidth]{rain-warmfrac-crop.pdf}
+\end{frame}
+
+\begin{frame}{Threshold on autoconversion: $r_e > 17~\mu \text{m}$}
+  % \begin{columns}[T]
+  %   \begin{column}{0.45\textwidth}
+  %     \begin{block}{KK(2000) autoconv with $r_e$ threshold}
+  %       \centering
+  %       \includegraphics[width=1.2\textwidth]{rain-warmfrac-reffthr-crop.pdf}
+  %     \end{block}
+  %   \end{column}
+  %   \hfill
+  %   \begin{column}{0.45\textwidth}
+  %     \begin{block}{Satellite}
+  %       \centering
+  %       \vfill
+  %       %% \includegraphics[width=0.33\textwidth, page=1]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}~
+  %       \includegraphics[width=\textwidth, page=2]{{/home/jmuelmen/wcrain/rain-phase-v8-proj.pdf}}\\[-12pt]
+  %       %% \includegraphics[width=0.33\textwidth, page=3]{{/home/jmuelmen/wcrain/cloud-phase-v7.pdf}}\\
+  %       \includegraphics[width=\textwidth]{/home/jmuelmen/wcrain/rain-phase-legend-v8-proj.pdf}\\
+  %       \vfill~
+  %     \end{block}
+  %   \end{column}
+  % \end{columns}
+  \includegraphics[width=\textwidth]{rain-warmfrac-reffthr-crop.pdf}
+\end{frame}
+
+\begin{frame}{These modifications are related}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      Khairoutdinov and Kogan (2000):
+      \begin{equation}
+        \dd{q_r}t \propto q_l^\alpha N^\beta, \quad \alpha = 2.47, \beta = -1.79
+      \end{equation}
+      Since
+      \begin{equation}
+        q_l \propto r_e^3 N
+      \end{equation}
+      the autoconversion rate can be rewritten as a function of $r_e$ and either of
+      $q_l$ or $N$:
+      \begin{equation}
+        \dd{q_r}t \propto \left\{
+          \begin{array}{ll}
+            r_e^{3\alpha} N^{\alpha + \beta} \\
+            r_e^{-3\beta} q_l^{\alpha + \beta}
+          \end{array}
+        \right.
+      \end{equation}
+      Under the simplifying assumption that $r_e$ is uncorrelated with either of
+      $q_l$ or $N$, we expect the autoconversion rate to scale with
+      $r_e^{5.5\sim7.5}$, which effectively sets an $r_e$ threshold.
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \includegraphics[width=\textwidth,page=3]{aut-re-new.pdf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Effect on energy fluxes}
+  \begin{columns}[T]
+    \begin{column}{0.4\textwidth}
+      \begin{itemize}
+      \item Reducing the warm-rain fraction significantly detunes the TOA energy
+        balance $\rightarrow$ retuning is required (primarily SW)
+        \vfill
+      \item (Reducing warm-rain fraction increases large-scale
+        precipitation)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \includegraphics[width=\textwidth,page=2]{rain-rad-pi.pdf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% \begin{frame}{Effect on cloud macrophysics}
+% plot of cloud cover, LWP
+% \end{frame}
+
+\begin{frame}{Effect on precipitation intensity distribution}
+  \begin{columns}[T]
+    \begin{column}{0.35\textwidth}
+      \begin{itemize}
+      \item Reducing the warm-rain fraction also increases the intensity
+        spectrum
+      \item Shown here are large-scale precipitation intensity spectra at different latitude
+        bands
+      \item Decreasing the warm-rain fraction increases the probability of
+        intense large-scale precipitation
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.65\textwidth}
+        \includegraphics[width=\textwidth,page=1]{rain-pr-crop.pdf}
+    \end{column}
+  \end{columns}
+  \end{frame}
+
+\begin{frame}{Tuning the warm rain fraction in ECHAM--HAM: conclusions}
+  \begin{itemize}
+  \item Satellite warm-rain fraction can be reproduced in ECHAM--HAM by
+    multiplying the Khairoutdinov and Kogan (2000) autoconversion rate by
+    $10^{-4}$\\ (default ECHAM--HAM tuning factor: 4)
+    \vfill
+  \item Alternative to this drastic scale factor: $r_e > 17\mu$m threshold on
+    autoconversion 
+    \vfill
+  \item Effect on radiative balance is large (large increase in cloud lifetime)
+    \vfill
+  \item Reducing the warm-rain fraction to match the satellite climatology also
+    increases the intensity spectrum 
+    \vfill
+  \item (Some remaining uncertainty on these numbers because of parameter
+    choices in diagnosis of warm-rain fraction)
+  \end{itemize}
+  
+\end{frame}
+
+\section{Interactions between the warm-rain fraction and ERF$_\text{aci}$}
+\begin{frame}{Influence of the warm-rain fraction on ERF$_\text{aer}$}
+  \begin{block}{Results for ECHAM6.1--HAM2.2, AeroCom II 1850/2000 emissions}
+    \rowcolors{2}{gray!25}{white}
+    \begin{tabular}{l|c|c|c}
+      \rowcolor{gray!50}
+       & SW PD $-$ PI (W m$^{-2}$) & LW PD $-$ PI (W
+                                                    m$^{-2}$) & SW $+$ LW PD $-$
+                                                                PI (W m$^{-2}$)
+                                                                 \\
+      Reference  & $-2.1$ & 1.0 & \alert{$-1.1$} \pause \\
+      Reduced warm rain & $-1.6$ & 0.72 & \alert{$-0.86$} \\
+    \end{tabular}
+  \end{block}
+  \pause  
+  \vspace{12pt}
+  \begin{itemize}
+  \item As hypothesized, the configuration with lower warm-rain fraction has a smaller
+    \erfaer
+  \item The change is $-0.5$ W m$^{-2}$ SW offset by $0.3$ W m$^{-2}$ LW
+    $\Rightarrow$ plausible that \erfaci\ change is a large contribution
+  \item (Low-\texttt{ccraut} configuration has not been retuned and \erfaci\ has
+    not been diagnosed separately from \erfaer\ yet)
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}{Influence of the lifetime effect on warm-rain fraction}
+%   \begin{columns}
+%     \begin{column}{0.6\textwidth}
+%       \includegraphics[width=\textwidth]{andrew-both-crop.pdf}
+%     \end{column}
+%     \begin{column}{0.4\textwidth}
+%       \begin{itemize}
+%       \item CAM5 runs with and without cloud lifetime effect
+%       \item In SE and NE Pacific and Atlantic, lifetime effect decreases the
+%         warm-rain fraction, as expected from drizzle suppression
+%       \item However, there are also regions where the warm-rain fraction
+%         decreases
+%       \item Results are very preliminary (still based on non-standard
+%         diagnostic algorithm while some more files transfer)
+%       \end{itemize}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
+
+\begin{frame}{Comparison to Golaz et al.~(2011)}
+  %% \footnote{}
+  \begin{itemize}
+  \item In GFDL AM3, higher critical $r_e$ leads to \alert{stronger} ERF, in
+    contrast to our results
+    \vfill
+  \item In AM3, the decrease in $q_l$ due to autoconversion during a time step
+    is limited to
+    \begin{equation}
+      q_l \geq q_\text{crit} = \frac43\pi\frac{\rho_l}\rho r_\text{crit}^3 N_d
+    \end{equation}
+    \vfill
+  \item In practice, this limit almost always applies, so that $q_l \approx
+    q_\text{crit}$
+    \vfill
+  \item The anthropogenic perturbation to $N_d$ therefore results in a change in 
+    $q_l$ is therefore
+    \begin{equation}
+      \label{eq:1}
+      \Delta q_l \approx \frac43\pi\frac{\rho_l}\rho r_\text{crit}^3 \Delta N_d,
+    \end{equation}
+    i.e., the perturbation grows with the threshold $r_e$
+    \vfill
+  \item In ECHAM-HAM, the combined autoconversion and accretion can deplete
+    $q_l$ without such a restriction, so that (\ref{eq:1}) does not apply
+  \end{itemize}
+  \footnote{Golaz et al.~(2011), \textit{J. Climate}% , 24
+% , 3145–3160, doi:
+% 10.1175/2010JCLI3945
+}
+\end{frame}
+
+\begin{frame}{Preliminary conclusions on the relationship between warm-rain
+    fraction and aerosol effects}
+  \begin{itemize}
+  \item Changing the warm-rain fraction (in ECHAM--HAM) changes the \erfaci
+    % ;
+    % turning off the cloud lifetime effect (in CAM) changes the warm-rain
+    % fraction
+    \begin{itemize}
+    \item[$\Rightarrow$] \normalsize \alert{As anticipated, aerosol effects are
+        sensitive to the warm-rain fraction}
+    \end{itemize}
+    \vfill
+  \item Lots of model diversity; this observable has not been tuned to death
+    \begin{itemize}
+    \item[$\Rightarrow$] \normalsize \alert{May be useful as an observational
+        constraint} 
+    \end{itemize}
+    \vfill
+  \item Next step: investigate relationship between warm-rain fraction and
+    \erfaci\ across models
+    \begin{itemize}
+    \item[$\Rightarrow$] \normalsize \alert{Multiple CAM flavors, SPRINTARS,
+        IFS, ECHAM-HAM, HadGEM are on board (potentially as part of an AeroCom
+        intercomparison)}
+    \end{itemize}
+    \vfill
+  \item Participation by other models welcome!
+    \begin{itemize}
+    \item[$\Rightarrow$] \normalsize \alert{Required output: snow and rain
+        mixing ratio/flux/path, non-accumulated field, ideally~3h; preferably
+        for a model configuration with known \erfaci}\\ (protocol will be sent to
+      AeroCom mailing list soon)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}{Change of subject: response to Stevens (2015)}
+%   \begin{columns}
+%     \begin{column}{0.55\textwidth}
+%       \includegraphics[height=0.85\textheight]{comment-crop.pdf}
+%     \end{column}
+%     \begin{column}{0.45\textwidth}
+%       \begin{itemize}
+%       \item Stevens (2015): zero-dimensional global-mean aerosol forcing model
+%         with linear ARI and logarithmic ACI terms based on sulfate aerosol
+%       \item In this model, $\approx$50\% of \erfaer\ is already realized in
+%         1950; warming in the early 20th century constrains present-day \erfaer
+%       \item In CMIP5 models, the ACI saturates less quickly due to transport
+%         from polluted to pristine regions (Rotstayn et al., 2015)
+%       \item Realized \erfaer\ is only $\approx$25\% in 1950 
+%       \item No strong constraint on \erfaer\ from early-20th-century warming
+%       \end{itemize}
+%     \end{column}
+%   \end{columns}
+%   \footnote{\small Kretzschmar et al.~(2016), submitted to \textit{J.~Climate}}
+% \end{frame}
+
+\begin{frame}{Summary}
+  \begin{itemize}%%\large
+  \item Warm-rain fraction is very low over continents (especially extratropical
+    NH); details: {M\"ulmenst\"adt} et~al.~(2015), \emph{Geophys. Res. Lett.} {42~(15)},
+    6502--6509, doi:\href{http://doi.org/10.1002/2015GL064604}{10.1002/2015GL064604}
+    \vfill
+  \item Warm-rain fraction can be diagnosed in GCMs and may serve as an
+    observational constraint on precipitation-related processes (including
+    aerosol cloud lifetime effect)
+    \vfill
+  \item In ECHAM--HAM, agreement with satellite warm-rain fraction can be
+    achieved with either a drastic rescaling of KK2000 autoconversion or a
+    less drastic $r_e$ threshold 
+    \vfill
+  \item Either method of tuning the warm-rain fraction intensifies the
+    precipitation intensity spectrum and decreases the ERF$_\text{aci}$
+    \vfill
+  \item \alert{Space-borne active remote sensing} is essential for (this and
+    other) studies trying to derive observational constraints on parameterized
+    convection 
+  \end{itemize}
+
+  % \begin{block}{What would the warm-rain fraction be in a pristine continental
+  %     atmosphere?}
+    
+  %   \end{block}
+\end{frame}
+\end{document}
+\section*{Backup slides}
+
+
+
+\end{document}
