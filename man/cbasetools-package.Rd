@@ -7,7 +7,43 @@
 \title{Retrieve and evaluate cloud bases from various satellite-borne
 instruments}
 \description{
-Retrieve and evaluate cloud bases from various satellite-borne
-instruments
+The layout of this directory is as follows:
+}
+\details{
+For every retrieval method, there are two files, <retrieval>.gen.R
+and <retrieval>.R.
+
+The purpose of <retrieval>.gen.R is to hold
+functions that generate the retrievals from the precursor products
+(for example, generate the C-BASE retrievals from the CALIOP VFM).
+These functions should be exported so that it is possible to run
+the retrieval algorithm over a bunch of input data from some driver
+script, Makefile, or similar.
+
+The purpose of <retrieval>.R is to provide accessor functions so
+that the retrievals can be loaded (typically as data.frames) into
+code that does further processing, for example visualization,
+combination with evaluation datasets, or evaluation.  In addition
+to these accessor functions, reasonably small datasets should also
+be made available as package data and described in data.R.
+
+Currently, files exist for the C-BASE CALIOP-based cloud base
+retrieval (c-base.gen.R and c-base.R) and for the METAR
+ground-based ceilometer evaluation dataset (metar.gen.R and
+metar.R).  In the future, similar files are planned for cloud base
+retrievals from MISR, oxygen A-band, and NPP cloud-base
+temperature.
+
+In addition to the retrieval-specific <retrieval>.gen.R and
+<retrieval>.R files, the package consists of:
+
+\describe{
+\item{combine.R}{Code to combine retrievals and evaluation datasets}
+\item{eval.R}{Code to evaluate the retrievals}
+\item{vis.R}{Code to visualize the retrievals}
+\item{utils.R}{Functions that are useful in more than one place,
+internally to the package}
+\item{tools.R}{Functions that are also useful outside the package}
+}
 }
 
