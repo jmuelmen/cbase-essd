@@ -56,7 +56,8 @@ eval.metar <- function(df) {
     
 }
 
-## add summary statistics (linear regression, correlation, RMS error) to a data frame or grouped data frame
+#' add summary statistics (linear regression, correlation, RMS error) to a data frame or grouped data frame
+#' @export
 statistify <- function(df) {
     regress <- function(ceilo, caliop, type) {
         res <- try({
@@ -81,6 +82,8 @@ statistify <- function(df) {
               rmse.fit = regress(ceilo, caliop, "rmse"))
 }
 
+#' make a ggplot the way we like them, based on a grouped data frame
+#' @export
 statistify.df <- function(df) {
     stats <- statistify(df)
     base.df <- dplyr::select(stats, -(cor:rmse))
@@ -94,14 +97,15 @@ statistify.df <- function(df) {
           cbind(base.df, statistic = stats$rmse.fit, statistic.name = "Fit RMSE"))
 }
 
-## make a ggplot the way we like them, based on a grouped data frame
+#' make a ggplot the way we like them, based on a grouped data frame
+#' @export
 regression_plot <- function(df, title, xlab = "CALIOP base (km)") {
     stats <- statistify(df)
     gg <- ggplot2::ggplot(df, ggplot2::aes(caliop, ceilo)) +
         ggplot2::geom_point(pch = ".") +
         ggplot2::stat_density2d(geom = "density2d") +
         ggplot2::stat_smooth(method = "lm", col = "red", fill = "red", formula = y ~ x) +
-        ## ggplot2::stat_smooth(method = "loess", col = "blue", fill = "blue", formula = y ~ x) +
+        ggplot2::stat_smooth(method = "loess", col = "blue", fill = "blue", formula = y ~ x) +
         ggplot2::geom_abline(intercept = 0, slope = 1000, lty = "dashed", col = "lightgrey") +
         ggplot2::coord_cartesian(ylim = c(-500,5500)) +
         ggplot2::facet_grid(dplyr::groups(df)) +
