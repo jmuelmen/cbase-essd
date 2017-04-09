@@ -69,8 +69,13 @@ statistify.df <- function(df) {
 #' 
 regression_plot <- function(df, title, xlab = "50 km running mean CALIOP base (km)") {
     stats <- statistify(df)
+    stats.n <- summarize(df, n = n())
+    print(stats.n)
     gg <- ggplot2::ggplot(df, ggplot2::aes(caliop, ceilo)) +
-        ggplot2::geom_point(pch = ".") +
+        (if (max(stats.n$n) < 1e4)
+             ggplot2::geom_point(pch = ".")
+         else
+             ggplot2::stat_bin2d()) +
         ggplot2::stat_density2d(geom = "density2d") +
         ggplot2::stat_smooth(method = "lm", col = "red", fill = "red", formula = y ~ x) +
         ggplot2::stat_smooth(method = "loess", col = "blue", fill = "blue", formula = y ~ x) +
@@ -81,8 +86,9 @@ regression_plot <- function(df, title, xlab = "50 km running mean CALIOP base (k
         ggplot2::geom_text(data = stats, ggplot2::aes(x = 5, y = 0,
                                     label = gsub("NA", "'NA'", sprintf("atop(atop(italic(n) == %.0f, italic(r)[loc] == %.2f~ italic(r)[fit] == %.2f), atop(italic(y) == %4.0f* x + %4.0f ~ fit ~ RMSE == %4.0f~m, RMSE == %4.0f~ m~bias == %4.0f~m))",
                                                     n, cor.loc, cor, slope, icpt, rmse.fit, rmse, bias))),
-                  size = 4, vjust = 0, hjust = 1, parse = TRUE) +
-        ggplot2::theme_bw(base_size = 20)
+                           size = 4, vjust = 0, hjust = 1, parse = TRUE) +
+        ggplot2::scale_fill_distiller(palette = "GnBu") +
+        ggplot2::theme_bw()
     ## print(gg)
     return(list(stats = stats, ggplot = gg))
 }
