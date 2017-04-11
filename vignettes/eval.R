@@ -1,18 +1,41 @@
-## ---- eval-cov-thick ---------------------
-df <- readRDS("~/r-packages/cbm-min.rds") %>% factor.vfm()
-df %>%
+## ---- eval-setup ---------------------
+df <- readRDS("~/r-packages/cbm-min.rds") %>%
+    factor.vfm() %>%
+    dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
     dplyr::mutate(ceilo = hgts.1 + elevation.m,
                   caliop = cloud.base.altitude,
                   caliop.local = caliop) %>%
     dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
-    dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
-    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 5, lays == 1) %>%
-    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
+    mutate(dummy = "",
+           dummy2 = "") %>%
     dplyr::filter(region == "K") %>%
-    ## plotutils::discretize(dist, quantile(dist, seq(0, 1, 0.2)), as_factor = TRUE) %>%
     dplyr::filter(dist < 50) %>%
+    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 5)
+    
+## ---- eval-qual ---------------------
+res <- df %>%
+    filter(lays == 1) %>%
+    dplyr::group_by(dummy, feature.qa.lowest.cloud) %>%
+    regression_plot(title = "feature.qa.lowest.cloud")
+res$ggplot
+
+## ---- eval-qual-tbl ---------------------
+regression_table(res)
+
+## ---- eval-lays ---------------------
+df %>%
+    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
+    dplyr::group_by(dummy, lays) %>%
+    regression_plot(title = "lays")
+
+## ---- eval-cov-thick ---------------------
+res <- df %>%
+    dplyr::filter(lays == 1) %>%
+    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
     plotutils::discretize(thickness, quantile(thickness, seq(0, 1, 0.2)), as_factor = TRUE) %>%
-    ##     dummy = "",
-    ##     dummy2 = "") %>%
     dplyr::group_by(covs.1, thickness) %>%
-    regression_plot(title = "test")
+    regression_plot(title = "covs.1:thickness")
+res$ggplot
+
+## ---- eval-cov-thick-tbl ---------------------
+regression_table(res)
