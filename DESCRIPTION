@@ -15,6 +15,7 @@ Imports:
     doParallel,
     doSNOW,
     snow,
+    xtable,
     hdf
 RoxygenNote: 5.0.1
 Suggests: knitr,

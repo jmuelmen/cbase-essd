@@ -135,3 +135,46 @@ sanitize.numbers <- function (str, type, math.style.negative = FALSE, math.style
     }
 }
 
+#' Make an xtable from statistics of a grouped data frame
+#'
+#' @param df.stats List or data.frame.  Statistics summary from
+#'     \code{statistify()} or list output from \code{regression_plot}
+#'     (in which case the \code{stats} element is used)
+#' @return An \code{xtable}
+#'
+#' @export
+#'
+#' @examples
+#' 
+regression_table <- function(df.stats) {
+    if (class(df.stats) == "list")
+        df.stats <- df.stats$stats
+    
+    df.stats %>%
+        ungroup() %>%
+        select(-starts_with("dummy")) %>%
+        mutate("$n$" = n,
+               "$r$" = cor,
+               "$r_\\text{loc}$" = cor.loc,
+               "RMSE (m)" = rmse,
+               "bias (m)" = bias,
+               fit = sanitize.numbers(sprintf("$y = %.2G x %s %.2G$ m",
+                                              slope * 1e-3,
+                                              ifelse(icpt < 0, "-", "+"),
+                                              abs(icpt)),
+                                      type = "latex",
+                                      math.style.exponents = "ensuremath"),
+               "RMSE(fit)" = rmse.fit) %>%
+        select(-(n:rmse.fit)) %>%
+        xtable::xtable(.,
+                       auto = TRUE,
+                       digits = 3,
+                       display = gsub("f", "G", xtable::xdisplay(.))) %>%
+        print(., sanitize.colnames.function = identity,
+              sanitize.text.function = identity,
+              floating = FALSE,
+              math.style.negative = TRUE,
+              math.style.exponents = TRUE,
+              include.rownames = FALSE,
+              hline.after = c(rep(-1, 2), 0, rep(nrow(.), 2)))
+}
