@@ -18,20 +18,24 @@ eval.metar <- function(df) {
                       caliop = cloud.base.altitude,
                       caliop.local = caliop) %>%
         dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
-        filter(ceilo < 5000, base < 3000) %>%
+        filter(ceilo < 5000, hgts.1 < 3000) %>%
         dplyr::filter(region == "K") -> test
         
     df %>%
         dplyr::mutate(ceilo = hgts.1 + elevation.m,
                       caliop = cloud.base.altitude,
                       caliop.local = caliop) %>%
+        dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
         dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
-        filter(ceilo < 5000, hgts.1 < 3000, caliop < 5, lays == 1) %>%
+        dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 5, lays == 1) %>%
+        dplyr::filter(feature.qa.lowest.cloud == "high") %>%
         dplyr::filter(region == "K") %>%
-        ## dplyr::mutate(## dist = cut(dist, quantile(dist)),
+        ## plotutils::discretize(dist, quantile(dist, seq(0, 1, 0.2)), as_factor = TRUE) %>%
+        dplyr::filter(dist < 50) %>%
+        plotutils::discretize(thickness, quantile(thickness, seq(0, 1, 0.2)), as_factor = TRUE) %>%
         ##     dummy = "",
         ##     dummy2 = "") %>%
-        dplyr::group_by(covs.1, feature.above.surface) %>%
+        dplyr::group_by(covs.1, thickness) %>%
         regression_plot(title = "test")
         
         dplyr::mutate(lon = lon.caliop, lat = lat.caliop) %>%
