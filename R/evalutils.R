@@ -158,7 +158,7 @@ regression_table <- function(df.stats) {
                "$r_\\text{loc}$" = cor.loc,
                "RMSE (m)" = rmse,
                "bias (m)" = bias,
-               fit = sanitize.numbers(sprintf("$y = %.2G x %s %.2G$ m",
+               fit = sanitize.numbers(sprintf("$y = %#.3G x %s %#.3G$ m",
                                               slope * 1e-3,
                                               ifelse(icpt < 0, "-", "+"),
                                               abs(icpt)),
