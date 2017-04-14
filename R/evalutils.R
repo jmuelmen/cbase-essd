@@ -149,6 +149,13 @@ sanitize.numbers <- function (str, type, math.style.negative = FALSE, math.style
 regression_table <- function(df.stats) {
     if (class(df.stats) == "list")
         df.stats <- df.stats$stats
+
+    ## add hlines between levels of the first grouping variable
+    group.diffs <- df.stats %>%
+        select(group1 = eval(parse(text = groups(df.stats)[[1]]))) %>%
+        as.data.frame() %>% ## needed for ordered factor comparison
+        mutate(group.diff = group1 != group1[2:(n() + 1)])
+    hlines <- which(group.diffs$group.diff)
     
     df.stats %>%
         ungroup() %>%
@@ -176,5 +183,6 @@ regression_table <- function(df.stats) {
               math.style.negative = TRUE,
               math.style.exponents = TRUE,
               include.rownames = FALSE,
-              hline.after = c(rep(-1, 2), 0, rep(nrow(.), 2)))
+              format.args = list(flag = "#"),
+              hline.after = c(rep(-1, 2), 0, hlines, rep(nrow(.), 2)))
 }
