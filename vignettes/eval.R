@@ -23,10 +23,14 @@ res$ggplot
 regression_table(res)
 
 ## ---- eval-lays ---------------------
-df %>%
+res <- df %>%
     dplyr::filter(feature.qa.lowest.cloud == "high") %>%
     dplyr::group_by(dummy, lays) %>%
     regression_plot(title = "lays")
+res$ggplot
+
+## ---- eval-lays-tbl ---------------------
+regression_table(res)
 
 ## ---- eval-cov-thick ---------------------
 res <- df %>%

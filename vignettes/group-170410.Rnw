@@ -1,5 +1,5 @@
 \PassOptionsToPackage{table}{xcolor}
-\documentclass[10pt,notes=all,aspectratio=169]{beamer}
+\documentclass[10pt,notes=all,aspectratio=1610]{beamer}
 \mode<presentation>
 \usepackage{alltt}
 \usepackage[utf8]{inputenc}
@@ -12,6 +12,7 @@
 \usepackage{tabularx}
 \usepackage{colortbl}
 \usepackage{pgfpages}
+\usepackage{adjustbox}
 
 \renewcommand\d[2]{\ensuremath{\frac{d#1}{d#2}}}
 \newcommand\dd[2]{\ensuremath{\frac{\partial#1}{\partial#2}}}
@@ -22,6 +23,7 @@
 %%\setbeameroption{show notes on second screen}
 
 \renewcommand{\sfdefault}{pfu}
+\newcommand{\degree}{\ensuremath{^\circ}}
 
 \title{CALIOP-based cloud base heights} \subtitle{} \date{23 January 2017}
 \author{Johannes, Odran}
@@ -60,14 +62,22 @@
 
 <<setup, include=FALSE, cache=FALSE>>=
 library(knitr)
+library(plyr)
+library(dplyr)
+library(ggplot2)
+library(cbasetools)
 ## set global chunk options
-opts_chunk$set(fig.path='figure/group-170410-', cache.path='cache/group-170410-', fig.align='center', fig.show='hold', par=TRUE)
+opts_chunk$set(fig.path='figure/group-170410-', cache.path='cache/group-170410-', fig.align='center', fig.show='hold', warning = FALSE, par=TRUE)
 ## I use = but I can replace it with <-; set code/output width to be 68
 options(formatR.arrow=TRUE, width=68, digits=4)
 ## tune details of base graphics (http://yihui.name/knitr/hooks)
 knit_hooks$set(par=function(before, options, envir){
 if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
 })
+## evaluation code chunks
+read_chunk("eval.R")
+## visualization code chunks
+read_chunk("vis.R")
 @
 
 \begin{frame}
@@ -88,28 +98,71 @@ if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1),cex.lab=.95,cex.axi
 %   %%question: can we see this globally in satellite observation?
 % \end{frame}
 
-\section{Motivation}
-\begin{frame}[fragile]{test}
-  blah blah blah
-  \begin{figure}
-<<cars-demo,dev='tikz',fig.width=3,fig.height=2.2,out.width='.45\\textwidth',message=FALSE,cache=TRUE>>=
-fit=lm(dist~speed,data=cars) # linear regression
-par(mar=c(4, 4, 1, .1), mgp=c(2,1,0))
-with(cars,plot(speed,dist,panel.last=abline(fit)))
-text(10,100,'$Y = \\beta_0 + \\beta_1x + \\epsilon$')
-library(ggplot2)
-qplot(exp(100 * speed - 3000), dist, data=cars)
-@
+\section{Method}
+\begin{frame}{Method}
+  \begin{itemize}
+  \item Use CALIOP
+  \item 
+  \end{itemize}
+  
+\end{frame}
 
-\caption{\label{fig:cars-demo}A simple demo of possible output in \textbf{knitr}:
-  (1) multiple plots per chunk; (2) no need to \emph{print()} objects
-  in \textbf{ggplot2}; (3) device size is $4\times2.8$ (inches) but
-  output size is adjusted to \texttt{.45\textbackslash{}textwidth} in
-  chunk options; (4) base graphics and \textbf{ggplot2} can sit side
-  by side; (5) use the \emph{tikz()} device in \textbf{tikzDevice} by
-  setting chunk option \texttt{dev='tikz'} (hence can write native \protect\LaTeX{}
-  expressions in R plots); (6) code highlighting.}
-\end{figure}
+\section{Geographical distributions}
+\begin{frame}[fragile]{Geographical distributions}
+  <<test,dev='tikz',cache=FALSE>>=
+  dev.cur()
+  @
+\end{frame}
+
+\begin{frame}[fragile]{Geographical distributions}
+  <<vis-cbase,cache=TRUE>>=
+  @
+\end{frame}
+
+\begin{frame}[fragile]{Geographical distributions}
+  With regular-sized text for comparison
+<<vis-cbase2,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+@
+\end{frame}
+
+%% \begin{frame}[fragile]{Geographical distributions}
+%%   With regular-sized text for comparison
+%% <<vis-cbase2,dev='tikz',fig.width=9,fig.height=6,out.width='0pt',message=FALSE,cache=TRUE,echo=TRUE,results='hide'>>=
+%% @
+%% \end{frame}
+
+\section{Evaluation with ceilometers}
+<<eval-setup,cache=TRUE>>=
+@ 
+\begin{frame}[fragile]{Evaluation with ceilometers}
+  <<eval-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Evaluation with ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-qual-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+\begin{frame}[fragile]{Evaluation with ceilometers}
+  <<eval-lays,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Evaluation with ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-cov-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+\begin{frame}[fragile]{Evaluation with ceilometers}
+  <<eval-cov-thick,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Evaluation with ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-cov-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
 \end{frame}
 \end{document}
 
