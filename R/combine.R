@@ -68,13 +68,13 @@ resolve <- function(df, resolution) {
 #' Combine METAR with cloud base retrievals
 #' 
 #' @export
-combine.cbase.metar <- function(metar = get.metar.2008(),
-                                cloudbase = dbtools::db_spec("cloud-bases-2008.sqlite", "cloudbase"),
+combine.cbase.metar <- function(eval = get.metar.2008(),
+                                retrieval = dbtools::db_spec("cloud-bases-2008.sqlite", "cloudbase"),
                                 resolution = resolution.min_cbh,
-                                n.cores = 72) {
+                                ncores = 72) {
 
     ## set up worker processes
-    cl <- snow::makeCluster(rep("localhost", n.cores), type = "SOCK", outfile = "snow.log")
+    cl <- snow::makeCluster(rep("localhost", ncores), type = "SOCK", outfile = "snow.log")
     on.exit({
         snow::stopCluster(cl)
     })
