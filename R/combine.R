@@ -11,25 +11,35 @@ combine.cbase <- function(df.eval, df.ret, max.dist) {
     
 }
 
-## in cases with multiple retrievals,
-## different resolution methods are possible:
-## * retrieval at minimum distance
-## ## dplyr::filter(dist == min(dist)) %>%
-## * retrieval at minimum cloud base height
-## ## dplyr::filter(dist < 100)  %>%
-## ## dplyr::filter(cloud.base.altitude == min(cloud.base.altitude))
-## * retrieval at minimum cloud base height
-##   subject to quality criteria
+#' Methods to resolve multiple retrievals at the same location
+#' 
+#' @param df Data frame containing multiple retrievals
+#' @return A \code{data.frame} containing the resolution of the
+#'     multiple retrievals (single retrieval)
+#' @name resolution
+NULL
+
+
+#' @describeIn resolution Retrieval at minimum distance
+#'
+#' @export
 resolution.min_dist <- function(df) {
     dplyr::filter(df, dist == min(dist))
 }
 
+#' @describeIn resolution Retrieval at minimum cloud base height
+#'
+#' @export
 resolution.min_cbh <- function(df) {
     df %>%
         dplyr::filter(dist < 100)  %>%
         dplyr::slice(which.min(cloud.base.altitude))
 }
 
+#' @describeIn resolution Retrieval at quantile of cloud base height
+#'
+#' @param prob Scalar numeric.  Quantile of cloud base altitude
+#' @export
 resolution.quantile_cbh <- function(prob) {
     function(df) {
         df %>%
@@ -37,6 +47,14 @@ resolution.quantile_cbh <- function(prob) {
             dplyr::slice(which.min(abs(cloud.base.altitude -
                                        quantile(cloud.base.altitude, prob))))
     }
+}
+
+#' @describeIn resolution Retrieval at minimum cloud base height subject to quality criteria
+#'
+resolution.min_cbh.qual <- function(df) {
+    df %>%
+        dplyr::filter(dist < 100)  %>%
+        dplyr::slice(which.min(cloud.base.altitude))
 }
 
 resolve <- function(df, resolution) {
