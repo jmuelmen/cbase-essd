@@ -105,7 +105,7 @@ combine.cbase.metar <- function(eval = get.metar.2008(),
                                 resolution_names,
                                 ncores = 72) {
     ## set up worker processes
-    cl <- snow::makeCluster(rep("localhost", ncores), type = "SOCK", outfile = "snow.log")
+    cl <- snow::makeCluster(rep("localhost", ncores), type = "SOCK", outfile = "/dev/null")
     on.exit({
         snow::stopCluster(cl)
     })
@@ -119,7 +119,7 @@ combine.cbase.metar <- function(eval = get.metar.2008(),
     })
 
     ## find A-Train point closest to each METAR
-    plyr::ddply(dplyr::slice(eval,1:100) %>% dplyr::mutate(datetime = as.numeric(datetime)),
+    plyr::ddply(dplyr::slice(eval) %>% dplyr::mutate(datetime = as.numeric(datetime)),
                 ~ station.icao + datetime + date + episode,
                 function(x, resolution, resolution_names) {
                     df %>%
