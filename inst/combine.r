@@ -29,8 +29,6 @@ spec = matrix(c(
     'resolution'        , 'x', 1, "character",  ""
 ), byrow=TRUE, ncol=5);
 
-print(commandArgs(TRUE));
-
 opt = getopt(spec, opt = commandArgs(TRUE));
 
 ## if help was asked for print a friendly message
@@ -52,10 +50,8 @@ args <- llply(opt, function(text) {
 if (is.null(args$method))
     args$method <- combine.cbase;
 
-resolution_names <- resolution.names(args$resolution);
-print(resolution_names);
-q();
-
+resolution_names <- eval(parse(text = sprintf("resolution.names(%s)", opt$resolution)));
+args$resolution_names <- resolution_names;
 
 ret <- do.call(args$method,  ## comination method
                args[!(names(args) %in% c("out.file", "method"))] ## all the other arguments
