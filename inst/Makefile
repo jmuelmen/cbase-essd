@@ -1,11 +1,14 @@
 COMBINE = ./combine.sh
-METARCOMBINEFLAGS = -n 72 --method=combine.cbase.metar.dummy \
+METARCOMBINEFLAGS = -n 72 --method=combine.cbase.metar \
 		--retrieval="list(filename='$<',table='cloudbase')" \
 		-o "'$@'"
 
 
 SRUNENV = SLURM_JOB_PARTITION=compute2 SLURM_CPU_FREQ_REQ=High
 SRUNFLAGS = -A bb0839 -p compute2 --time=08:00:00 --exclusive -N 1 --mem=250G
+
+cloud-bases-2008.sqlite:
+	ln -s $HOME/cloud-bases-2008.sqlite
 
 cbm-min_cbh.rds:	cloud-bases-2008.sqlite
 	@ echo using R to make $@ from $<
