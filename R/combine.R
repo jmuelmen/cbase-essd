@@ -92,11 +92,7 @@ resolution.names <- function(resolution) {
         if (is.null(fun.names))
             fun.names <- sub
         fun.names[fun.names == ""] <- sub[fun.names == ""]
-
-        ## apply sequentially, add names
-        ldply(seq_along(resolution), function(i) {
-            fun.name <- fun.names[i]
-        })
+        fun.names
     }
 }
 
@@ -108,10 +104,6 @@ combine.cbase.metar <- function(eval = get.metar.2008(),
                                 resolution,
                                 resolution_names,
                                 ncores = 72) {
-    ## find names of resolution functions
-    print(resolution_names)
-    return(resolution_names)
-    
     ## set up worker processes
     cl <- snow::makeCluster(rep("localhost", ncores), type = "SOCK", outfile = "snow.log")
     on.exit({
@@ -127,7 +119,7 @@ combine.cbase.metar <- function(eval = get.metar.2008(),
     })
 
     ## find A-Train point closest to each METAR
-    plyr::ddply(dplyr::slice(eval,100) %>% dplyr::mutate(datetime = as.numeric(datetime)),
+    plyr::ddply(dplyr::slice(eval,1:100) %>% dplyr::mutate(datetime = as.numeric(datetime)),
                 ~ station.icao + datetime + date + episode,
                 function(x, resolution, resolution_names) {
                     df %>%
