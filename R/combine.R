@@ -36,25 +36,29 @@ resolution.min_cbh <- function(df) {
         dplyr::slice(which.min(cloud.base.altitude))
 }
 
-#' @describeIn resolution Retrieval at quantile of cloud base height
-#'
-#' @param prob Scalar numeric.  Quantile of cloud base altitude
-#' @export
-resolution.quantile_cbh <- function(prob) {
-    function(df) {
-        df %>%
-            dplyr::filter(dist < 100)  %>%
-            dplyr::slice(which.min(abs(cloud.base.altitude -
-                                       quantile(cloud.base.altitude, prob))))
-    }
-}
-
 #' @describeIn resolution Retrieval at minimum cloud base height subject to quality criteria
 #'
 resolution.min_cbh.qual <- function(df) {
     df %>%
         dplyr::filter(dist < 100)  %>%
+        dplyr::filter(feature.qa.lowest.cloud %in% c("medium", "high")) %>%
+        dplyr::filter(cloud.top.altitude - cloud.base.altitude < 1) %>%
         dplyr::slice(which.min(cloud.base.altitude))
+}
+
+#' @describeIn resolution Retrieval at quantile of cloud base height
+#'
+#' @param prob Scalar numeric.  Quantile of cloud base altitude
+#' @export
+resolution.quantile_cbh.qual <- function(prob) {
+    function(df) {
+        df %>%
+            dplyr::filter(dist < 100)  %>%
+            dplyr::filter(feature.qa.lowest.cloud %in% c("medium", "high")) %>%
+            dplyr::filter(cloud.top.altitude - cloud.base.altitude < 1) %>%
+            dplyr::slice(which.min(abs(cloud.base.altitude -
+                                       quantile(cloud.base.altitude, prob))))
+    }
 }
 
 resolve <- function(df, resolution) {
