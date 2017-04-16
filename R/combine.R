@@ -120,7 +120,7 @@ combine.cbase.metar <- function(eval = get.metar.2008(),
                         dplyr::filter(time > x$datetime - 3600, time < x$datetime + 3600) %>%
                         dplyr::collect() %>%
                         dplyr::mutate(dist = cbasetools::dist.gc(lon, x$lon, lat, x$lat)) %>%
-                        resolve(df, resolution)
+                        resolve(resolution)
                 },
                 .progress = "text", .parallel = TRUE, resolution = resolution) -> ret
 
