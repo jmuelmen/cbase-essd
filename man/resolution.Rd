@@ -5,16 +5,16 @@
 \alias{resolution.min_cbh}
 \alias{resolution.min_cbh.qual}
 \alias{resolution.min_dist}
-\alias{resolution.quantile_cbh}
+\alias{resolution.quantile_cbh.qual}
 \title{Methods to resolve multiple retrievals at the same location}
 \usage{
 resolution.min_dist(df)
 
 resolution.min_cbh(df)
 
-resolution.quantile_cbh(prob)
-
 resolution.min_cbh.qual(df)
+
+resolution.quantile_cbh.qual(prob)
 }
 \arguments{
 \item{df}{Data frame containing multiple retrievals}
@@ -34,8 +34,8 @@ Methods to resolve multiple retrievals at the same location
 
 \item \code{resolution.min_cbh}: Retrieval at minimum cloud base height
 
-\item \code{resolution.quantile_cbh}: Retrieval at quantile of cloud base height
-
 \item \code{resolution.min_cbh.qual}: Retrieval at minimum cloud base height subject to quality criteria
+
+\item \code{resolution.quantile_cbh.qual}: Retrieval at quantile of cloud base height
 }}
 
