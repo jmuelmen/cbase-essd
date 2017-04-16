@@ -93,7 +93,8 @@ resolve <- function(df, resolution) {
 combine.cbase.metar <- function(eval = get.metar.2008(),
                                 retrieval = dbtools::db_spec("cloud-bases-2008.sqlite", "cloudbase"),
                                 resolution = resolution.min_cbh,
-                                ncores = 72) {
+                                ncores = 72,
+                                ...) {
 
     ## set up worker processes
     cl <- snow::makeCluster(rep("localhost", ncores), type = "SOCK", outfile = "snow.log")
