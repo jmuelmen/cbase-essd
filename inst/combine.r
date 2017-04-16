@@ -52,8 +52,13 @@ args <- llply(opt, function(text) {
 if (is.null(args$method))
     args$method <- combine.cbase;
 
+resolution_names <- resolution.names(args$resolution);
+print(resolution_names);
+q();
+
+
 ret <- do.call(args$method,  ## comination method
-               args[names(args) != "method"] ## all the other arguments
+               args[!(names(args) %in% c("out.file", "method"))] ## all the other arguments
                );
 
 if (!is.null(args$out.file)) {

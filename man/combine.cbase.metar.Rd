@@ -4,9 +4,9 @@
 \alias{combine.cbase.metar}
 \title{Combine METAR with cloud base retrievals}
 \usage{
-combine.cbase.metar(metar = get.metar.2008(),
-  cloudbase = dbtools::db_spec("cloud-bases-2008.sqlite", "cloudbase"),
-  n.cores = 72)
+combine.cbase.metar(eval = get.metar.2008(),
+  retrieval = dbtools::db_spec("cloud-bases-2008.sqlite", "cloudbase"),
+  resolution, resolution_names, ncores = 72)
 }
 \description{
 Combine METAR with cloud base retrievals

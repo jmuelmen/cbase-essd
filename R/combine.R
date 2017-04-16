@@ -77,6 +77,10 @@ resolve <- function(df, resolution, resolution_names) {
     }
 }
 
+#' Get resolution names from function or function list
+#'
+#' @param resolution Function or list of functions
+#' @export
 resolution.names <- function(resolution) {
     if (class(resolution) == "function") {
         fun.name <- as.character(substitute(resolution))
@@ -101,10 +105,10 @@ resolution.names <- function(resolution) {
 #' @export
 combine.cbase.metar <- function(eval = get.metar.2008(),
                                 retrieval = dbtools::db_spec("cloud-bases-2008.sqlite", "cloudbase"),
-                                resolution = resolution.min_cbh,
+                                resolution,
+                                resolution_names,
                                 ncores = 72) {
     ## find names of resolution functions
-    resolution_names <- resolution.names(resolution)
     print(resolution_names)
     return(resolution_names)
     
