@@ -8,11 +8,13 @@ combine.cbase.metar.dummy <-
     function(eval = get.metar.2008(),
              retrieval = dbtools::db_spec("cloud-bases-2008.sqlite", "cloudbase"),
              resolution = resolution.min_cbh,
-             ncores = 72) {
+             ncores = 72,
+             ...) {
         str(eval);
         print(retrieval);
         print(resolution);
         print(ncores);
+        return(resolution);
     }
 
 
@@ -26,6 +28,8 @@ spec = matrix(c(
     'retrieval'         , 'r', 1, "character",  "",
     'resolution'        , 'x', 1, "character",  ""
 ), byrow=TRUE, ncol=5);
+
+print(commandArgs(TRUE));
 
 opt = getopt(spec, opt = commandArgs(TRUE));
 
