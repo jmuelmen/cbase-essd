@@ -9,8 +9,8 @@ SRUNFLAGS = -A bb1002 -p compute --time=08:00:00 --exclusive -N 1 --mem=250G
 	env $(SRUNENV) srun $(SRUNFLAGS) \
 		$(COMBINE) $(COMBINEFLAGS) $(EXTRACOMBINEFLAGS) \
 		--method=combine.cbase.metar.dummy \
-		--retrieval="list(filename = \"$<\", table = 'cloudbase')" \
-		-o $@
+		--retrieval="list(filename='$<',table='cloudbase')" \
+		-o "'$@'"
 
 .PHONY:	all
 all:	cbm-min.rds
