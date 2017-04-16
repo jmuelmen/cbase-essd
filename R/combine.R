@@ -113,7 +113,7 @@ combine.cbase.metar <- function(eval = get.metar.2008(),
     })
 
     ## find A-Train point closest to each METAR
-    plyr::ddply(dplyr::slice(eval) %>% dplyr::mutate(datetime = as.numeric(datetime)),
+    plyr::ddply(dplyr::slice(eval,100) %>% dplyr::mutate(datetime = as.numeric(datetime)),
                 ~ station.icao + datetime + date + episode,
                 function(x, resolution) {
                     df %>%
