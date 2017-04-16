@@ -1,4 +1,4 @@
-#! /usr/bin/env Rscript --vanilla
+#! /usr/bin/Rscript --vanilla
 
 library(getopt)
 library(cbasetools)
@@ -22,6 +22,7 @@ spec = matrix(c(
     'help'              , 'h', 0, "logical",    "",
     'method'            , 'm', 1, "character",  "combination method; default: combine.cbase",
     'ncores'            , 'n', 1, "integer",    "default: 72",
+    'out.file'          , 'o', 1, "character",  "",
     'retrieval'         , 'r', 1, "character",  "",
     'resolution'        , 'x', 1, "character",  ""
 ), byrow=TRUE, ncol=5);
@@ -47,8 +48,12 @@ args <- llply(opt, function(text) {
 if (is.null(args$method))
     args$method <- combine.cbase;
 
-do.call(args$method,  ## comination method
-        args[-(names(args) == "method")] ## all the other arguments
-        );
+ret <- do.call(args$method,  ## comination method
+               args[names(args) != "method"] ## all the other arguments
+               );
+
+if (!is.null(args$out.file)) {
+    saveRDS(ret, args$out.file);
+}
 q();
 
