@@ -105,24 +105,24 @@ combine.cbase.metar <- function(eval = get.metar.2008(),
     doSNOW::registerDoSNOW(cl)
 
     snow::clusterExport(cl, "retrieval", environment())
-    snow::clusterExport(cl, "resolution", environment())
     snow::clusterEvalQ(cl, {
         library(dplyr)
         db <- dplyr::src_sqlite(retrieval$filename)
         df <- dplyr::tbl(db, retrieval$table)
+        NULL
     })
 
     ## find A-Train point closest to each METAR
     plyr::ddply(dplyr::slice(eval) %>% dplyr::mutate(datetime = as.numeric(datetime)),
                 ~ station.icao + datetime + date + episode,
-                function(x) {
+                function(x, resolution) {
                     df %>%
                         dplyr::filter(time > x$datetime - 3600, time < x$datetime + 3600) %>%
                         dplyr::collect() %>%
                         dplyr::mutate(dist = cbasetools::dist.gc(lon, x$lon, lat, x$lat)) %>%
                         resolve(df, resolution)
                 },
-                .progress = "text", .parallel = TRUE) -> ret
+                .progress = "text", .parallel = TRUE, resolution = resolution) -> ret
 
     ## extract METAR cloud-base information
     eval <- dplyr::bind_cols(eval, metar.to.cloud.heights(eval$metar, .parallel = TRUE))
