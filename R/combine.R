@@ -38,6 +38,7 @@ resolution.min_cbh <- function(df) {
 
 #' @describeIn resolution Retrieval at minimum cloud base height subject to quality criteria
 #'
+#' @export
 resolution.min_cbh.qual <- function(df) {
     df %>%
         dplyr::filter(dist < 100)  %>%
