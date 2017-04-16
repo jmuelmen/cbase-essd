@@ -62,12 +62,24 @@ resolution.quantile_cbh.qual <- function(prob) {
     }
 }
 
-resolve <- function(df, resolution) {
+resolve <- function(df, resolution, resolution_names) {
     if (class(resolution) == "function") {
-        ## apply, add name
-        fun.name <- as.character(substitute(resolution))
         resolution(df) %>%
-            mutate(resolution.method = fun.name)
+            mutate(resolution.method = resolution_names)
+    } else {
+        ## apply sequentially, add names
+        ldply(seq_along(resolution), function(i) {
+            fun <- resolution[[i]]
+            fun.name <- resolution_names[i]
+            fun(df) %>%
+                mutate(resolution.method = fun.name)
+        })
+    }
+}
+
+resolution.names <- function(resolution) {
+    if (class(resolution) == "function") {
+        fun.name <- as.character(substitute(resolution))
     } else {
         ## get names from names attribute
         fun.names <- names(resolution)
@@ -79,24 +91,23 @@ resolve <- function(df, resolution) {
 
         ## apply sequentially, add names
         ldply(seq_along(resolution), function(i) {
-            fun <- resolution[[i]]
             fun.name <- fun.names[i]
-            print(fun.name)
-            fun(df) %>%
-                mutate(resolution.method = fun.name)
         })
     }
 }
-    
+
 #' Combine METAR with cloud base retrievals
 #' 
 #' @export
 combine.cbase.metar <- function(eval = get.metar.2008(),
                                 retrieval = dbtools::db_spec("cloud-bases-2008.sqlite", "cloudbase"),
                                 resolution = resolution.min_cbh,
-                                ncores = 72,
-                                ...) {
-
+                                ncores = 72) {
+    ## find names of resolution functions
+    resolution_names <- resolution.names(resolution)
+    print(resolution_names)
+    return(resolution_names)
+    
     ## set up worker processes
     cl <- snow::makeCluster(rep("localhost", ncores), type = "SOCK", outfile = "snow.log")
     on.exit({
@@ -105,7 +116,6 @@ combine.cbase.metar <- function(eval = get.metar.2008(),
     doSNOW::registerDoSNOW(cl)
 
     snow::clusterExport(cl, "retrieval", environment())
-    snow::clusterExport(cl, "resolution", environment())
     snow::clusterEvalQ(cl, {
         library(dplyr)
         db <- dplyr::src_sqlite(retrieval$filename)
@@ -115,13 +125,15 @@ combine.cbase.metar <- function(eval = get.metar.2008(),
     ## find A-Train point closest to each METAR
     plyr::ddply(dplyr::slice(eval,100) %>% dplyr::mutate(datetime = as.numeric(datetime)),
                 ~ station.icao + datetime + date + episode,
-                function(x) {
+                function(x, resolution, resolution_names) {
                     df %>%
                         dplyr::filter(time > x$datetime - 3600, time < x$datetime + 3600) %>%
                         dplyr::collect() %>%
                         dplyr::mutate(dist = cbasetools::dist.gc(lon, x$lon, lat, x$lat)) %>%
-                        resolve(resolution)
+                        resolve(resolution, resolution_names)
                 },
+                resolution = resolution,
+                resolution_names = resolution_names,
                 .progress = "text", .parallel = TRUE) -> ret
 
     ## extract METAR cloud-base information
