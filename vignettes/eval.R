@@ -43,3 +43,52 @@ res$ggplot
 
 ## ---- eval-cov-thick-tbl ---------------------
 regression_table(res)
+
+## ---- eval-min-qual-setup ---------------------
+df <- readRDS("~/r-packages/cbm-min_cbh.qual.rds") %>%
+    factor.vfm() %>%
+    dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
+    dplyr::mutate(ceilo = hgts.1 + elevation.m,
+                  caliop = cloud.base.altitude,
+                  caliop.local = caliop) %>%
+    dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
+    mutate(dummy = "",
+           dummy2 = "") %>%
+    dplyr::filter(region == "K") %>%
+    dplyr::filter(dist < 50) %>%
+    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 5)
+
+## ---- eval-min-qual ---------------------
+res <- df %>%
+    ## filter(lays == 1) %>%
+    dplyr::group_by(dummy, feature.qa.lowest.cloud) %>%
+    regression_plot(title = NULL)
+res$ggplot
+
+## ---- eval-min-qual-tbl ---------------------
+regression_table(res)
+
+## ---- eval-quantiles-setup ---------------------
+df <- readRDS("~/r-packages/cbm-quantile_cbh.qual.rds") %>%
+    factor.vfm() %>%
+    dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
+    dplyr::mutate(ceilo = hgts.1 + elevation.m,
+                  caliop = cloud.base.altitude,
+                  caliop.local = caliop) %>%
+    dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
+    mutate(dummy = "",
+           dummy2 = "") %>%
+    dplyr::filter(region == "K") %>%
+    dplyr::filter(dist < 50) %>%
+    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 5)
+
+## ---- eval-quantiles-qual ---------------------
+res <- df %>%
+    ## filter(lays == 1) %>%
+    dplyr::mutate(resolution.method = sprintf("\\verb+%s+", resolution.method)) %>%
+    dplyr::group_by(dummy, resolution.method) %>%
+    regression_plot(title = NULL)
+res$ggplot
+
+## ---- eval-quantiles-qual-tbl ---------------------
+regression_table(res)
