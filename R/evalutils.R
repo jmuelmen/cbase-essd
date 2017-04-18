@@ -72,7 +72,7 @@ regression_plot <- function(df, title, xlab = "50 km running mean CALIOP base (k
     stats.n <- summarize(df, n = n())
     print(stats.n)
     gg <- ggplot2::ggplot(df, ggplot2::aes(caliop, ceilo)) +
-        (if (max(stats.n$n) < 1e4)
+        (if (max(stats.n$n) < 1e3)
              ggplot2::geom_point(pch = ".")
          else
              ggplot2::stat_bin2d()) +
