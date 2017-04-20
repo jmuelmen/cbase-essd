@@ -2,6 +2,7 @@
 
 library(getopt)
 library(plyr)
+library(methods)
 
 spec = matrix(c(
 ##    'verbose', 'v', 2, "integer",
