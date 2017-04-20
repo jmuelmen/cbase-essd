@@ -16,7 +16,9 @@ Imports:
     doSNOW,
     snow,
     xtable,
-    hdf
+    hdf,
+    getopt,
+    RSQLite
 RoxygenNote: 5.0.1
 Suggests: knitr,
     rmarkdown
