@@ -1,3 +1,25 @@
+#' Get METARs at A-Train overpass locations (2007)
+#' 
+#' @export
+#'
+#'
+get.metar.2007 <- function() {
+    data(metar.2007, envir = environment())
+    metar.2008 %>%
+        dplyr::filter(valid) %>%
+        dplyr::transmute(station.icao = trim(station.icao),
+                         station.name = factor(station.name),
+                         date = date,
+                         datetime = as.POSIXct(DateUTC, tz = "UTC"),
+                         episode = episode,
+                         metar = metar) %>%
+        dplyr::left_join(stations.metar() %>%
+                         dplyr::select(-station.name) %>%
+                         dplyr::mutate(station.icao = as.character(station.icao)),
+                         by = "station.icao") %>%
+        dplyr::mutate(station.icao = factor(station.icao))
+}
+
 #' Get METARs at A-Train overpass locations (2008)
 #' 
 #' @export
