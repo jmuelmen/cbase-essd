@@ -1,5 +1,5 @@
 COMBINE = ./combine.sh
-METARCOMBINEFLAGS = -n 2 --method=combine.cbase.metar \
+METARCOMBINEFLAGS = -n 72 --method=combine.cbase.metar \
 		--retrieval="list(filename='$<',table='cloudbase')" \
 		-o "'$@'"
 
@@ -15,25 +15,25 @@ cloud-bases-2007.sqlite:	$(HOME)/r-packages/cloud-bases-2007.sqlite
 	ln -s $<
 
 cloud-bases-2008.sqlite:
-	ln -s $(HOME)/r-packages/cloud-bases-2008.sqlite
+	ln -s $(HOME)/cloud-bases-2008.sqlite
 
 cbm-min_cbh.rds:	cloud-bases-2008.sqlite
 	@ echo using R to make $@ from $<
-## env $(SRUNENV) srun $(SRUNFLAGS) 
+	env $(SRUNENV) srun $(SRUNFLAGS) \
 		$(COMBINE) $(METARCOMBINEFLAGS) \
 		--resolution=resolution.min_cbh
 
 cbm-min_cbh.qual.rds:	cloud-bases-2008.sqlite
 	@ echo using R to make $@ from $<
-## env $(SRUNENV) srun $(SRUNFLAGS) 
+	env $(SRUNENV) srun $(SRUNFLAGS) \
 		$(COMBINE) $(METARCOMBINEFLAGS) \
 		--resolution=resolution.min_cbh.qual
 
 cbm-quantile_cbh.qual.rds:	cloud-bases-2008.sqlite
 	@ echo using R to make $@ from $<
-## 	env $(SRUNENV) srun $(SRUNFLAGS) 
+	env $(SRUNENV) srun $(SRUNFLAGS) \
 		$(COMBINE) $(METARCOMBINEFLAGS) \
-		--resolution="c(q0.01=resolution.quantile_cbh.qual(0.01),resolution.quantile_cbh.qual(0.02),resolution.quantile_cbh.qual(0.05),resolution.quantile_cbh.qual(0.1),resolution.quantile_cbh.qual(0.2))"
+		--resolution="c(resolution.quantile_cbh.qual(0.01),resolution.quantile_cbh.qual(0.02),resolution.quantile_cbh.qual(0.05),resolution.quantile_cbh.qual(0.1),resolution.quantile_cbh.qual(0.2))"
 
 
 .PHONY:	all
