@@ -6,12 +6,12 @@ METARCOMBINEFLAGS = -n 72 --method=combine.cbase.metar \
 SQLIZE = ./sqlize.sh
 
 SRUNENV = SLURM_JOB_PARTITION=compute2 SLURM_CPU_FREQ_REQ=High
-SRUNFLAGS = -A bb0839 -p compute2 --time=08:00:00 --exclusive -N 1 --mem=250G
+SRUNFLAGS = -A bb1002 -p compute2 --time=08:00:00 --exclusive -N 1 --mem=250G
 
-$(HOME)/r-packages/cloud-bases-2007.sqlite:	$(HOME)/cloud-bases-2007.rds
+$(HOME)/cloud-bases-2007.sqlite:	$(HOME)/cloud-bases-2007.rds
 	$(SQLIZE) -i "'$<'" -o "'$@'" -t "'cloudbase'" -x 'list("lon","lat","time")'
 
-cloud-bases-2007.sqlite:	$(HOME)/r-packages/cloud-bases-2007.sqlite
+cloud-bases-2007.sqlite:	$(HOME)/cloud-bases-2007.sqlite
 	ln -s $<
 
 cloud-bases-2008.sqlite:
