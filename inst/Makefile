@@ -35,6 +35,13 @@ cbm-quantile_cbh.qual.rds:	cloud-bases-2008.sqlite
 		$(COMBINE) $(METARCOMBINEFLAGS) \
 		--resolution="c(resolution.quantile_cbh.qual(0.01),resolution.quantile_cbh.qual(0.02),resolution.quantile_cbh.qual(0.05),resolution.quantile_cbh.qual(0.1),resolution.quantile_cbh.qual(0.2))"
 
+cbm-min_cbh-2007.rds:	cloud-bases-2007.sqlite
+	@ echo using R to make $@ from $<
+	env $(SRUNENV) srun $(SRUNFLAGS) \
+		$(COMBINE) $(METARCOMBINEFLAGS) \
+		--resolution=resolution.min_cbh \
+		--eval="get.metar.2007()"
+
 
 .PHONY:	all
 all:	cbm-min_cbh.rds cbm-min_cbh.qual.rds cbm-quantile_cbh.qual.rds
