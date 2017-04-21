@@ -5,7 +5,7 @@
 #'
 get.metar.2007 <- function() {
     data(metar.2007, envir = environment())
-    metar.2008 %>%
+    metar.2007 %>%
         dplyr::filter(valid) %>%
         dplyr::transmute(station.icao = trim(station.icao),
                          station.name = factor(station.name),
