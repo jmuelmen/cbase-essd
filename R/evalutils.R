@@ -71,6 +71,14 @@ regression_plot <- function(df, title, xlab = "50 km running mean CALIOP base (k
     stats <- statistify(df)
     stats.n <- summarize(df, n = n())
     print(stats.n)
+    
+    ## df.prof <- df %>%
+    ##     plotutils::discretize(caliop, 30) %>%
+    ##     dplyr::group_by_(c(dplyr::groups(df), expression(caliop))) %>%
+    ##     dplyr::summarize(mean = mean(ceilo),
+    ##                      sd = sd(ceilo)) 
+    ## str(df.prof)
+    
     gg <- ggplot2::ggplot(df, ggplot2::aes(caliop, ceilo)) +
         (if (max(stats.n$n) < 1e3)
              ggplot2::geom_point(pch = ".")
@@ -88,6 +96,9 @@ regression_plot <- function(df, title, xlab = "50 km running mean CALIOP base (k
                                                     n, cor.loc, cor, slope, icpt, rmse.fit, rmse, bias))),
                            size = 4, vjust = 0, hjust = 1, parse = TRUE) +
         ggplot2::scale_fill_distiller(palette = "GnBu") +
+        ## ggplot2::geom_pointrange(ggplot2::aes(x = caliop, y = mean,
+        ##                                      ymin = mean - sd, ymax = mean + sd),
+        ##                          df.prof) +
         ggplot2::theme_bw()
     ## print(gg)
     return(list(stats = stats, ggplot = gg))
