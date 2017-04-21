@@ -5,6 +5,7 @@
 #' @export
 vis.geo <- function(df) {
     df %>%
+        ## dplyr::mutate(lon = lon.caliop, lat = lat.caliop) %>%
         plotutils::discretize(lon, 180) %>%
         plotutils::discretize(lat, 90) %>%
         group_by(lon, lat, feature.qa.lowest.cloud, feature.above.surface) %>%

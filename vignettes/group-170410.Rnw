@@ -132,10 +132,10 @@ read_chunk("vis.R")
 %% \end{frame}
 
 \section{Comparing lowest CALIOP CBH to ceilometers}
-<<eval-setup,cache=TRUE>>=
+<<eval-setup,cache=FALSE>>=
 @ 
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  <<eval-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  <<eval-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
 \end{frame}
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
@@ -145,7 +145,7 @@ read_chunk("vis.R")
   \end{adjustbox}
 \end{frame}
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  <<eval-lays,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  <<eval-lays,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
 \end{frame}
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
@@ -155,7 +155,7 @@ read_chunk("vis.R")
   \end{adjustbox}
 \end{frame}
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  <<eval-cov-thick,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  <<eval-cov-thick,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
 \end{frame}
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
@@ -166,10 +166,10 @@ read_chunk("vis.R")
 \end{frame}
 
 \section{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-<<eval-min-qual-setup,cache=TRUE>>=
+<<eval-min-qual-setup,cache=FALSE>>=
 @ 
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-  <<eval-min-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  <<eval-min-qual,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
 \end{frame}
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
@@ -178,12 +178,46 @@ read_chunk("vis.R")
     @
   \end{adjustbox}
 \end{frame}
+\begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers}
+  <<eval-min-qual-cor,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-min-qual-cor-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+
+\section{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
+<<eval-min-qual-2007-setup,cache=FALSE>>=
+@ 
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
+  <<eval-min-qual-2007,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-min-qual-2007-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+\begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers -- 2008 correction applied to 2007}
+  <<eval-min-qual-2007-cor,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers -- 2008 correction applied to 2007}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-min-qual-2007-cor-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
 
 \section{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
-<<eval-quantiles-setup,cache=TRUE>>=
+<<eval-quantiles-setup,cache=FALSE>>=
 @ 
 \begin{frame}[fragile]{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
-  <<eval-quantiles-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  <<eval-quantiles-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
 \end{frame}
 \begin{frame}[fragile]{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
@@ -192,25 +226,7 @@ read_chunk("vis.R")
     @
   \end{adjustbox}
 \end{frame}
-\end{document}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-  <<eval-lays,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
-  @
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-    <<eval-cov-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-    @
-  \end{adjustbox}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-  <<eval-cov-thick,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
-  @
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-    <<eval-cov-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-    @
-  \end{adjustbox}
-\end{frame}
+<<glorious-victory,cache=FALSE,echo=FALSE>>=
+@ 
+
 \end{document}

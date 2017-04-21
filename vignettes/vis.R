@@ -14,7 +14,7 @@ gc()
 
 ## ---- vis-cbase2 ---------------------
 df %>%
-    ## filter(feature.above.surface %in% c("cloud", "clear air"),
+    filter(!feature.above.surface %in% c("invalid", "cloud")) %>%
     ##        feature.qa.lowest.cloud == "high") %>%
     ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = cloud.base.height)) +
     ggplot2::geom_raster() +
@@ -22,5 +22,6 @@ df %>%
     plotutils::geom_world_polygon() +
     plotutils::scale_x_geo(facet = TRUE) +
     plotutils::scale_y_geo() +
+    ggplot2::coord_fixed(ratio = 1, expand = FALSE) +
     ggplot2::facet_grid(feature.qa.lowest.cloud ~ feature.above.surface) +
     ggplot2::theme_bw()
