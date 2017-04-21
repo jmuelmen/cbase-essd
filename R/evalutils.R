@@ -95,7 +95,7 @@ regression_plot <- function(df, title, xlab = "50 km running mean CALIOP base (k
                                     label = gsub("NA", "'NA'", sprintf("atop(atop(italic(n) == %.0f, italic(r)[loc] == %.2f~ italic(r)[fit] == %.2f), atop(italic(y) == %4.0f* x + %4.0f ~ fit ~ RMSE == %4.0f~m, RMSE == %4.0f~ m~bias == %4.0f~m))",
                                                     n, cor.loc, cor, slope, icpt, rmse.fit, rmse, bias))),
                            size = 4, vjust = 0, hjust = 1, parse = TRUE) +
-        ggplot2::scale_fill_distiller(palette = "GnBu") +
+        ggplot2::scale_fill_distiller(palette = "GnBu", trans = "log10") +
         ## ggplot2::geom_pointrange(ggplot2::aes(x = caliop, y = mean,
         ##                                      ymin = mean - sd, ymax = mean + sd),
         ##                          df.prof) +
