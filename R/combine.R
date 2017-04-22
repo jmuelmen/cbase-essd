@@ -33,7 +33,7 @@ resolution.min_dist <- function(df) {
 resolution.min_cbh <- function(df) {
     df %>%
         dplyr::filter(dist < 100)  %>%
-        dplyr::slice(which.min(cloud.base.altitude))
+        dplyr::filter(cloud.base.altitude == min(cloud.base.altitude))
 }
 
 #' @describeIn resolution Retrieval at minimum cloud base height subject to quality criteria
