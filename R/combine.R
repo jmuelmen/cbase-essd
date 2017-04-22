@@ -64,15 +64,22 @@ resolution.quantile_cbh.qual <- function(prob) {
 
 resolve <- function(df, resolution, resolution_names) {
     if (class(resolution) == "function") {
-        resolution(df) %>%
-            mutate(resolution.method = resolution_names)
+        df %>%
+            dplyr::mutate(resolution.in = n()) %>%
+            resolution() %>%
+            mutate(resolution.method = resolution_names,
+                   resolution.out = n())
+
     } else {
         ## apply sequentially, add names
         ldply(seq_along(resolution), function(i) {
             fun <- resolution[[i]]
             fun.name <- resolution_names[i]
-            fun(df) %>%
-                mutate(resolution.method = fun.name)
+            df %>%
+                dplyr::mutate(resolution.in = n()) %>%
+                fun() %>%
+                mutate(resolution.method = fun.name,
+                       resolution.out = n())
         })
     }
 }
