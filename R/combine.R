@@ -20,6 +20,14 @@ combine.cbase <- function(df.eval, df.ret, max.dist) {
 NULL
 
 
+#' @describeIn resolution All retrieval within 100 km
+#'
+#' @export
+resolution.all <- function(df) {
+    df %>%
+        dplyr::filter(dist < 100)
+}
+
 #' @describeIn resolution Retrieval at minimum distance
 #'
 #' @export

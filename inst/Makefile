@@ -17,6 +17,18 @@ cloud-bases-2007.sqlite:	$(HOME)/cloud-bases-2007.sqlite
 cloud-bases-2008.sqlite:
 	ln -s $(HOME)/cloud-bases-2008.sqlite
 
+cbm-all.rds:	cloud-bases-2008.sqlite
+	@ echo using R to make $@ from $<
+	env $(SRUNENV) srun $(SRUNFLAGS) \
+		$(COMBINE) $(METARCOMBINEFLAGS) \
+		--resolution=resolution.all
+
+cbm-min_dist.rds:	cloud-bases-2008.sqlite
+	@ echo using R to make $@ from $<
+	env $(SRUNENV) srun $(SRUNFLAGS) \
+		$(COMBINE) $(METARCOMBINEFLAGS) \
+		--resolution=resolution.min_dist
+
 cbm-min_cbh.rds:	cloud-bases-2008.sqlite
 	@ echo using R to make $@ from $<
 	env $(SRUNENV) srun $(SRUNFLAGS) \

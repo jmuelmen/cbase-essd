@@ -2,12 +2,15 @@
 % Please edit documentation in R/combine.R
 \name{resolution}
 \alias{resolution}
+\alias{resolution.all}
 \alias{resolution.min_cbh}
 \alias{resolution.min_cbh.qual}
 \alias{resolution.min_dist}
 \alias{resolution.quantile_cbh.qual}
 \title{Methods to resolve multiple retrievals at the same location}
 \usage{
+resolution.all(df)
+
 resolution.min_dist(df)
 
 resolution.min_cbh(df)
@@ -30,6 +33,8 @@ Methods to resolve multiple retrievals at the same location
 }
 \section{Functions}{
 \itemize{
+\item \code{resolution.all}: All retrieval within 100 km
+
 \item \code{resolution.min_dist}: Retrieval at minimum distance
 
 \item \code{resolution.min_cbh}: Retrieval at minimum cloud base height
