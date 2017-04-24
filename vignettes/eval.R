@@ -1,5 +1,5 @@
 ## ---- eval-setup ---------------------
-df <- readRDS("~/r-packages/cbm-min.rds") %>%
+df <- readRDS("~/r-packages/cbm-all.rds") %>%
     factor.vfm() %>%
     dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
     dplyr::mutate(ceilo = hgts.1 + elevation.m,
@@ -10,7 +10,9 @@ df <- readRDS("~/r-packages/cbm-min.rds") %>%
            dummy2 = "") %>%
     dplyr::filter(region == "K") %>%
     dplyr::filter(dist < 50) %>%
-    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
+    dplyr::filter(ceilo < 3000, hgts.1 < 3000, caliop < 3) %>%
+    group_by(station.icao, datetime, date, episode) ## %>%
+    ## slice(1)
     
 ## ---- eval-qual ---------------------
 res <- df %>%
@@ -184,4 +186,4 @@ regression_table(res)
 
 ## ---- glorious-victory ---------------------
 library(beepr)
-beep("fanfare")
+beep(0)
