@@ -226,6 +226,21 @@ read_chunk("vis.R")
     @
   \end{adjustbox}
 \end{frame}
+
+\section{Comparing CloudSat/CALIPSO to ceilometers}
+<<eval-2bgeoprof-setup,cache=FALSE>>=
+@ 
+\begin{frame}[fragile]{Comparing CloudSat/CALIPSO to ceilometers}
+  <<eval-2bgeoprof,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing CloudSat/CALIPSO to ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+
 <<glorious-victory,cache=FALSE,echo=FALSE>>=
 @ 
 

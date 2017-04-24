@@ -145,6 +145,31 @@ res$ggplot
 ## ---- eval-min-qual-2007-cor-tbl ---------------------
 regression_table(res)
 
+## ---- eval-2bgeoprof-setup --------------------
+df.comp <- readRDS("~/r-packages/atrain-2bgeoprof-metar-comp-2008.rds")[,-c(10:11)]
+df.2bgeoprof <- filter(df.comp, !is.na(base.1)) %>% 
+    mutate(ceilo = base + elev, caliop = base.1 * 1e-3, caliop.local = base.1 * 1e-3) %>%
+    filter(ceilo < 5000, base < 3000, caliop < 3) %>%
+    mutate(region = factor(substr(station.icao, 1,1)),
+           type = factor(type, levels = c("FEW", "SCT", "BKN", "OVC"), ordered = TRUE),
+           flag.base = factor(flag.base, levels = 0:3, labels = c("None", "Radar", "Lidar", "Radar+Lidar")),
+           station.dist.dec = cut(station.dist.km, breaks = c(0,20,40,70,100))) %>%
+    mutate(dummy = "",
+           dummy2 = "") %>%
+    filter(!is.na(type), region == "K", flag.base %in% c("Radar", "Lidar"))
+
+## ---- eval-2bgeoprof --------------------
+res <- df.2bgeoprof %>%
+    ## filter(lays == 1) %>%
+    dplyr::group_by(dummy, ## dummy2) %>%
+        ## lays,
+                    flag.base) %>%
+    regression_plot(title = NULL)
+res$ggplot
+
+## ---- eval-2bgeoprof-tbl --------------------
+regression_table(res)
+
 ## ---- glorious-victory ---------------------
 library(beepr)
 beep("fanfare")
