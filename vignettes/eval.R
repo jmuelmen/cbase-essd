@@ -22,6 +22,18 @@ res$ggplot
 ## ---- eval-qual-tbl ---------------------
 regression_table(res)
 
+## ---- eval-mult ---------------------
+res <- df %>%
+    ## filter(lays == 1) %>%
+    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
+    plotutils::discretize(resolution.out, quantile(resolution.out, seq(0, 1, 0.2)), as_factor = TRUE) %>%
+    dplyr::group_by(lays, resolution.out) %>%
+    regression_plot(title = "resolution.out")
+res$ggplot
+
+## ---- eval-mult-tbl ---------------------
+regression_table(res)
+
 ## ---- eval-lays ---------------------
 res <- df %>%
     dplyr::filter(feature.qa.lowest.cloud == "high") %>%

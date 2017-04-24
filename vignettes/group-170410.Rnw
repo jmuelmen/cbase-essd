@@ -145,6 +145,16 @@ read_chunk("vis.R")
   \end{adjustbox}
 \end{frame}
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  <<eval-mult,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-mult-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
   <<eval-lays,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
 \end{frame}
