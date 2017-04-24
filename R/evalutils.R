@@ -86,7 +86,7 @@ regression_plot <- function(df, title, xlab = "50 km running mean CALIOP base (k
              ggplot2::stat_bin2d()) +
         ggplot2::stat_density2d(geom = "density2d") +
         ggplot2::stat_smooth(method = "lm", col = "red", fill = "red", formula = y ~ x) +
-        ggplot2::stat_smooth(method = "loess", col = "blue", fill = "blue", formula = y ~ x) +
+        ggplot2::stat_smooth(method = "auto", col = "blue", fill = "blue", formula = y ~ x) +
         ggplot2::geom_abline(intercept = 0, slope = 1000, lty = "dashed", col = "lightgrey") +
         ggplot2::coord_cartesian(ylim = c(-500,5500)) +
         ggplot2::facet_grid(dplyr::groups(df)) +
