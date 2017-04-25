@@ -9,14 +9,14 @@ df <- readRDS("~/r-packages/cbm-all.rds") %>%
     mutate(dummy = "",
            dummy2 = "") %>%
     dplyr::filter(region == "K") %>%
-    dplyr::filter(dist < 50) %>%
-    dplyr::filter(ceilo < 3000, hgts.1 < 3000, caliop < 3) %>%
-    group_by(station.icao, datetime, date, episode) ## %>%
+    ## dplyr::filter(dist < 50) %>%
+    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3) ## %>%
+    ## group_by(station.icao, datetime, date, episode) ## %>%
     ## slice(1)
     
 ## ---- eval-qual ---------------------
 res <- df %>%
-    filter(lays == 1) %>%
+    ## filter(lays == 1) %>%
     dplyr::group_by(dummy, feature.qa.lowest.cloud) %>%
     regression_plot(title = "feature.qa.lowest.cloud")
 res$ggplot
@@ -24,22 +24,98 @@ res$ggplot
 ## ---- eval-qual-tbl ---------------------
 regression_table(res)
 
+## ---- eval-dist ---------------------
+res <- df %>%
+    ## filter(lays == 1) %>%
+    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
+    plotutils::discretize(dist, quantile(dist, seq(0, 1, 0.2)), as_factor = TRUE) %>%
+    dplyr::group_by(dummy, dist) %>%
+    regression_plot(title = "dist")
+res$ggplot
+
+## ---- eval-dist-tbl ---------------------
+regression_table(res)
+
+## ---- eval-deltat ---------------------
+res <- df %>%
+    ## filter(lays == 1) %>%
+    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
+    dplyr::mutate(delta.t = as.numeric(datetime) - time) %>%
+    plotutils::discretize(delta.t, quantile(delta.t, seq(0, 1, 0.2)), as_factor = TRUE) %>%
+    dplyr::group_by(dummy, delta.t) %>%
+    regression_plot(title = "$\\Delta t$")
+res$ggplot
+
+## ---- eval-deltat-tbl ---------------------
+regression_table(res)
+
 ## ---- eval-mult ---------------------
 res <- df %>%
     ## filter(lays == 1) %>%
     dplyr::filter(feature.qa.lowest.cloud == "high") %>%
     plotutils::discretize(resolution.out, quantile(resolution.out, seq(0, 1, 0.2)), as_factor = TRUE) %>%
-    dplyr::group_by(lays, resolution.out) %>%
-    regression_plot(title = "resolution.out")
+    dplyr::group_by(dummy, resolution.out) %>%
+    regression_plot(title = "$n_\\text{ret}$")
 res$ggplot
 
 ## ---- eval-mult-tbl ---------------------
 regression_table(res)
 
+## ---- eval-thick ---------------------
+res <- df %>%
+    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
+    plotutils::discretize(thickness, quantile(thickness, seq(0, 1, 0.2)), as_factor = TRUE) %>%
+    dplyr::group_by(dummy, thickness) %>%
+    regression_plot(title = "thickness")
+res$ggplot
+
+## ---- eval-thick-tbl ---------------------
+regression_table(res)
+
+## ---- eval-phase ---------------------
+res <- df %>%
+    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
+    dplyr::group_by(dummy, phase.lowest.cloud) %>%
+    regression_plot(title = "phase.lowest.cloud")
+res$ggplot
+
+## ---- eval-phase-tbl ---------------------
+regression_table(res)
+
+## ---- eval-feature ---------------------
+res <- df %>%
+    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
+    dplyr::group_by(dummy, feature.above.surface) %>%
+    regression_plot(title = "feature.above.surface")
+res$ggplot
+
+## ---- eval-feature-tbl ---------------------
+regression_table(res)
+
+## ---- eval-averaging ---------------------
+res <- df %>%
+    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
+    dplyr::group_by(dummy, horizontal.averaging.lowest.cloud.min) %>%
+    regression_plot(title = "horizontal averaging distance")
+res$ggplot
+
+## ---- eval-averaging-tbl ---------------------
+regression_table(res)
+
+## ---- eval-best-case-setup --------------------
+df <- filter(df,
+             dist < 40,
+             feature.qa.lowest.cloud == "high",
+             resolution.out > 400,
+             thickness < 1,
+             phase.lowest.cloud != "horizontally oriented ice",
+             !(feature.above.surface %in% c("invalid", "no signal")),
+             horizontal.averaging.lowest.cloud.min < "5 km")
+
 ## ---- eval-lays ---------------------
 res <- df %>%
     dplyr::filter(feature.qa.lowest.cloud == "high") %>%
-    dplyr::group_by(dummy, lays) %>%
+    dplyr::group_by(dummy, dummy2) %>%
     regression_plot(title = "lays")
 res$ggplot
 

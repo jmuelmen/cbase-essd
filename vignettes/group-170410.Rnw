@@ -145,6 +145,26 @@ read_chunk("vis.R")
   \end{adjustbox}
 \end{frame}
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  <<eval-dist,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-dist-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  <<eval-deltat,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-deltat-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
   <<eval-mult,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
 \end{frame}
@@ -155,101 +175,143 @@ read_chunk("vis.R")
   \end{adjustbox}
 \end{frame}
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  <<eval-thick,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  <<eval-phase,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-phase-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  <<eval-feature,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-feature-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  <<eval-averaging,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+\end{frame}
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+  \begin{adjustbox}{max width=\textwidth}
+    <<eval-averaging-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    @
+  \end{adjustbox}
+\end{frame}
+<<eval-best-case-setup,cache=FALSE>>=
+@ 
+\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
   <<eval-lays,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
 \end{frame}
 \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
   \begin{adjustbox}{max width=\textwidth}
-    <<eval-cov-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+    <<eval-lays-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
     @
   \end{adjustbox}
 \end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  <<eval-cov-thick,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  @
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-    <<eval-cov-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-    @
-  \end{adjustbox}
-\end{frame}
+%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+%%   <<eval-cov-thick,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-cov-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
 
-\section{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-<<eval-min-qual-setup,cache=FALSE>>=
-@ 
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-  <<eval-min-qual,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  @
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-    <<eval-min-qual-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-    @
-  \end{adjustbox}
-\end{frame}
-\begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers}
-  <<eval-min-qual-cor,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  @
-\end{frame}
-\begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-    <<eval-min-qual-cor-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-    @
-  \end{adjustbox}
-\end{frame}
+%% \section{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
+%% <<eval-min-qual-setup,cache=FALSE>>=
+%% @ 
+%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
+%%   <<eval-min-qual,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-min-qual-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers}
+%%   <<eval-min-qual-cor,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-min-qual-cor-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
 
-\section{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
-<<eval-min-qual-2007-setup,cache=FALSE>>=
-@ 
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
-  <<eval-min-qual-2007,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  @
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
-  \begin{adjustbox}{max width=\textwidth}
-    <<eval-min-qual-2007-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-    @
-  \end{adjustbox}
-\end{frame}
-\begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers -- 2008 correction applied to 2007}
-  <<eval-min-qual-2007-cor,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  @
-\end{frame}
-\begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers -- 2008 correction applied to 2007}
-  \begin{adjustbox}{max width=\textwidth}
-    <<eval-min-qual-2007-cor-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-    @
-  \end{adjustbox}
-\end{frame}
+%% \section{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
+%% <<eval-min-qual-2007-setup,cache=FALSE>>=
+%% @ 
+%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
+%%   <<eval-min-qual-2007,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-min-qual-2007-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers -- 2008 correction applied to 2007}
+%%   <<eval-min-qual-2007-cor,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers -- 2008 correction applied to 2007}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-min-qual-2007-cor-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
 
-\section{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
-<<eval-quantiles-setup,cache=FALSE>>=
-@ 
-\begin{frame}[fragile]{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
-  <<eval-quantiles-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  @
-\end{frame}
-\begin{frame}[fragile]{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-    <<eval-quantiles-qual-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-    @
-  \end{adjustbox}
-\end{frame}
+%% \section{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
+%% <<eval-quantiles-setup,cache=FALSE>>=
+%% @ 
+%% \begin{frame}[fragile]{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
+%%   <<eval-quantiles-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-quantiles-qual-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
 
-\section{Comparing CloudSat/CALIPSO to ceilometers}
-<<eval-2bgeoprof-setup,cache=FALSE>>=
-@ 
-\begin{frame}[fragile]{Comparing CloudSat/CALIPSO to ceilometers}
-  <<eval-2bgeoprof,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  @
-\end{frame}
-\begin{frame}[fragile]{Comparing CloudSat/CALIPSO to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-    <<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-    @
-  \end{adjustbox}
-\end{frame}
+%% \section{Comparing CloudSat/CALIPSO to ceilometers}
+%% <<eval-2bgeoprof-setup,cache=FALSE>>=
+%% @ 
+%% \begin{frame}[fragile]{Comparing CloudSat/CALIPSO to ceilometers}
+%%   <<eval-2bgeoprof,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{Comparing CloudSat/CALIPSO to ceilometers}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
 
 <<glorious-victory,cache=FALSE,echo=FALSE>>=
 @ 
