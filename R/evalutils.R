@@ -67,7 +67,7 @@ statistify.df <- function(df) {
 #'
 #' @examples
 #' 
-regression_plot <- function(df, title, xlab = "50 km running mean CALIOP base (km)") {
+regression_plot <- function(df, title, xlab = "CALIOP base retrieval (km)") {
     stats <- statistify(df)
     stats.n <- summarize(df, n = n())
     print(stats.n)
