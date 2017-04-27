@@ -10,5 +10,88 @@ NULL
 #' 
 #' @export
 tune.cbase.lm <- function(df) {
+    models <- list()
+    index <- 0
+
+    df <- df %>%
+        factor.cbase.tuning.dist() %>%
+        factor.cbase.tuning.mult() %>%
+        factor.cbase.tuning.thick() %>%
+        dplyr::filter(feature.qa.lowest.cloud == "high",
+                      phase.lowest.cloud == "water",
+                      !(feature.above.surface %in% c("invalid", "no signal")),
+                      horizontal.averaging.lowest.cloud.min < "5 km") %>%
+        plyr::ddply(~ dist +
+                        resolution.out +
+                        feature.qa.lowest.cloud +
+                        thickness +
+                        phase.lowest.cloud +
+                        feature.above.surface,
+                    function(df) {
+                        index <<- index + 1
+                        models[[index]] <<- lm(ceilo ~ caliop, df)
+                        data.frame(index = index,
+                                   rmse = sqrt(mean((df$ceilo - 1e3 * df$caliop)^2)),
+                                   pred.rmse = sqrt(mean(models[[index]]$residuals^2)))
+                    })
+
+    list(models = models, df = df)
+}
+
+#' @export
+correct.cbase.lm <- function(df, correction) {
+    models <- correction$models
+    df.cor <- correction$df
+
+    doParallel::registerDoParallel(8)
     
+    df <- df %>%
+        factor.cbase.tuning.dist() %>%
+        factor.cbase.tuning.mult() %>%
+        factor.cbase.tuning.thick() %>%
+        dplyr::filter(feature.qa.lowest.cloud == "high",
+                      phase.lowest.cloud == "water",
+                      !(feature.above.surface %in% c("invalid", "no signal")),
+                      horizontal.averaging.lowest.cloud.min < "5 km") %>%
+        dplyr::left_join(df.cor, by = c("dist",
+                                        "resolution.out",
+                                        "feature.qa.lowest.cloud",
+                                        "thickness",
+                                        "phase.lowest.cloud",
+                                        "feature.above.surface")) %>%
+        mutate(index.model = index) %>%
+        mutate(index = 1 : nrow(.)) %>%
+        filter(!is.na(index.model)) %>%
+        plyr::ddply(~ index.model, function(x) {
+            model <- models[[median(x$index.model)]]
+            pred.ceilo <- predict(model, newdata = select(x, caliop))
+            dplyr::mutate(x, pred.ceilo = pred.ceilo)
+        }, .parallel = FALSE, .progress = "text")##   %>%
+}
+
+#' @export
+test.cbase.lm <- function(df) {
+    ret <- plyr::ddply(df,
+                       ~ dist +
+                           resolution.out +
+                           feature.qa.lowest.cloud +
+                           thickness +
+                           phase.lowest.cloud +
+                           feature.above.surface,
+                       function(df) {
+                           df %>%
+                               dplyr::select(-rmse) %>%
+                               dplyr::summarize(pred.rmse = median(pred.rmse),
+                                                rmse = sqrt(mean((ceilo - pred.ceilo)^2)))
+                       })
+    ggplot(df, aes(x = pred.ceilo, y = ceilo)) +
+        geom_bin2d() +
+        scale_fill_distiller(palette = "GnBu") +
+        stat_smooth() +
+        stat_smooth(method = "lm")
+    print(summary(lm(ceilo ~ pred.ceilo, df)))
+    ret %>%
+        mutate(ratio = rmse / pred.rmse) %>%
+        ggplot(aes(x = ratio)) +
+        geom_histogram()
 }
