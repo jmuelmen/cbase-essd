@@ -6,12 +6,9 @@
 \alias{factor.horizontal.averaging}
 \alias{factor.ice.water.phase}
 \alias{factor.qa}
-\alias{factor.relabel}
 \alias{factor.vfm}
 \title{CALIOP VFM factors}
 \usage{
-factor.relabel(x, labels, ordered = FALSE)
-
 factor.feature.type(x)
 
 factor.qa(x)
@@ -23,12 +20,6 @@ factor.horizontal.averaging(x)
 factor.vfm(df)
 }
 \arguments{
-\item{x}{Character or integer.  Vector to convert to factor}
-
-\item{labels}{Character.  Factor labels}
-
-\item{ordered}{Boolean.  Create ordered factor?}
-
 \item{df}{Data.frame.  A data frame containing the variables
 \code{feature.qa.lowest.cloud} ... \code{feature.above.surface}
 as strings}
@@ -47,9 +38,6 @@ CALIOP VFM factors
 }
 \section{Functions}{
 \itemize{
-\item \code{factor.relabel}: Utility function for converting
-character or integer vectors to factor
-
 \item \code{factor.feature.type}: Convert feature type from string to factor
 
 \item \code{factor.qa}: Convert feature type from string to factor

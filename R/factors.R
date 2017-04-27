@@ -6,8 +6,8 @@
 #' @name CALIOP_VFM_factors
 NULL
 
-#' @describeIn CALIOP_VFM_factors Utility function for converting
-#'     character or integer vectors to factor
+#' Utility function for converting character or integer vectors to
+#'     factor
 #'
 #' @param x Character or integer.  Vector to convert to factor
 #' @param labels Character.  Factor labels
@@ -86,4 +86,30 @@ factor.vfm <- function(df) {
            phase.lowest.cloud 		= factor.ice.water.phase(phase.lowest.cloud),
            phase.qa.lowest.cloud 	= factor.qa(phase.qa.lowest.cloud),
            feature.above.surface 	= factor.feature.type	(feature.above.surface))
+}
+
+#' C-BASE tuning factors
+#' 
+#' @return With the exception of \code{factor.vfm}, these functions
+#'     return factor version of their character or integer vector
+#'     argument.
+#' @name C-BASE_factors
+NULL
+
+#' @describeIn C-BASE_factors Convert distance to factor
+#' @export
+factor.cbase.tuning.dist <- function(df) {
+    plotutils::discretize(df, dist, c(0, 40, 60, 75, 88, 100), as_factor = "ordered")
+}
+
+#' @describeIn C-BASE_factors Convert retrieval multiplicity to factor
+#' @export
+factor.cbase.tuning.mult <- function(df) {
+    plotutils::discretize(df, resolution.out, c(0, 175, 250, 325, 400, 1e9), as_factor = "ordered")
+}
+
+#' @describeIn C-BASE_factors Convert cloud thickness to factor
+#' @export
+factor.cbase.tuning.thick <- function(df) {
+    plotutils::discretize(df, thickness, c(0, 0.25, 0.45, 0.625, 1, 1e9), as_factor = "ordered")
 }
