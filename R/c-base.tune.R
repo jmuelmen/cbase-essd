@@ -70,6 +70,35 @@ correct.cbase.lm <- function(df, correction) {
 }
 
 #' @export
+correct.cbase.ident <- function(df, correction) {
+    models <- correction$models
+    df.cor <- correction$df
+
+    doParallel::registerDoParallel(8)
+    
+    df <- df %>%
+        factor.cbase.tuning.dist() %>%
+        factor.cbase.tuning.mult() %>%
+        factor.cbase.tuning.thick() %>%
+        dplyr::filter(feature.qa.lowest.cloud == "high",
+                      phase.lowest.cloud == "water",
+                      !(feature.above.surface %in% c("invalid", "no signal")),
+                      horizontal.averaging.lowest.cloud.min < "5 km") %>%
+        dplyr::left_join(df.cor, by = c("dist",
+                                        "resolution.out",
+                                        "feature.qa.lowest.cloud",
+                                        "thickness",
+                                        "phase.lowest.cloud",
+                                        "feature.above.surface")) %>%
+        mutate(index.model = index) %>%
+        mutate(index = 1 : nrow(.)) %>%
+        filter(!is.na(index.model)) %>%
+        plyr::ddply(~ index.model, function(x) {
+            dplyr::mutate(x, pred.ceilo = 1e3 * caliop, pred.rmse = rmse)
+        }, .parallel = FALSE, .progress = "text")##   %>%
+}
+
+#' @export
 test.cbase.lm <- function(df) {
     ret <- plyr::ddply(df,
                        ~ dist +
