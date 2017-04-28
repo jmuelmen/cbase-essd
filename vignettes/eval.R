@@ -10,10 +10,9 @@ df <- readRDS("~/r-packages/cbm-all.rds") %>%
            dummy2 = "") %>%
     dplyr::filter(region == "K") %>%
     ## dplyr::filter(dist < 50) %>%
-    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3) ## %>%
-    ## group_by(station.icao, datetime, date, episode) ## %>%
-    ## slice(1)
-    
+    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)##  %>%
+    ## dplyr::mutate(train = factor(ifelse(round(runif(nrow(df))), "train", "validate")))
+
 ## ---- eval-qual ---------------------
 res <- df %>%
     ## filter(lays == 1) %>%
@@ -103,7 +102,7 @@ res$ggplot
 regression_table(res)
 
 ## ---- eval-best-case-setup --------------------
-df <- filter(df,
+df.best <- filter(df,
              dist < 40,
              feature.qa.lowest.cloud == "high",
              resolution.out > 400,
@@ -113,7 +112,7 @@ df <- filter(df,
              horizontal.averaging.lowest.cloud.min < "5 km")
 
 ## ---- eval-lays ---------------------
-res <- df %>%
+res <- df.best %>%
     dplyr::filter(feature.qa.lowest.cloud == "high") %>%
     dplyr::group_by(dummy, dummy2) %>%
     regression_plot(title = "lays")
@@ -134,106 +133,106 @@ res$ggplot
 ## ---- eval-cov-thick-tbl ---------------------
 regression_table(res)
 
-## ---- eval-min-qual-setup ---------------------
-df <- readRDS("~/r-packages/cbm-min_cbh.qual.rds") %>%
-    factor.vfm() %>%
-    dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
-    dplyr::mutate(ceilo = hgts.1 + elevation.m,
-                  caliop = cloud.base.altitude,
-                  caliop.local = caliop) %>%
-    dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
-    mutate(dummy = "",
-           dummy2 = "") %>%
-    dplyr::filter(region == "K") %>%
-    dplyr::filter(dist < 50) %>%
-    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
+## ## ---- eval-min-qual-setup ---------------------
+## df <- readRDS("~/r-packages/cbm-min_cbh.qual.rds") %>%
+##     factor.vfm() %>%
+##     dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
+##     dplyr::mutate(ceilo = hgts.1 + elevation.m,
+##                   caliop = cloud.base.altitude,
+##                   caliop.local = caliop) %>%
+##     dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
+##     mutate(dummy = "",
+##            dummy2 = "") %>%
+##     dplyr::filter(region == "K") %>%
+##     dplyr::filter(dist < 50) %>%
+##     dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
 
-## ---- eval-min-qual ---------------------
-res <- df %>%
-    ## filter(lays == 1) %>%
-    dplyr::group_by(## dummy, ##dummy2) %>%
-        lays,
-                    feature.qa.lowest.cloud) %>%
-    regression_plot(title = NULL)
-res$ggplot
+## ## ---- eval-min-qual ---------------------
+## res <- df %>%
+##     ## filter(lays == 1) %>%
+##     dplyr::group_by(## dummy, ##dummy2) %>%
+##         lays,
+##                     feature.qa.lowest.cloud) %>%
+##     regression_plot(title = NULL)
+## res$ggplot
 
-## ---- eval-min-qual-tbl ---------------------
-regression_table(res)
+## ## ---- eval-min-qual-tbl ---------------------
+## regression_table(res)
 
-## ---- eval-min-qual-cor ---------------------
-res <- df %>%
-    dplyr::mutate(caliop = caliop * 0.768 + 0.527) %>%
-    ## filter(lays == 1) %>%
-    dplyr::group_by(dummy, ##dummy2) %>%
-                    feature.qa.lowest.cloud) %>%
-    regression_plot(title = NULL)
-res$ggplot
+## ## ---- eval-min-qual-cor ---------------------
+## res <- df %>%
+##     dplyr::mutate(caliop = caliop * 0.768 + 0.527) %>%
+##     ## filter(lays == 1) %>%
+##     dplyr::group_by(dummy, ##dummy2) %>%
+##                     feature.qa.lowest.cloud) %>%
+##     regression_plot(title = NULL)
+## res$ggplot
 
-## ---- eval-min-qual-cor-tbl ---------------------
-regression_table(res)
+## ## ---- eval-min-qual-cor-tbl ---------------------
+## regression_table(res)
 
-## ---- eval-quantiles-setup ---------------------
-df <- readRDS("~/r-packages/cbm-quantile_cbh.qual.rds") %>%
-    factor.vfm() %>%
-    dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
-    dplyr::mutate(ceilo = hgts.1 + elevation.m,
-                  caliop = cloud.base.altitude,
-                  caliop.local = caliop) %>%
-    dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
-    mutate(dummy = "",
-           dummy2 = "") %>%
-    dplyr::filter(region == "K") %>%
-    dplyr::filter(dist < 50) %>%
-    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
+## ## ---- eval-quantiles-setup ---------------------
+## df <- readRDS("~/r-packages/cbm-quantile_cbh.qual.rds") %>%
+##     factor.vfm() %>%
+##     dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
+##     dplyr::mutate(ceilo = hgts.1 + elevation.m,
+##                   caliop = cloud.base.altitude,
+##                   caliop.local = caliop) %>%
+##     dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
+##     mutate(dummy = "",
+##            dummy2 = "") %>%
+##     dplyr::filter(region == "K") %>%
+##     dplyr::filter(dist < 50) %>%
+##     dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
 
-## ---- eval-quantiles-qual ---------------------
-res <- df %>%
-    ## filter(lays == 1) %>%
-    dplyr::mutate(resolution.method = sprintf("\\verb+%s+", resolution.method)) %>%
-    dplyr::group_by(dummy, resolution.method) %>%
-    regression_plot(title = NULL)
-res$ggplot
+## ## ---- eval-quantiles-qual ---------------------
+## res <- df %>%
+##     ## filter(lays == 1) %>%
+##     dplyr::mutate(resolution.method = sprintf("\\verb+%s+", resolution.method)) %>%
+##     dplyr::group_by(dummy, resolution.method) %>%
+##     regression_plot(title = NULL)
+## res$ggplot
 
-## ---- eval-quantiles-qual-tbl ---------------------
-regression_table(res)
+## ## ---- eval-quantiles-qual-tbl ---------------------
+## regression_table(res)
 
-## ---- eval-min-qual-2007-setup ---------------------
-df <- readRDS("~/r-packages/cbm-min_cbh.qual-2007.rds") %>%
-    factor.vfm() %>%
-    dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
-    dplyr::mutate(ceilo = hgts.1 + elevation.m,
-                  caliop = cloud.base.altitude,
-                  caliop.local = caliop) %>%
-    dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
-    mutate(dummy = "",
-           dummy2 = "") %>%
-    dplyr::filter(region == "K") %>%
-    dplyr::filter(dist < 50) %>%
-    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
+## ## ---- eval-min-qual-2007-setup ---------------------
+## df <- readRDS("~/r-packages/cbm-min_cbh.qual-2007.rds") %>%
+##     factor.vfm() %>%
+##     dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
+##     dplyr::mutate(ceilo = hgts.1 + elevation.m,
+##                   caliop = cloud.base.altitude,
+##                   caliop.local = caliop) %>%
+##     dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
+##     mutate(dummy = "",
+##            dummy2 = "") %>%
+##     dplyr::filter(region == "K") %>%
+##     dplyr::filter(dist < 50) %>%
+##     dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
 
-## ---- eval-min-qual-2007 ---------------------
-res <- df %>%
-    ## filter(lays == 1) %>%
-    dplyr::group_by(dummy, ## dummy2) %>%
-        ## lays,
-                    feature.qa.lowest.cloud) %>%
-    regression_plot(title = NULL)
-res$ggplot
+## ## ---- eval-min-qual-2007 ---------------------
+## res <- df %>%
+##     ## filter(lays == 1) %>%
+##     dplyr::group_by(dummy, ## dummy2) %>%
+##         ## lays,
+##                     feature.qa.lowest.cloud) %>%
+##     regression_plot(title = NULL)
+## res$ggplot
 
-## ---- eval-min-qual-2007-tbl ---------------------
-regression_table(res)
+## ## ---- eval-min-qual-2007-tbl ---------------------
+## regression_table(res)
 
-## ---- eval-min-qual-2007-cor ---------------------
-res <- df %>%
-    dplyr::mutate(caliop = caliop * 0.768 + 0.527) %>%
-    ## filter(lays == 1) %>%
-    dplyr::group_by(dummy, ##dummy2) %>%
-                    feature.qa.lowest.cloud) %>%
-    regression_plot(title = NULL)
-res$ggplot
+## ## ---- eval-min-qual-2007-cor ---------------------
+## res <- df %>%
+##     dplyr::mutate(caliop = caliop * 0.768 + 0.527) %>%
+##     ## filter(lays == 1) %>%
+##     dplyr::group_by(dummy, ##dummy2) %>%
+##                     feature.qa.lowest.cloud) %>%
+##     regression_plot(title = NULL)
+## res$ggplot
 
-## ---- eval-min-qual-2007-cor-tbl ---------------------
-regression_table(res)
+## ## ---- eval-min-qual-2007-cor-tbl ---------------------
+## regression_table(res)
 
 ## ---- eval-2bgeoprof-setup --------------------
 df.comp <- readRDS("~/r-packages/atrain-2bgeoprof-metar-comp-2008.rds")[,-c(10:11)]
@@ -260,6 +259,43 @@ res$ggplot
 ## ---- eval-2bgeoprof-tbl --------------------
 regression_table(res)
 
+## ---- eval-tune-setup --------------------
+print(class(df))
+df <- dplyr::mutate(df, train = factor(ifelse(round(runif(nrow(df))), "train", "validate")))
+ddf <- tune.cbase.lm(filter(df, train == "train"))
+dddf <- correct.cbase.lm(filter(df, train == "validate"), ddf)
+combo <- cbase.combine(dddf)
+
+## ---- tune --------------------
+test.cbase.lm(dddf) %>% mutate(ratio = rmse / pred.rmse) %>% ggplot(aes(x = ratio)) + geom_histogram()
+
+## ---- combo2 --------------------
+res <- combo %>%
+    ungroup() %>%
+    mutate(dummy = "", dummy2 = "") %>%
+    ## select(-caliop) %>%
+    mutate(caliop = pred.ceilo * 1e-3, caliop.local = caliop) %>%
+    group_by(dummy, dummy2) %>%
+    regression_plot(title = NULL)
+res$ggplot
+
+## ---- combo3 --------------------
+res <- combo %>%
+    ungroup() %>%
+    mutate(dummy = "", dummy2 = "") %>%
+    plotutils::discretize(pred.rmse, ## quantiles(pred.rmse, seq(0, 1, 0.2)),##
+                          c(0,400,500,600,1000),
+                          as_factor = TRUE) %>%
+    ## select(-caliop) %>%
+    mutate(caliop = pred.ceilo * 1e-3, caliop.local = caliop) %>%
+    group_by(dummy, pred.rmse) %>%
+    regression_plot(title = NULL)
+res$ggplot
+
+## ---- combo3-tbl --------------------
+regression_table(res)
+
 ## ---- glorious-victory ---------------------
 library(beepr)
 beep(0)
+

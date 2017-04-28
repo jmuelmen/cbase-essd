@@ -75,7 +75,7 @@
 \renewcommand{\sfdefault}{pfu}
 \newcommand{\degree}{\ensuremath{^\circ}}
 
-\title{CALIOP-based cloud base heights} \subtitle{} \date{23 January 2017}
+\title{CALIOP-based cloud base heights} \subtitle{} \date{28 April 2017}
 \author{Johannes, Odran}
 % - Use the \inst{?} command only if the authors have different
 %   affiliation.
@@ -132,75 +132,46 @@
 
 \section{Method}
 \begin{frame}{Method}
-  \begin{itemize}
-  \item Use CALIOP
-  \item 
-  \end{itemize}
-  
+  \begin{enumerate}
+  \item Determine cloud base height from CALIOP profiles where the surface
+    generates a return ($\longrightarrow$ lidar is not attenuated above cloud
+    base)
+  \item Using ground-based ceilometer data, determine quality of cloud base
+    height depending on a number of factors
+  \item Based on the predicted quality of each individual retrieval, combine $n$
+    retrievals within a distance $\Delta$ of the point of interest
+    $\longrightarrow$ estimate of cloud base height, estimate of cloud base
+    height uncertainty
+  \item Use a statistically independent validation dataset to verify that the
+    cloud base height and uncertainty are correct
+  \end{enumerate}
 \end{frame}
 
-\section{Geographical distributions}
-\begin{frame}[fragile]{Geographical distributions}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{dev.cur}\hlstd{()}
-\end{alltt}
-\begin{verbatim}
-## tikz output 
-##           2
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-\end{frame}
+%% \section{Geographical distributions}
+%% \begin{frame}[fragile]{Geographical distributions}
+%%   <<test,dev='tikz',cache=FALSE>>=
+%%   dev.cur()
+%%   @
+%% \end{frame}
 
-\begin{frame}[fragile]{Geographical distributions}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{df} \hlkwb{<-} \hlkwd{readRDS}\hlstd{(}\hlstr{"~/r-packages/cloud-bases-2008.rds"}\hlstd{)} \hlopt{%>%}
-    \hlkwd{select}\hlstd{(lon, lat, feature.qa.lowest.cloud, feature.above.surface,}
-           \hlstd{cloud.base.altitude, surface.elevation)}
-
-\hlstd{df} \hlkwb{<-} \hlstd{df} \hlopt{%>%}
-    \hlstd{plotutils}\hlopt{::}\hlkwd{discretize}\hlstd{(lon,} \hlnum{180}\hlstd{)} \hlopt{%>%}
-    \hlstd{plotutils}\hlopt{::}\hlkwd{discretize}\hlstd{(lat,} \hlnum{90}\hlstd{)} \hlopt{%>%}
-    \hlkwd{group_by}\hlstd{(lon, lat, feature.qa.lowest.cloud, feature.above.surface)} \hlopt{%>%}
-    \hlkwd{summarize}\hlstd{(}\hlkwc{cloud.base.altitude} \hlstd{=} \hlkwd{median}\hlstd{(cloud.base.altitude),}
-              \hlkwc{cloud.base.height} \hlstd{=} \hlkwd{median}\hlstd{(cloud.base.altitude} \hlopt{-} \hlstd{surface.elevation))}
-
-\hlkwd{gc}\hlstd{()}
-\end{alltt}
-\begin{verbatim}
-##           used (Mb) gc trigger    (Mb)  max used    (Mb)
-## Ncells  535058 28.6  1.442e+06    77.1 1.442e+06    77.1
-## Vcells 1898923 14.5  2.032e+09 15499.9 2.450e+09 18692.4
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-\end{frame}
-
-\begin{frame}[fragile]{Geographical distributions}
-  With regular-sized text for comparison
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\textwidth]{figure/group-170410-vis-cbase2-1} 
-
-}
-
-
-
-\end{knitrout}
-\end{frame}
+%% \begin{frame}[fragile]{Geographical distributions}
+%%   <<vis-cbase,cache=TRUE>>=
+%%   @
+%% \end{frame}
 
 %% \begin{frame}[fragile]{Geographical distributions}
 %%   With regular-sized text for comparison
-%% <<vis-cbase2,dev='tikz',fig.width=9,fig.height=6,out.width='0pt',message=FALSE,cache=TRUE,echo=TRUE,results='hide'>>=
+%% <<vis-cbase2,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
 %% @
 %% \end{frame}
 
-\section{Comparing lowest CALIOP CBH to ceilometers}
+%% %% \begin{frame}[fragile]{Geographical distributions}
+%% %%   With regular-sized text for comparison
+%% %% <<vis-cbase2,dev='tikz',fig.width=9,fig.height=6,out.width='0pt',message=FALSE,cache=TRUE,echo=TRUE,results='hide'>>=
+%% %% @
+%% %% \end{frame}
+
+\section{Comparing CALIOP CBH to ceilometers}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -215,285 +186,215 @@
            \hlkwc{dummy2} \hlstd{=} \hlstr{""}\hlstd{)} \hlopt{%>%}
     \hlstd{dplyr}\hlopt{::}\hlkwd{filter}\hlstd{(region} \hlopt{==} \hlstr{"K"}\hlstd{)} \hlopt{%>%}
     \hlcom{## dplyr::filter(dist < 50) %>%}
-    \hlstd{dplyr}\hlopt{::}\hlkwd{filter}\hlstd{(ceilo} \hlopt{<} \hlnum{5000}\hlstd{, hgts.1} \hlopt{<} \hlnum{3000}\hlstd{, caliop} \hlopt{<} \hlnum{3}\hlstd{)} \hlcom{## %>%}
-    \hlcom{## group_by(station.icao, datetime, date, episode) ## %>%}
-    \hlcom{## slice(1)}
+    \hlstd{dplyr}\hlopt{::}\hlkwd{filter}\hlstd{(ceilo} \hlopt{<} \hlnum{5000}\hlstd{, hgts.1} \hlopt{<} \hlnum{3000}\hlstd{, caliop} \hlopt{<} \hlnum{3}\hlstd{)}\hlcom{##  %>%}
+    \hlcom{## dplyr::mutate(train = factor(ifelse(round(runif(nrow(df))), "train", "validate")))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+%% \begin{frame}[fragile]{\insertsection}
+%%   <<eval-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-qual-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   <<eval-dist,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-dist-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   <<eval-deltat,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-deltat-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   <<eval-mult,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-mult-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   <<eval-thick,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   <<eval-phase,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-phase-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   <<eval-feature,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-feature-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   <<eval-averaging,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-averaging-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% <<eval-best-case-setup,cache=FALSE>>=
+%% @ 
+%% \begin{frame}[fragile]{\insertsection}
+%%   <<eval-lays,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
+%% \begin{frame}[fragile]{\insertsection}
+%%   \begin{adjustbox}{max width=\textwidth}
+%%     <<eval-lays-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,echo=FALSE,results='asis'>>=
+%%     @
+%%   \end{adjustbox}
+%% \end{frame}
+%% %% \begin{frame}[fragile]{\insertsection}
+%% %%   <<eval-cov-thick,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%% %%   @
+%% %% \end{frame}
+%% %% \begin{frame}[fragile]{\insertsection}
+%% %%   \begin{adjustbox}{max width=\textwidth}
+%% %%     <<eval-cov-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%% %%     @
+%% %%   \end{adjustbox}
+%% %% \end{frame}
 
-{\centering \includegraphics[width=\textwidth]{figure/group-170410-eval-qual-1} 
+%% %% \section{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
+%% %% <<eval-min-qual-setup,cache=FALSE>>=
+%% %% @ 
+%% %% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
+%% %%   <<eval-min-qual,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%% %%   @
+%% %% \end{frame}
+%% %% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
+%% %%   \begin{adjustbox}{max width=\textwidth}
+%% %%     <<eval-min-qual-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%% %%     @
+%% %%   \end{adjustbox}
+%% %% \end{frame}
+%% %% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers}
+%% %%   <<eval-min-qual-cor,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%% %%   @
+%% %% \end{frame}
+%% %% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers}
+%% %%   \begin{adjustbox}{max width=\textwidth}
+%% %%     <<eval-min-qual-cor-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%% %%     @
+%% %%   \end{adjustbox}
+%% %% \end{frame}
 
-}
+%% %% \section{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
+%% %% <<eval-min-qual-2007-setup,cache=FALSE>>=
+%% %% @ 
+%% %% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
+%% %%   <<eval-min-qual-2007,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%% %%   @
+%% %% \end{frame}
+%% %% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
+%% %%   \begin{adjustbox}{max width=\textwidth}
+%% %%     <<eval-min-qual-2007-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%% %%     @
+%% %%   \end{adjustbox}
+%% %% \end{frame}
+%% %% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers -- 2008 correction applied to 2007}
+%% %%   <<eval-min-qual-2007-cor,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%% %%   @
+%% %% \end{frame}
+%% %% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers -- 2008 correction applied to 2007}
+%% %%   \begin{adjustbox}{max width=\textwidth}
+%% %%     <<eval-min-qual-2007-cor-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%% %%     @
+%% %%   \end{adjustbox}
+%% %% \end{frame}
 
+%% %% \section{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
+%% %% <<eval-quantiles-setup,cache=FALSE>>=
+%% %% @ 
+%% %% \begin{frame}[fragile]{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
+%% %%   <<eval-quantiles-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%% %%   @
+%% %% \end{frame}
+%% %% \begin{frame}[fragile]{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
+%% %%   \begin{adjustbox}{max width=\textwidth}
+%% %%     <<eval-quantiles-qual-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%% %%     @
+%% %%   \end{adjustbox}
+%% %% \end{frame}
 
-
-\end{knitrout}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Apr 25 13:25:25 2017
-\begin{tabular}{lrrrrrlr}
-  \hline
-\hline
-feature.qa.lowest.cloud & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
-  \hline
-none & 1653718 & 0.403 & 0.403 & $1.11 \times 10^{3}$ & $-$579. & $y = 0.447 x + \ensuremath{1.10 \times 10^{3}}$ m & 830. \\ 
-  low & 314239 & 0.552 & 0.552 & 733. & $-$149. & $y = 0.556 x + 691.$ m & 634. \\ 
-  medium & 221929 & 0.583 & 0.583 & 726. & $-$109. & $y = 0.588 x + 623.$ m & 642. \\ 
-  high & 2947317 & 0.613 & 0.613 & 633. & $-$4.67 & $y = 0.602 x + 515.$ m & 564. \\ 
-   \hline
-\hline
-\end{tabular}
-
-  \end{adjustbox}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\textwidth]{figure/group-170410-eval-dist-1} 
-
-}
-
-
-
-\end{knitrout}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Apr 25 13:28:39 2017
-\begin{tabular}{lrrrrrlr}
-  \hline
-\hline
-dist & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
-  \hline
-(0.15,42.2] & 589470 & 0.670 & 0.670 & 572. & $-$30.5 & $y = 0.650 x + 468.$ m & 514. \\ 
-  (42.2,61.2] & 589445 & 0.631 & 0.631 & 613. & $-$14.2 & $y = 0.620 x + 500.$ m & 548. \\ 
-  (61.2,76.1] & 589481 & 0.607 & 0.607 & 643. & 0.625 & $y = 0.602 x + 518.$ m & 574. \\ 
-  (76.1,88.8] & 589458 & 0.586 & 0.586 & 661. & 9.44 & $y = 0.578 x + 536.$ m & 585. \\ 
-  (88.8,100] & 589463 & 0.573 & 0.573 & 672. & 11.3 & $y = 0.563 x + 552.$ m & 591. \\ 
-   \hline
-\hline
-\end{tabular}
-
-  \end{adjustbox}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\textwidth]{figure/group-170410-eval-deltat-1} 
-
-}
-
-
-
-\end{knitrout}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Apr 25 13:31:57 2017
-\begin{tabular}{lrrrrrlr}
-  \hline
-\hline
-delta.t & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
-  \hline
-(-3.6e+03,-552] & 589470 & 0.652 & 0.652 & 625. & $-$38.8 & $y = 0.638 x + 514.$ m & 561. \\ 
-  (-552,-173] & 589468 & 0.554 & 0.554 & 678. & 16.3 & $y = 0.541 x + 570.$ m & 590. \\ 
-  (-173,180] & 589498 & 0.641 & 0.641 & 610. & 26.2 & $y = 0.613 x + 464.$ m & 539. \\ 
-  (180,561] & 589418 & 0.607 & 0.607 & 613. & 30.2 & $y = 0.591 x + 492.$ m & 541. \\ 
-  (561,3.6e+03] & 589463 & 0.608 & 0.608 & 639. & $-$57.3 & $y = 0.617 x + 545.$ m & 575. \\ 
-   \hline
-\hline
-\end{tabular}
-
-  \end{adjustbox}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\textwidth]{figure/group-170410-eval-mult-1} 
-
-}
-
-
-
-\end{knitrout}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Apr 25 13:35:12 2017
-\begin{tabular}{lrrrrrlr}
-  \hline
-\hline
-resolution.out & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
-  \hline
-(1,171] & 598376 & 0.509 & 0.509 & 746. & 141. & $y = 0.510 x + 579.$ m & 637. \\ 
-  (171,248] & 584181 & 0.600 & 0.600 & 639. & 44.9 & $y = 0.606 x + 507.$ m & 573. \\ 
-  (248,317] & 589446 & 0.609 & 0.609 & 620. & $-$0.405 & $y = 0.607 x + 523.$ m & 555. \\ 
-  (317,396] & 592204 & 0.633 & 0.633 & 602. & $-$41.6 & $y = 0.635 x + 492.$ m & 544. \\ 
-  (396,592] & 583110 & 0.715 & 0.715 & 539. & $-$170. & $y = 0.727 x + 435.$ m & 478. \\ 
-   \hline
-\hline
-\end{tabular}
-
-  \end{adjustbox}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\textwidth]{figure/group-170410-eval-thick-1} 
-
-}
-
-
-
-\end{knitrout}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Apr 25 13:38:25 2017
-\begin{tabular}{lrrrrrlr}
-  \hline
-\hline
-thickness & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
-  \hline
-(0,0.27] & 603569 & 0.619 & 0.619 & 585. & 43.4 & $y = 0.622 x + 491.$ m & 526. \\ 
-  (0.27,0.45] & 578679 & 0.659 & 0.659 & 554. & $-$6.75 & $y = 0.641 x + 505.$ m & 497. \\ 
-  (0.45,0.63] & 588888 & 0.691 & 0.691 & 563. & $-$60.2 & $y = 0.656 x + 478.$ m & 501. \\ 
-  (0.63,0.93] & 591774 & 0.591 & 0.591 & 660. & $-$11.7 & $y = 0.571 x + 517.$ m & 578. \\ 
-  (0.93,6.99] & 584407 & 0.506 & 0.506 & 778. & 10.9 & $y = 0.520 x + 574.$ m & 684. \\ 
-   \hline
-\hline
-\end{tabular}
-
-  \end{adjustbox}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\textwidth]{figure/group-170410-eval-phase-1} 
-
-}
-
-
-
-\end{knitrout}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Apr 25 13:42:03 2017
-\begin{tabular}{lrrrrrlr}
-  \hline
-\hline
-phase.lowest.cloud & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
-  \hline
-unknown & 102030 & 0.581 & 0.581 & 686. & 35.3 & $y = 0.623 x + 547.$ m & 629. \\ 
-  randomly oriented ice & 131280 & 0.632 & 0.632 & 663. & $-$8.44 & $y = 0.628 x + 586.$ m & 597. \\ 
-  water & 2708647 & 0.609 & 0.609 & 628. & $-$5.00 & $y = 0.596 x + 514.$ m & 557. \\ 
-  horizontally oriented ice & 5360 & 0.375 & 0.375 & $1.17 \times 10^{3}$ & $-$505. & $y = 0.418 x + \ensuremath{1.17 \times 10^{3}}$ m & 921. \\ 
-   \hline
-\hline
-\end{tabular}
-
-  \end{adjustbox}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\textwidth]{figure/group-170410-eval-feature-1} 
-
-}
-
-
-
-\end{knitrout}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Apr 25 13:45:37 2017
-\begin{tabular}{lrrrrrlr}
-  \hline
-\hline
-feature.above.surface & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
-  \hline
-invalid &  930 & 0.670 & 0.670 & 416. & 42.5 & $y = 0.713 x + 290.$ m & 389. \\ 
-  clear air & 1231973 & 0.596 & 0.596 & 609. & 21.9 & $y = 0.577 x + 598.$ m & 535. \\ 
-  cloud & 545163 & 0.628 & 0.628 & 560. & $-$255. & $y = 0.812 x + 369.$ m & 490. \\ 
-  aerosol & 729954 & 0.608 & 0.608 & 604. & $-$37.2 & $y = 0.641 x + 559.$ m & 554. \\ 
-  no signal & 439297 & 0.370 & 0.370 & 810. & 286. & $y = 0.357 x + 566.$ m & 616. \\ 
-   \hline
-\hline
-\end{tabular}
-
-  \end{adjustbox}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\textwidth]{figure/group-170410-eval-averaging-1} 
-
-}
-
-
-
-\end{knitrout}
-\end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-  \begin{adjustbox}{max width=\textwidth}
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Apr 25 13:49:26 2017
-\begin{tabular}{lrrrrrlr}
-  \hline
-\hline
-horizontal.averaging.lowest.cloud.min & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
-  \hline
-1/3 km & 2303204 & 0.615 & 0.615 & 635. & $-$0.360 & $y = 0.597 x + 503.$ m & 561. \\ 
-  1 km & 503752 & 0.613 & 0.613 & 574. & 1.44 & $y = 0.618 x + 559.$ m & 518. \\ 
-  5 km & 104190 & 0.521 & 0.521 & 700. & 26.5 & $y = 0.557 x + 519.$ m & 629. \\ 
-  20 km & 20703 & 0.475 & 0.475 & $1.01 \times 10^{3}$ & $-$333. & $y = 0.520 x + 916.$ m & 853. \\ 
-  80 km & 15468 & 0.514 & 0.514 & $1.04 \times 10^{3}$ & $-$617. & $y = 0.553 x + \ensuremath{1.15 \times 10^{3}}$ m & 755. \\ 
-   \hline
-\hline
-\end{tabular}
-
-  \end{adjustbox}
-\end{frame}
+\section{Combining measurements}
+\label{sec:combo}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{df} \hlkwb{<-} \hlkwd{filter}\hlstd{(df,}
-             \hlstd{dist} \hlopt{<} \hlnum{40}\hlstd{,}
-             \hlstd{feature.qa.lowest.cloud} \hlopt{==} \hlstr{"high"}\hlstd{,}
-             \hlstd{resolution.out} \hlopt{>} \hlnum{400}\hlstd{,}
-             \hlstd{thickness} \hlopt{<} \hlnum{1}\hlstd{,}
-             \hlstd{phase.lowest.cloud} \hlopt{!=} \hlstr{"horizontally oriented ice"}\hlstd{,}
-             \hlopt{!}\hlstd{(feature.above.surface} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"invalid"}\hlstd{,} \hlstr{"no signal"}\hlstd{)),}
-             \hlstd{horizontal.averaging.lowest.cloud.min} \hlopt{<} \hlstr{"5 km"}\hlstd{)}
+\hlkwd{print}\hlstd{(}\hlkwd{class}\hlstd{(df))}
+\hlstd{df} \hlkwb{<-} \hlstd{dplyr}\hlopt{::}\hlkwd{mutate}\hlstd{(df,} \hlkwc{train} \hlstd{=} \hlkwd{factor}\hlstd{(}\hlkwd{ifelse}\hlstd{(}\hlkwd{round}\hlstd{(}\hlkwd{runif}\hlstd{(}\hlkwd{nrow}\hlstd{(df))),} \hlstr{"train"}\hlstd{,} \hlstr{"validate"}\hlstd{)))}
+\hlstd{ddf} \hlkwb{<-} \hlkwd{tune.cbase.lm}\hlstd{(}\hlkwd{filter}\hlstd{(df, train} \hlopt{==} \hlstr{"train"}\hlstd{))}
+\hlstd{dddf} \hlkwb{<-} \hlkwd{correct.cbase.lm}\hlstd{(}\hlkwd{filter}\hlstd{(df, train} \hlopt{==} \hlstr{"validate"}\hlstd{), ddf)}
+\hlstd{combo} \hlkwb{<-} \hlkwd{cbase.combine}\hlstd{(dddf)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+%% \begin{frame}[fragile]{\insertsection}
+%%   <<tune,dev='tikz',fig.width=3,fig.height=3,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%%   @
+%% \end{frame}
 
-{\centering \includegraphics[width=\textwidth]{figure/group-170410-eval-lays-1} 
+\begin{frame}[fragile]{\insertsection}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{ggplot}\hlstd{(combo,} \hlkwd{aes}\hlstd{(}\hlkwc{x} \hlstd{= (pred.ceilo} \hlopt{-} \hlstd{ceilo)} \hlopt{/} \hlstd{pred.rmse))} \hlopt{+} \hlkwd{geom_histogram}\hlstd{()}
+\hlkwd{ggplot}\hlstd{(combo,} \hlkwd{aes}\hlstd{(}\hlkwc{x} \hlstd{= pred.rmse))} \hlopt{+} \hlkwd{geom_histogram}\hlstd{()}
+\hlkwd{with}\hlstd{(combo,} \hlkwd{mean}\hlstd{((ceilo} \hlopt{-} \hlstd{pred.ceilo)} \hlopt{/} \hlstd{pred.rmse))}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.01895
+\end{verbatim}
+\begin{alltt}
+\hlkwd{with}\hlstd{(combo,} \hlkwd{sd}\hlstd{((ceilo} \hlopt{-} \hlstd{pred.ceilo)} \hlopt{/} \hlstd{pred.rmse))}
+\end{alltt}
+\begin{verbatim}
+## [1] 1.033
+\end{verbatim}
+\end{kframe}
+
+{\centering \includegraphics[width=0.5\textwidth]{figure/group-170410-combo-1} 
+\includegraphics[width=0.5\textwidth]{figure/group-170410-combo-2} 
 
 }
 
@@ -501,108 +402,100 @@ horizontal.averaging.lowest.cloud.min & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & 
 
 \end{knitrout}
 \end{frame}
-\begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
+
+\begin{frame}[fragile]{\insertsection}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=\textwidth]{figure/group-170410-combo2-1} 
+
+}
+
+
+
+\end{knitrout}
+\end{frame}
+
+\begin{frame}[fragile]{\insertsection}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=\textwidth]{figure/group-170410-combo3-1} 
+
+}
+
+
+
+\end{knitrout}
+\end{frame}
+\begin{frame}[fragile]{\insertsection}
   \begin{adjustbox}{max width=\textwidth}
 % latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Apr 25 13:49:44 2017
-\begin{tabular}{rrrrrlr}
+% Fri Apr 28 13:56:53 2017
+\begin{tabular}{lrrrrrlr}
   \hline
 \hline
-$n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
+pred.rmse & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
   \hline
-105129 & 0.791 & 0.791 & 454. & $-$161. & $y = 0.775 x + 382.$ m & 397. \\ 
+(0,300] &   33 & 0.980 & 0.980 & 335. & $-$14.2 & $y = 1.30 x - 293.$ m & 220. \\ 
+  (300,400] &  849 & 0.789 & 0.789 & 335. & 16.6 & $y = 1.17 x - 147.$ m & 328. \\ 
+  (400,500] & 6736 & 0.793 & 0.793 & 452. & $-$28.6 & $y = 1.22 x - 247.$ m & 440. \\ 
+  (500,600] & 14192 & 0.663 & 0.663 & 568. & $-$0.112 & $y = 1.20 x - 290.$ m & 562. \\ 
+  (600,1e+03] & 3192 & 0.624 & 0.624 & 744. & $-$19.0 & $y = 1.28 x - 414.$ m & 733. \\ 
    \hline
 \hline
 \end{tabular}
 
   \end{adjustbox}
 \end{frame}
-%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-%%   <<eval-cov-thick,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-%%   @
-%% \end{frame}
-%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH to ceilometers}
-%%   \begin{adjustbox}{max width=\textwidth}
-%%     <<eval-cov-thick-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-%%     @
-%%   \end{adjustbox}
-%% \end{frame}
 
-%% \section{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-%% <<eval-min-qual-setup,cache=FALSE>>=
-%% @ 
-%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-%%   <<eval-min-qual,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-%%   @
-%% \end{frame}
-%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers}
-%%   \begin{adjustbox}{max width=\textwidth}
-%%     <<eval-min-qual-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-%%     @
-%%   \end{adjustbox}
-%% \end{frame}
-%% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers}
-%%   <<eval-min-qual-cor,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-%%   @
-%% \end{frame}
-%% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers}
-%%   \begin{adjustbox}{max width=\textwidth}
-%%     <<eval-min-qual-cor-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-%%     @
-%%   \end{adjustbox}
-%% \end{frame}
+\section{Comparing 2B-GEOPROF-LIDAR (CloudSat/CALIPSO) to ceilometers}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{df.comp} \hlkwb{<-} \hlkwd{readRDS}\hlstd{(}\hlstr{"~/r-packages/atrain-2bgeoprof-metar-comp-2008.rds"}\hlstd{)[,}\hlopt{-}\hlkwd{c}\hlstd{(}\hlnum{10}\hlopt{:}\hlnum{11}\hlstd{)]}
+\hlstd{df.2bgeoprof} \hlkwb{<-} \hlkwd{filter}\hlstd{(df.comp,} \hlopt{!}\hlkwd{is.na}\hlstd{(base.1))} \hlopt{%>%}
+    \hlkwd{mutate}\hlstd{(}\hlkwc{ceilo} \hlstd{= base} \hlopt{+} \hlstd{elev,} \hlkwc{caliop} \hlstd{= base.1} \hlopt{*} \hlnum{1e-3}\hlstd{,} \hlkwc{caliop.local} \hlstd{= base.1} \hlopt{*} \hlnum{1e-3}\hlstd{)} \hlopt{%>%}
+    \hlkwd{filter}\hlstd{(ceilo} \hlopt{<} \hlnum{5000}\hlstd{, base} \hlopt{<} \hlnum{3000}\hlstd{, caliop} \hlopt{<} \hlnum{3}\hlstd{)} \hlopt{%>%}
+    \hlkwd{mutate}\hlstd{(}\hlkwc{region} \hlstd{=} \hlkwd{factor}\hlstd{(}\hlkwd{substr}\hlstd{(station.icao,} \hlnum{1}\hlstd{,}\hlnum{1}\hlstd{)),}
+           \hlkwc{type} \hlstd{=} \hlkwd{factor}\hlstd{(type,} \hlkwc{levels} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"FEW"}\hlstd{,} \hlstr{"SCT"}\hlstd{,} \hlstr{"BKN"}\hlstd{,} \hlstr{"OVC"}\hlstd{),} \hlkwc{ordered} \hlstd{=} \hlnum{TRUE}\hlstd{),}
+           \hlkwc{flag.base} \hlstd{=} \hlkwd{factor}\hlstd{(flag.base,} \hlkwc{levels} \hlstd{=} \hlnum{0}\hlopt{:}\hlnum{3}\hlstd{,} \hlkwc{labels} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"None"}\hlstd{,} \hlstr{"Radar"}\hlstd{,} \hlstr{"Lidar"}\hlstd{,} \hlstr{"Radar+Lidar"}\hlstd{)),}
+           \hlkwc{station.dist.dec} \hlstd{=} \hlkwd{cut}\hlstd{(station.dist.km,} \hlkwc{breaks} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,}\hlnum{20}\hlstd{,}\hlnum{40}\hlstd{,}\hlnum{70}\hlstd{,}\hlnum{100}\hlstd{)))} \hlopt{%>%}
+    \hlkwd{mutate}\hlstd{(}\hlkwc{dummy} \hlstd{=} \hlstr{""}\hlstd{,}
+           \hlkwc{dummy2} \hlstd{=} \hlstr{""}\hlstd{)} \hlopt{%>%}
+    \hlkwd{filter}\hlstd{(}\hlopt{!}\hlkwd{is.na}\hlstd{(type), region} \hlopt{==} \hlstr{"K"}\hlstd{, flag.base} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"Radar"}\hlstd{,} \hlstr{"Lidar"}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\begin{frame}[fragile]{\insertsection}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-%% \section{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
-%% <<eval-min-qual-2007-setup,cache=FALSE>>=
-%% @ 
-%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
-%%   <<eval-min-qual-2007,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-%%   @
-%% \end{frame}
-%% \begin{frame}[fragile]{Comparing lowest CALIOP CBH with quality cuts to ceilometers -- 2007}
-%%   \begin{adjustbox}{max width=\textwidth}
-%%     <<eval-min-qual-2007-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-%%     @
-%%   \end{adjustbox}
-%% \end{frame}
-%% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers -- 2008 correction applied to 2007}
-%%   <<eval-min-qual-2007-cor,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-%%   @
-%% \end{frame}
-%% \begin{frame}[fragile]{Comparing corrected lowest CALIOP CBH with quality cuts to ceilometers -- 2008 correction applied to 2007}
-%%   \begin{adjustbox}{max width=\textwidth}
-%%     <<eval-min-qual-2007-cor-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-%%     @
-%%   \end{adjustbox}
-%% \end{frame}
+{\centering \includegraphics[width=\textwidth]{figure/group-170410-eval-2bgeoprof-1} 
 
-%% \section{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
-%% <<eval-quantiles-setup,cache=FALSE>>=
-%% @ 
-%% \begin{frame}[fragile]{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
-%%   <<eval-quantiles-qual,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-%%   @
-%% \end{frame}
-%% \begin{frame}[fragile]{Comparing quantiles of CALIOP CBH with quality cuts to ceilometers}
-%%   \begin{adjustbox}{max width=\textwidth}
-%%     <<eval-quantiles-qual-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-%%     @
-%%   \end{adjustbox}
-%% \end{frame}
+}
 
-%% \section{Comparing CloudSat/CALIPSO to ceilometers}
-%% <<eval-2bgeoprof-setup,cache=FALSE>>=
-%% @ 
-%% \begin{frame}[fragile]{Comparing CloudSat/CALIPSO to ceilometers}
-%%   <<eval-2bgeoprof,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-%%   @
-%% \end{frame}
-%% \begin{frame}[fragile]{Comparing CloudSat/CALIPSO to ceilometers}
-%%   \begin{adjustbox}{max width=\textwidth}
-%%     <<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-%%     @
-%%   \end{adjustbox}
-%% \end{frame}
+
+
+\end{knitrout}
+\end{frame}
+\begin{frame}[fragile]{\insertsection}
+  \begin{adjustbox}{max width=\textwidth}
+% latex table generated in R 3.2.3 by xtable 1.8-3 package
+% Fri Apr 28 13:46:01 2017
+\begin{tabular}{lrrrrrlr}
+  \hline
+\hline
+flag.base & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
+  \hline
+Radar & 15096 & 0.490 & 0.490 & 783. & 95.9 & $y = 0.800 x + 179.$ m & 769. \\ 
+  Lidar & 13094 & 0.632 & 0.632 & 596. & 4.04 & $y = 0.642 x + 417.$ m & 543. \\ 
+   \hline
+\hline
+\end{tabular}
+
+  \end{adjustbox}
+\end{frame}
 
 
 
