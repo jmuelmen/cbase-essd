@@ -95,3 +95,17 @@ test.cbase.lm <- function(df) {
         ggplot(aes(x = ratio)) +
         geom_histogram()
 }
+
+#' @export
+cbase.combine <- function(df.cor) {
+    df.cor %>%
+        dplyr::group_by(station.icao, datetime, date, episode) %>%
+        dplyr::summarize(n = n(),
+                         all = all(ceilo == mean(ceilo)),
+                         sd.ceilo = sd(ceilo),
+                         ceilo = mean(ceilo),
+                         best.ceilo = pred.ceilo[which.min(pred.rmse)],
+                         pred.ceilo = sum(pred.ceilo / pred.rmse^2) / sum(pred.rmse^-2),
+                         pred.rmse.uncor = sqrt(1 / sum(pred.rmse^-2)),
+                         pred.rmse = sqrt(mean(pred.rmse^2)))
+}
