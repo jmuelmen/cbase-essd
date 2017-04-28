@@ -113,16 +113,6 @@ test.cbase.lm <- function(df) {
                                dplyr::summarize(pred.rmse = median(pred.rmse),
                                                 rmse = sqrt(mean((ceilo - pred.ceilo)^2)))
                        })
-    ggplot(df, aes(x = pred.ceilo, y = ceilo)) +
-        geom_bin2d() +
-        scale_fill_distiller(palette = "GnBu") +
-        stat_smooth() +
-        stat_smooth(method = "lm")
-    print(summary(lm(ceilo ~ pred.ceilo, df)))
-    ret %>%
-        mutate(ratio = rmse / pred.rmse) %>%
-        ggplot(aes(x = ratio)) +
-        geom_histogram()
 }
 
 #' @export
