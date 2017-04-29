@@ -260,10 +260,20 @@ res$ggplot
 regression_table(res)
 
 ## ---- eval-tune-setup --------------------
-print(class(df))
-df <- dplyr::mutate(df, train = factor(ifelse(round(runif(nrow(df))), "train", "validate")))
-ddf <- tune.cbase.lm(filter(df, train == "train"))
-dddf <- correct.cbase.lm(filter(df, train == "validate"), ddf)
+df.val <- readRDS("~/r-packages/cbm-all-2007.rds") %>%
+    factor.vfm() %>%
+    dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
+    dplyr::mutate(ceilo = hgts.1 + elevation.m,
+                  caliop = cloud.base.altitude,
+                  caliop.local = caliop) %>%
+    dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
+    mutate(dummy = "",
+           dummy2 = "") %>%
+    dplyr::filter(region == "K") %>%
+    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
+## df <- dplyr::mutate(df, train = factor(ifelse(round(runif(nrow(df))), "train", "validate")))
+ddf <- tune.cbase.lm(df)
+dddf <- correct.cbase.lm(df.val, ddf)
 combo <- cbase.combine(dddf)
 
 ## ---- tune --------------------

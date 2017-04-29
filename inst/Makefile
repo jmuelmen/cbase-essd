@@ -23,6 +23,13 @@ cbm-all.rds:	cloud-bases-2008.sqlite
 		$(COMBINE) $(METARCOMBINEFLAGS) \
 		--resolution=resolution.all
 
+cbm-all-2007.rds:	cloud-bases-2007.sqlite
+	@ echo using R to make $@ from $<
+	env $(SRUNENV) srun $(SRUNFLAGS) \
+		$(COMBINE) $(METARCOMBINEFLAGS) \
+		--resolution=resolution.all \
+		--eval="get.metar.2007()"
+
 cbm-min_dist.rds:	cloud-bases-2008.sqlite
 	@ echo using R to make $@ from $<
 	env $(SRUNENV) srun $(SRUNFLAGS) \

@@ -361,10 +361,20 @@
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{print}\hlstd{(}\hlkwd{class}\hlstd{(df))}
-\hlstd{df} \hlkwb{<-} \hlstd{dplyr}\hlopt{::}\hlkwd{mutate}\hlstd{(df,} \hlkwc{train} \hlstd{=} \hlkwd{factor}\hlstd{(}\hlkwd{ifelse}\hlstd{(}\hlkwd{round}\hlstd{(}\hlkwd{runif}\hlstd{(}\hlkwd{nrow}\hlstd{(df))),} \hlstr{"train"}\hlstd{,} \hlstr{"validate"}\hlstd{)))}
-\hlstd{ddf} \hlkwb{<-} \hlkwd{tune.cbase.lm}\hlstd{(}\hlkwd{filter}\hlstd{(df, train} \hlopt{==} \hlstr{"train"}\hlstd{))}
-\hlstd{dddf} \hlkwb{<-} \hlkwd{correct.cbase.lm}\hlstd{(}\hlkwd{filter}\hlstd{(df, train} \hlopt{==} \hlstr{"validate"}\hlstd{), ddf)}
+\hlstd{df.val} \hlkwb{<-} \hlkwd{readRDS}\hlstd{(}\hlstr{"~/r-packages/cbm-all-2007.rds"}\hlstd{)} \hlopt{%>%}
+    \hlkwd{factor.vfm}\hlstd{()} \hlopt{%>%}
+    \hlstd{dplyr}\hlopt{::}\hlkwd{mutate}\hlstd{(}\hlkwc{region} \hlstd{=} \hlkwd{factor}\hlstd{(}\hlkwd{substr}\hlstd{(station.icao,} \hlnum{1}\hlstd{,}\hlnum{1}\hlstd{)))} \hlopt{%>%}
+    \hlstd{dplyr}\hlopt{::}\hlkwd{mutate}\hlstd{(}\hlkwc{ceilo} \hlstd{= hgts.1} \hlopt{+} \hlstd{elevation.m,}
+                  \hlkwc{caliop} \hlstd{= cloud.base.altitude,}
+                  \hlkwc{caliop.local} \hlstd{= caliop)} \hlopt{%>%}
+    \hlstd{dplyr}\hlopt{::}\hlkwd{mutate}\hlstd{(}\hlkwc{thickness} \hlstd{= cloud.top.altitude} \hlopt{-} \hlstd{cloud.base.altitude)} \hlopt{%>%}
+    \hlkwd{mutate}\hlstd{(}\hlkwc{dummy} \hlstd{=} \hlstr{""}\hlstd{,}
+           \hlkwc{dummy2} \hlstd{=} \hlstr{""}\hlstd{)} \hlopt{%>%}
+    \hlstd{dplyr}\hlopt{::}\hlkwd{filter}\hlstd{(region} \hlopt{==} \hlstr{"K"}\hlstd{)} \hlopt{%>%}
+    \hlstd{dplyr}\hlopt{::}\hlkwd{filter}\hlstd{(ceilo} \hlopt{<} \hlnum{5000}\hlstd{, hgts.1} \hlopt{<} \hlnum{3000}\hlstd{, caliop} \hlopt{<} \hlnum{3}\hlstd{)}
+\hlcom{## df <- dplyr::mutate(df, train = factor(ifelse(round(runif(nrow(df))), "train", "validate")))}
+\hlstd{ddf} \hlkwb{<-} \hlkwd{tune.cbase.lm}\hlstd{(df)}
+\hlstd{dddf} \hlkwb{<-} \hlkwd{correct.cbase.lm}\hlstd{(df.val, ddf)}
 \hlstd{combo} \hlkwb{<-} \hlkwd{cbase.combine}\hlstd{(dddf)}
 \end{alltt}
 \end{kframe}
@@ -383,13 +393,13 @@
 \hlkwd{with}\hlstd{(combo,} \hlkwd{mean}\hlstd{((ceilo} \hlopt{-} \hlstd{pred.ceilo)} \hlopt{/} \hlstd{pred.rmse))}
 \end{alltt}
 \begin{verbatim}
-## [1] 0.01895
+## [1] 0.06252
 \end{verbatim}
 \begin{alltt}
 \hlkwd{with}\hlstd{(combo,} \hlkwd{sd}\hlstd{((ceilo} \hlopt{-} \hlstd{pred.ceilo)} \hlopt{/} \hlstd{pred.rmse))}
 \end{alltt}
 \begin{verbatim}
-## [1] 1.033
+## [1] 1.055
 \end{verbatim}
 \end{kframe}
 
@@ -431,17 +441,16 @@
 \begin{frame}[fragile]{\insertsection}
   \begin{adjustbox}{max width=\textwidth}
 % latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Fri Apr 28 13:56:53 2017
+% Fri Apr 28 21:39:47 2017
 \begin{tabular}{lrrrrrlr}
   \hline
 \hline
 pred.rmse & $n$ & $r$ & $r_\text{loc}$ & RMSE (m) & bias (m) & fit & RMSE(fit) \\ 
   \hline
-(0,300] &   33 & 0.980 & 0.980 & 335. & $-$14.2 & $y = 1.30 x - 293.$ m & 220. \\ 
-  (300,400] &  849 & 0.789 & 0.789 & 335. & 16.6 & $y = 1.17 x - 147.$ m & 328. \\ 
-  (400,500] & 6736 & 0.793 & 0.793 & 452. & $-$28.6 & $y = 1.22 x - 247.$ m & 440. \\ 
-  (500,600] & 14192 & 0.663 & 0.663 & 568. & $-$0.112 & $y = 1.20 x - 290.$ m & 562. \\ 
-  (600,1e+03] & 3192 & 0.624 & 0.624 & 744. & $-$19.0 & $y = 1.28 x - 414.$ m & 733. \\ 
+(0,400] &  825 & 0.800 & 0.800 & 354. & $-$40.8 & $y = 1.14 x - 73.6$ m & 347. \\ 
+  (400,500] & 7228 & 0.787 & 0.787 & 472. & $-$49.1 & $y = 1.21 x - 223.$ m & 458. \\ 
+  (500,600] & 15176 & 0.658 & 0.658 & 578. & $-$27.0 & $y = 1.20 x - 261.$ m & 572. \\ 
+  (600,1e+03] & 3163 & 0.557 & 0.557 & 750. & $-$5.74 & $y = 1.05 x - 73.8$ m & 749. \\ 
    \hline
 \hline
 \end{tabular}

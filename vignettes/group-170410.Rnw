@@ -310,7 +310,7 @@ read_chunk("vis.R")
 
 \section{Combining measurements}
 \label{sec:combo}
-<<eval-tune-setup,cache=FALSE,results='hide'>>=
+<<eval-tune-setup,cache=TRUE,results='hide'>>=
 @ 
 %% \begin{frame}[fragile]{\insertsection}
 %%   <<tune,dev='tikz',fig.width=3,fig.height=3,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
@@ -318,7 +318,7 @@ read_chunk("vis.R")
 %% \end{frame}
 
 \begin{frame}[fragile]{\insertsection}
-  <<combo,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=TRUE,echo=TRUE>>=
+  <<combo,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=TRUE>>=
   ggplot(combo, aes(x = (pred.ceilo - ceilo) / pred.rmse)) + geom_histogram()
   ggplot(combo, aes(x = pred.rmse)) + geom_histogram()
   with(combo, mean((ceilo - pred.ceilo) / pred.rmse))
@@ -327,17 +327,17 @@ read_chunk("vis.R")
 \end{frame}
 
 \begin{frame}[fragile]{\insertsection}
-  <<combo2,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  <<combo2,dev='tikz',fig.width=9,fig.height=6,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
 @
 \end{frame}
 
 \begin{frame}[fragile]{\insertsection}
-  <<combo3,dev='tikz',fig.width=9,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  <<combo3,dev='tikz',fig.width=9,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
 @
 \end{frame}
 \begin{frame}[fragile]{\insertsection}
   \begin{adjustbox}{max width=\textwidth}
-    <<combo3-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
+    <<combo3-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
     @
   \end{adjustbox}
 \end{frame}
