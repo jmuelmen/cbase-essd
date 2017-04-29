@@ -1,15 +1,131 @@
-%% $Id$
+%% $Id: method.tex,v 1.1 2015/11/15 10:24:32 jmuelmen Exp $
 
 %% description of the retrieval method and the evaluation using various
 %% ground-based observations
 
-\documentclass{article}
-\usepackage{fullpage}
+%% Copernicus Publications Manuscript Preparation Template for LaTeX Submissions
+%% ---------------------------------
+%% This template should be used for copernicus.cls
+%% The class file and some style files are bundled in the Copernicus Latex Package which can be downloaded from the different journal webpages.
+%% For further assistance please contact the Copernicus Publications at: publications@copernicus.org
+%% http://publications.copernicus.org
 
-\setlength{\parindent}{0pt}
+
+%% Please use the following documentclass and Journal Abbreviations for Discussion Papers and Final Revised Papers.
+
+
+%% 2-Column Papers and Discussion Papers
+\documentclass[amt,manuscript]{copernicus}
+
+
+
+%% Journal Abbreviations (Please use the same for Discussion Papers and Final Revised Papers)
+
+% Archives Animal Breeding (aab)
+% Atmospheric Chemistry and Physics (acp)
+% Advances in Geosciences (adgeo)
+% Advances in Statistical Climatology, Meteorology and Oceanography (ascmo)
+% Annales Geophysicae (angeo)
+% ASTRA Proceedings (ap)
+% Atmospheric Measurement Techniques (amt)
+% Advances in Radio Science (ars)
+% Advances in Science and Research (asr)
+% Biogeosciences (bg)
+% Climate of the Past (cp)
+% Drinking Water Engineering and Science (dwes)
+% Earth System Dynamics (esd)
+% Earth Surface Dynamics (esurf)
+% Earth System Science Data (essd)
+% Fossil Record (fr)
+% Geographica Helvetica (gh)
+% Geoscientific Instrumentation, Methods and Data Systems (gi)
+% Geoscientific Model Development (gmd)
+% Geothermal Energy Science (gtes)
+% Hydrology and Earth System Sciences (hess)
+% History of Geo- and Space Sciences (hgss)
+% Journal of Sensors and Sensor Systems (jsss)
+% Mechanical Sciences (ms)
+% Natural Hazards and Earth System Sciences (nhess)
+% Nonlinear Processes in Geophysics (npg)
+% Ocean Science (os)
+% Proceedings of the International Association of Hydrological Sciences (piahs)
+% Primate Biology (pb)
+% Scientific Drilling (sd)
+% SOIL (soil)
+% Solid Earth (se)
+% The Cryosphere (tc)
+% Web Ecology (we)
+
+
+
+%% \usepackage commands included in the copernicus.cls:
+%\usepackage[german, english]{babel}
+%\usepackage{tabularx}
+%\usepackage{cancel}
+%\usepackage{multirow}
+%\usepackage{supertabular}
+%\usepackage{algorithmic}
+%\usepackage{algorithm}
+%\usepackage{amsthm}
+%\usepackage{float}
+%\usepackage{subfig}
+%\usepackage{rotating}
+\usepackage{mathptmx}
+%% \usepackage[T1]{fontenc}
 
 \begin{document}
-\section{Introduction}
+
+%% \linenumbers
+
+\title{Using CALIOP to estimate the base height of optically thick clouds}
+%% \title{Cloud base height retrievals using 2B-GEOPROF-LIDAR and C-BREE$z$}
+%% \title{Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)}
+
+
+% \Author[affil]{given_name}{surname}
+
+\Author[1]{Johannes}{M\"ulmenst\"adt}
+\Author[1]{Odran}{Sourdeval}
+\Author[1]{Edward}{Gryspeerdt}
+\Author[1]{Johannes}{Quaas}
+
+\affil[1]{Institute of Meteorology, Universit\"at Leipzig, Leipzig, Germany}
+\affil[2]{Anyone else?}
+
+%% The [] brackets identify the author with the corresponding affiliation. 1, 2, 3, etc. should be inserted.
+
+
+
+\runningtitle{Cloud base height retrievals from CALIOP}
+
+\runningauthor{M\"ulmenst\"adt et al.}
+
+\correspondence{Johannes M\"ulmenst\"adt (\href{mailto:johannes.muelmenstaedt@uni-leipzig.de}{johannes.muelmenstaedt@uni-leipzig.de})}
+
+
+
+\received{}
+\pubdiscuss{} %% only important for two-stage journals
+\revised{}
+\accepted{}
+\published{}
+
+%% These dates will be inserted by Copernicus Publications during the typesetting process.
+
+
+\firstpage{1}
+
+\maketitle
+
+
+
+\begin{abstract}
+TEXT
+\end{abstract}
+
+
+
+\introduction  %% \introduction[modified heading if necessary]
 \label{sec:intro}
 Cloud base height is one of the most important parameters of a cloud.  It
 controls how much downwelling longwave radiation the cloud emits.  Aerosol
@@ -25,9 +141,12 @@ the clouds you are looking for.
 Because cloud base height varies slowly in space within an airmass, the cloud
 bases retried by CALIOP for thin clouds may be a good proxy for the cloud base
 heights of the entire cloud cluster, including the optically thicker clouds
-within the cluster.  In this paper we investigate this hypothesis by evaluating
-cloud base heights thus inferred against cloud base heights retrieved by
-ground-based ceilometers.  
+within the cluster.  We have designed an algorithm that extrapolates the CALIOP
+cloud-base measurements into locations where CALIOP attenuates before reaching
+cloud base.  This algorithm is called CBASE (Cloud Base Altitude Spatial
+Extrapolator).  In this paper we evaluate its performance by comparing CBASE
+cloud base heights against cloud base heights observed by ground-based
+ceilometers.
 
 Section~\ref{sec:retrieval} describes the details of the retrieval algorithm.
 In Section~\ref{sec:eval} we give a quantitative evaluation of the algorithm
@@ -45,7 +164,7 @@ using CloudSat; check Stephens et al (2012) energy-balance paper.
 \label{sec:retrieval}
 Two sources of local cloud base: 
 \begin{enumerate}
-\item DARDAR method:
+\item Caliop-Based Retrieval and Error Estimate of cloud-base $z$ (C-BREE$z$):
   \begin{itemize}
   \item Cloud top below 5 km MSL
   \item Cloud phase liquid or any
@@ -59,12 +178,12 @@ take the CALIPSO-only or CALIPSO+CloudSat retrievals of cloud base height.
 These cloud base retrievals only exist sporadically ($x$\% of columns), when
 CALIOP happens to hit a sufficiently thin cloud.  To infer the cloud base height
 $\hat{z}_i$ in a column $i$ away from the retrieval locations, we calculate the
-weighted average of retrievals $z_j$ in columns $j$ within a given distance $N$
+weighted average of retrievals $z_j$ in columns $j$ within a given distance $D$
 (specified in CloudSat footprints) of the desired location:
 \begin{equation}
   \label{eq:z}
-  \hat{z}_i = \frac{\sum\limits_{|i - j| < N} z_j w_{ij}}
-  {\sum\limits_{|i - j| < N} w_{ij}}
+  \hat{z}_i = \frac{\sum\limits_{|i - j| < D} z_j w_{ij}}
+  {\sum\limits_{|i - j| < D} w_{ij}}
 \end{equation}
 where the weight $w_{ij}$ given to each retrieval depends on the distance from
 the desired position:
@@ -83,8 +202,8 @@ the available retrievals $z_j$ increases.  To be able to quantify this
 dependence later on, we define a mean distance squared (MDS)
 \begin{equation}
   \label{eq:d}
-  \hat{d}^2_i = \frac{\sum\limits_{|i - j| < N} (i-j)^2 w_{ij}}
-  {\sum\limits_{|i - j| < N} w_{ij}}
+  \hat{d}^2_i = \frac{\sum\limits_{|i - j| < D} (i-j)^2 w_{ij}}
+  {\sum\limits_{|i - j| < D} w_{ij}}
 \end{equation}
 
 Apart from the selection of the cloud base retrievals that form the input
@@ -100,45 +219,74 @@ in Section~\ref{sec:eval-results}.  Once parameters have been chosen, the
 evaluation is performed again on a \emph{different} evaluation data set to
 ensure that the results can be generalized.
 
-\subsection{Bias correction}
+\subsection{Bias correction and uncertainty estimate}
 In addition to MDS, the quality of the retrieval also depends on the homogeneity
-of the cloud scene, as will be shown in Section~\ref{sec:eval-results}.  To
-account for this effect, the retrieval bias as defined in
-Section~\ref{sec:eval-results} is calculated for different classes of cloud
-fraction based on a subset of the evaluation data.  The retrieval is then
-linearly corrected to eliminate the bias.  A new bias evaluation is performed on
-a \emph{different} evaluation data set to ensure that the results can be
-generalized. 
+of the cloud scene and the number of cloud layers, as will be shown in
+Section~\ref{sec:eval-results}.  To account for this effect, the retrieval bias
+as defined in Section~\ref{sec:eval-results} is calculated for different classes
+of cloud fraction based on a subset of the evaluation data.  The retrieval is
+then linearly corrected to eliminate the bias.  A new bias evaluation is
+performed on a \emph{different} evaluation data set to ensure that the results
+can be generalized.
 
 \section{Evaluation method}
 \label{sec:eval}
-\par Evaluation metrics:
+We assess the quality of the cloud base retrieval based on the following
+metrics: 
+\begin{description}
+\item[Correlation coefficient] between the satellite retrieval and ground-based
+  observation of the cloud base.  We use the Pearson correlation coefficient.
+  Ideally the correlation coefficient would be unity.  
+\item[Linear regression slope and intercept] (ideally 1 and 0, respectively).  
+\item[RMS retrieval error,] defined as
+  \begin{equation}
+    \label{eq:rmse}
+    \mbox{RMSE} = \frac{1}{N}\sqrt{\sum\limits_{i = 1}^{N}\left(\hat z_i - z_{\mathrm{obs}}\right)^2},
+  \end{equation}
+(ideally 0)
+\item[Retrieval bias,] defined as
+  \begin{equation}
+    \label{eq:bias}
+    \mbox{RMSE} = \frac{1}{N}\sqrt{\sum\limits_{i = 1}^{N}\left(\hat z_i - z_{\mathrm{obs}}\right)},
+  \end{equation}(ideally 0)
+\item[Efficiency,] i.e., probability that a retrieval is available at the
+  desired location (ideally 1).
+\end{description}
+These metrics are calculated based on the set of all ground-based observations
+for which a Calipso overpass is available and which meet the following
+additional conditions:
 \begin{itemize}
-\item correlation coefficient between satellite retrieval and ground-based
-  observation (ideally 1)
-\item regression slope (ideally 1) and intercept (ideally 0) between satellite
-  retrieval and ground-based observation
-\item RMS retrieval error (ideally 0)
-\item retrieval bias (ideally 0)
-\item ``efficiency'', i.e., probability of retrieval where you want it
+\item the ground-based cloud base height is below 3~km above ground level (AGL);
+  this is the height to which the ceilometer-based aviation cloud base reports
+  are reliable
+\item for the evaluation of low-cloud retrievals, the ground-based cloud base
+  height is below 3~km above mean sea level; this threshold height emulates the
+  ISCCP definition of low cloud (cloud top pressure below 690~hPa)
+\item for the evaluation of very low cloud retrievals, the ground-based cloud
+  base height is below 1~km~AGL
 \end{itemize}
 
-\par Evaluation datasets:
-\begin{itemize}
-\item METARs (ceilometer cloud bases)
-\item ICOADS (mixture of ceilometer and human observer)
-\item Polarstern (ceilometer)
-\item MAGIC (ceilometer)
-\end{itemize}
+The sources of ground-based observations are the following:
+\begin{description}
+\item[METARs] aviation routine and special weather reports (METARs) where the
+  cloud base height is measured by ceilometer; to ensure that this is the case,
+  we restrict ourselves to the contiguous continental United States.
+\item[HD(CP)$^2$ ceilometers]
+\item[ICOADS] (human observer ship-based observations)
+\item[R/V \textit{Polarstern} ceilometer]
+\item[MAGIC ceilometer]
+\end{description}
 
 \section{Evaluation results}
 \label{sec:eval-results}
+Figure~\ref{fig:metar-geoprof} shows  and Tbl.~blah.
 
 \subsection{Variables controlling the retrieval quality}
+distance from the closest CALIOP cloud-base retrieval, number of layers,
+sky condition, cloud phase, terrain variability
 
 
-
-\section{Conclusions}
+\conclusions
 \label{sec:conclusions}
 \par Summary.  How useful is the cloud-base retrieval for various purposes?
 There are two main cases: where accuracy is more important than efficiency, and
@@ -146,4 +294,38 @@ the other way around.  For surface radiative flux, accuracy is more important.
 For cloud properties, efficiency.
 
 \par 
+
+\begin{acknowledgements}
+
+\end{acknowledgements}
+
+\begin{table}[t]
+\caption{}
+\vskip4mm
+\centering
+\begin{tabular}{p{\parindent}l|lll|lll}
+\hline\hline
+&& \multicolumn{3}{c|}{Local retrieval} & \multicolumn{3}{c}{C-BASE retrieval} \\
+&& 2BGL & DARDAR & CAL & 2BGL & DARDAR & CAL \\
+\hline
+\multicolumn{2}{l|}{Efficiency} & & \\
+& METAR & \\
+& MAGIC & \\
+& \chem{HD(CP)^2} & \\
+\multicolumn{2}{l|}{Bias} & \\
+\multicolumn{2}{l|}{RMSE} \\
+\hline\hline
+\end{tabular}
+\end{table}
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=12cm, page=1]{2b-geoprof-lidar-2008.pdf}
+  \caption{Comparison of the 2B-GEOPROF-LIDAR cloud-base retrieval with METARs}
+  \label{fig:metar-geoprof}
+\end{figure*}
+\begin{figure}
+  \centering
+  \caption{Comparison of the 2B-GEOPROF-LIDAR cloud-base retrieval with METARs}
+\end{figure}
 \end{document}
