@@ -75,18 +75,39 @@
 
 \begin{document}
 
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+library(plyr)
+library(dplyr)
+library(ggplot2)
+library(cbasetools)
+## set global chunk options
+opts_chunk$set(fig.path='../figure/method-', cache.path='../cache/method-', 
+               fig.align='center', fig.show='hold', cache = TRUE, warning = FALSE, par=TRUE)
+## I use = but I can replace it with <-; set code/output width to be 68
+options(formatR.arrow=TRUE, width=68, digits=4)
+## tune details of base graphics (http://yihui.name/knitr/hooks)
+knit_hooks$set(par=function(before, options, envir){
+if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
+})
+## evaluation code chunks
+read_chunk("../eval.R")
+## visualization code chunks
+read_chunk("../vis.R")
+@
+
 %% \linenumbers
 
-\title{Using CALIOP to estimate the base height of optically thick clouds}
+\title{Using CALIOP to estimate the base height of optically thick clouds\\
 %% \title{Cloud base height retrievals using 2B-GEOPROF-LIDAR and C-BREE$z$}
-%% \title{Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)}
+Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
 
 
 % \Author[affil]{given_name}{surname}
 
 \Author[1]{Johannes}{M\"ulmenst\"adt}
 \Author[1]{Odran}{Sourdeval}
-\Author[1]{Edward}{Gryspeerdt}
+%%\Author[1]{Edward}{Gryspeerdt}
 \Author[1]{Johannes}{Quaas}
 
 \affil[1]{Institute of Meteorology, Universit\"at Leipzig, Leipzig, Germany}
@@ -132,54 +153,153 @@ controls how much downwelling longwave radiation the cloud emits.  Aerosol
 concentration and updraft speed at that level control the microphysics of the
 cloud.  It is one of the parameters that is necessary to calculate the
 subadiabaticity of the cloud.  However, it is also one of the most difficult
-parameters to retrieve from satellite.  Passive sensors: forget it.  CloudSat
-misses the small droplets at the base and cannot retrieve in the ground clutter
-region.  Calipso only detects the bases of only the thinnest clouds ($\tau < 5$,
-according to Mace and Zhang, 10.1002/2013JD021374); frequently, these are not
-the clouds you are looking for.
+parameters to retrieve from satellite.  Oxygen absorption bands: planning to
+evaluate these too.  VIIRS cloud-base temperature method: Zhu et al.~(2014, doi
+10.1002/2013GL058970).  MISR stereoscopic imager method: working on it.
+However, these are all not on the A-Train.  CloudSat misses the small droplets
+at the base and cannot retrieve in the ground clutter region.  Calipso detects
+the bases of only the thinnest clouds ($\tau < 5$, according to Mace and Zhang,
+10.1002/2013JD021374); frequently, these are not the clouds you are looking for.
 
-Because cloud base height varies slowly in space within an airmass, the cloud
-bases retried by CALIOP for thin clouds may be a good proxy for the cloud base
-heights of the entire cloud cluster, including the optically thicker clouds
-within the cluster.  We have designed an algorithm that extrapolates the CALIOP
-cloud-base measurements into locations where CALIOP attenuates before reaching
-cloud base.  This algorithm is called CBASE (Cloud Base Altitude Spatial
-Extrapolator).  In this paper we evaluate its performance by comparing CBASE
-cloud base heights against cloud base heights observed by ground-based
-ceilometers.
+Because the lifting condensation level is approximately homogeneous within an
+airmass, the cloud bases retried by CALIOP for thin clouds may be a good proxy
+for the cloud base heights of the entire cloud cluster, including the optically
+thicker clouds within the cluster.  We have designed an algorithm that
+extrapolates the CALIOP cloud-base measurements into locations where CALIOP
+attenuates before reaching cloud base.  This algorithm is called CBASE (Cloud
+Base Altitude Spatial Extrapolator).  In this paper we evaluate its performance
+by comparing CBASE cloud base heights against cloud base heights observed by
+ground-based ceilometers.
 
-Section~\ref{sec:retrieval} describes the details of the retrieval algorithm.
-In Section~\ref{sec:eval} we give a quantitative evaluation of the algorithm
-including retrieval error statistics.  We conclude in
-Section~\ref{sec:conclusions} with an outlook on the longstanding questions that
-this retrieval can help address.
+Section~\ref{sec:data} describes the data sources used in determining and
+evaluating the cloud base height.  In Section~\ref{sec:algorithm} we describe
+the algorithm and evaluate its performance, including error statistics.  We
+conclude in Section~\ref{sec:conclusions} with an outlook on the longstanding
+questions that this retrieval can help address.
 
 Literature: Meerk\"otter and Zinner (2007) (10.1029/2007GL030347) retrievals
 using cloud top properties and adiabatic assumption; presumably there are
-others.  Rosenfeld (2014) for cloud base temperature using the thinnest cloud in
+others.  Zhu et al.~(2014) for cloud base temperature using the thinnest cloud in
 a cloud cluster.  Mace and Zhang (2014) using CPR and CALIOP.  At least one more
 using CloudSat; check Stephens et al (2012) energy-balance paper.
 
-\section{Retrieval method}
-\label{sec:retrieval}
-Two sources of local cloud base: 
+\section{Data}
+\label{sec:data}
+
+Description of the CALIOP VFM data.
+
+Description of the airport ceilometers.  METARs:
+\verb+https://library.wmo.int/pmb_ged/wmo_49-v2_2013_en.pdf+; ASOS:
+\verb+http://www.nws.noaa.gov/asos/pdfs/aum-toc.pdf+ 
+
+\section{Algorithm and evaluation}
+\label{sec:algorithm}
+
+The algorithm and evaluation proceed in four steps:
 \begin{enumerate}
-\item Caliop-Based Retrieval and Error Estimate of cloud-base $z$ (C-BREE$z$):
-  \begin{itemize}
-  \item Cloud top below 5 km MSL
-  \item Cloud phase liquid or any
-  \item CALIOP surface return indicates that the cloud is thin enough to trust
-    the cloud base height
-  \end{itemize}
-\item 2B-GEOPROF-LIDAR method:
-take the CALIPSO-only or CALIPSO+CloudSat retrievals of cloud base height.
+\item We determine the cloud base height from all CALIOP profiles where the
+  surface generates a return ($\longrightarrow$ lidar is not attenuated above
+  cloud base).  We refer to these cloud base heights as \textit{local cloud base
+    heights} in the sense that they are local to the CALIOP profile.
+\item Using ground-based ceilometer data, we determine quality of cloud base
+  height depending on a number of factors.  
+\item Based on the predicted quality of each local cloud base, we either reject
+  the local cloud base or combine it with other local cloud bases within a
+  distance $D$ of the point of interest (POI) $\longrightarrow$ estimate of cloud base
+  height, estimate of cloud base height uncertainty
+\item Using a statistically independent validation dataset, we verify that the
+  predicted cloud base height and uncertainty are correct.
 \end{enumerate}
 
-These cloud base retrievals only exist sporadically ($x$\% of columns), when
-CALIOP happens to hit a sufficiently thin cloud.  To infer the cloud base height
-$\hat{z}_i$ in a column $i$ away from the retrieval locations, we calculate the
-weighted average of retrievals $z_j$ in columns $j$ within a given distance $D$
-(specified in CloudSat footprints) of the desired location:
+This section is divided into four subsections, one for each step enumerated
+above.  Figure~\ref{fig:method} illustrates the method.
+
+\subsection{Determination of local cloud base height}
+\label{sec:algorithm:local}
+Source of local cloud base from the CALIOP VFM: any profile with a surface
+return.  
+
+\subsection{Determination of local cloud base quality}
+\label{sec:algorithm:qual}
+We assess the quality of the cloud base retrieval based on the following
+metrics: 
+\begin{description}
+\item[Correlation coefficient] between the satellite retrieval and ground-based
+  observation of the cloud base.  We use the Pearson correlation coefficient.
+  Ideally the correlation coefficient would be unity.  
+\item[Linear regression slope and intercept] (ideally 1 and 0, respectively).  
+\item[RMS retrieval error,] defined as
+  \begin{equation}
+    \label{eq:rmse}
+    \mbox{RMSE} = \frac{1}{N}\sqrt{\sum\limits_{i = 1}^{N}\left(\hat z_i - z_{\mathrm{obs}}\right)^2},
+  \end{equation}
+(ideally 0)
+\item[Retrieval bias,] defined as
+  \begin{equation}
+    \label{eq:bias}
+    \mbox{bias} = \frac{1}{N}\sum\limits_{i = 1}^{N}\left(\hat z_i - z_{\mathrm{obs}}\right),
+  \end{equation}(ideally 0)
+\item[Efficiency,] i.e., probability that a retrieval is available at the
+  desired location (ideally 1).
+\end{description}
+
+These metrics are calculated based on the set of all ground-based observations
+for which a Calipso overpass is available and which meet the following
+additional conditions:
+\begin{itemize}
+\item the ground-based cloud base height is below 3~km above ground level (AGL);
+  this is the height to which the ceilometer-based aviation cloud base reports
+  are reliable
+\item for the evaluation of low-cloud retrievals, the ground-based cloud base
+  height is below 3~km above mean sea level; this threshold height emulates the
+  ISCCP definition of low cloud (cloud top pressure below 690~hPa)
+\end{itemize}
+
+The sources of ground-based observations are the following:
+\begin{description}
+\item[METARs] aviation routine and special weather reports (METARs) where the
+  cloud base height is measured by ceilometer; to ensure that this is the case,
+  we restrict ourselves to the contiguous continental United States.
+\item[HD(CP)$^2$ ceilometers]
+\item[ICOADS] (human observer ship-based observations)
+\item[R/V \textit{Polarstern} ceilometer]
+\item[MAGIC ceilometer]
+\end{description}
+
+\subsection{Combination of local cloud bases}
+\label{sec:algorithm:combination}
+These cloud base retrievals only exist sporadically (on average $x$\% of
+columns), when CALIOP happens to hit a sufficiently thin cloud.  To infer the
+cloud base height $\hat{z}$ at a point of interest (POI) that does not necessarily
+coincide with the location of a CALIOP profile, we proceed as follows.  We first
+select all local CALIOP cloud base heights within a horizontal distance
+$D_\text{max} = 100$~km of the POI.  On the basis of Section~\ref{sec:algorithm:qual}, we
+discard cloud base heights unless
+\begin{itemize}
+\item VFM quality flag high confidence in the lowest cloud feature
+\item lowest cloud feature is liquid (required because not enough data is
+  available for reliable uncertainty prediction)
+\item minimum horizontal averaging distance required for detection of the lowest
+  cloud layer is 1~km or 1/3~km
+\item geometric thickness of the lowest cloud layer is less than 1~km
+\item the feature immediately above the surface is neither ``invalid'' nor ``no
+  signal'' (indicating that although the surface may generate a detectable
+  return, the lidar is sufficiently attenuated that the cloud base, which
+  scatters less strongly than the surface, is unreliable)
+\end{itemize}
+
+For each remaining local cloud base height $z_i$, we determine the predicted
+uncertainty $\sigma_i$ based on the categories established in the previous
+section.  We determine a combined cloud base height
+\begin{equation}
+  \label{eq:combo-z}
+  z = \frac{\sum_i w_i z_i}{\sum_i w_i}
+\end{equation}
+with weights $w_i = 1/\sigma_i^2$.  
+
+we calculate the weighted average of retrievals $z_j$ in columns
+$j$ within a given distance $D$ (specified in CloudSat footprints) of the
+desired location:
 \begin{equation}
   \label{eq:z}
   \hat{z}_i = \frac{\sum\limits_{|i - j| < D} z_j w_{ij}}
@@ -206,97 +326,35 @@ dependence later on, we define a mean distance squared (MDS)
   {\sum\limits_{|i - j| < D} w_{ij}}
 \end{equation}
 
-Apart from the selection of the cloud base retrievals that form the input
-for the interpolation, the algorithm has two tunable parameters.  The first is
-the maximum distance from the desired location within which cloud base
-retrievals will be used.  As long as sufficiently large values are chosen, this
-parameter mainly governs computation time.  We have set this parameter to 200
-CloudSat columns (approximately 280~km) to either side of the desired location
-along the CloudSat track throughout the article.  The second tunable parameter
-is the width of the Gaussian weighting function.  The choice of tunable
-parameters is made on the basis of the evaluation
-in Section~\ref{sec:eval-results}.  Once parameters have been chosen, the
-evaluation is performed again on a \emph{different} evaluation data set to
-ensure that the results can be generalized.
+\subsection{Evaluation of cloud base heights and cloud base height errors}
+\label{sec:algorithm:eval}
 
-\subsection{Bias correction and uncertainty estimate}
-In addition to MDS, the quality of the retrieval also depends on the homogeneity
-of the cloud scene and the number of cloud layers, as will be shown in
-Section~\ref{sec:eval-results}.  To account for this effect, the retrieval bias
-as defined in Section~\ref{sec:eval-results} is calculated for different classes
-of cloud fraction based on a subset of the evaluation data.  The retrieval is
-then linearly corrected to eliminate the bias.  A new bias evaluation is
-performed on a \emph{different} evaluation data set to ensure that the results
-can be generalized.
+Having tuned the algorithm on data from the year 2008, we evaluate it using a
+statistically independent data set from the year 2007.
 
-\section{Evaluation method}
-\label{sec:eval}
-We assess the quality of the cloud base retrieval based on the following
-metrics: 
-\begin{description}
-\item[Correlation coefficient] between the satellite retrieval and ground-based
-  observation of the cloud base.  We use the Pearson correlation coefficient.
-  Ideally the correlation coefficient would be unity.  
-\item[Linear regression slope and intercept] (ideally 1 and 0, respectively).  
-\item[RMS retrieval error,] defined as
-  \begin{equation}
-    \label{eq:rmse}
-    \mbox{RMSE} = \frac{1}{N}\sqrt{\sum\limits_{i = 1}^{N}\left(\hat z_i - z_{\mathrm{obs}}\right)^2},
-  \end{equation}
-(ideally 0)
-\item[Retrieval bias,] defined as
-  \begin{equation}
-    \label{eq:bias}
-    \mbox{RMSE} = \frac{1}{N}\sqrt{\sum\limits_{i = 1}^{N}\left(\hat z_i - z_{\mathrm{obs}}\right)},
-  \end{equation}(ideally 0)
-\item[Efficiency,] i.e., probability that a retrieval is available at the
-  desired location (ideally 1).
-\end{description}
-These metrics are calculated based on the set of all ground-based observations
-for which a Calipso overpass is available and which meet the following
-additional conditions:
-\begin{itemize}
-\item the ground-based cloud base height is below 3~km above ground level (AGL);
-  this is the height to which the ceilometer-based aviation cloud base reports
-  are reliable
-\item for the evaluation of low-cloud retrievals, the ground-based cloud base
-  height is below 3~km above mean sea level; this threshold height emulates the
-  ISCCP definition of low cloud (cloud top pressure below 690~hPa)
-\item for the evaluation of very low cloud retrievals, the ground-based cloud
-  base height is below 1~km~AGL
-\end{itemize}
 
-The sources of ground-based observations are the following:
-\begin{description}
-\item[METARs] aviation routine and special weather reports (METARs) where the
-  cloud base height is measured by ceilometer; to ensure that this is the case,
-  we restrict ourselves to the contiguous continental United States.
-\item[HD(CP)$^2$ ceilometers]
-\item[ICOADS] (human observer ship-based observations)
-\item[R/V \textit{Polarstern} ceilometer]
-\item[MAGIC ceilometer]
-\end{description}
 
-\section{Evaluation results}
-\label{sec:eval-results}
-Figure~\ref{fig:metar-geoprof} shows  and Tbl.~blah.
+\section{Results and data product availability}
+\label{sec:results}
 
-\subsection{Variables controlling the retrieval quality}
-distance from the closest CALIOP cloud-base retrieval, number of layers,
-sky condition, cloud phase, terrain variability
+Geographic distributions of mean or median cloud base and thickness.  Annual
+cycle (if it's interesting).  
 
+Comparison with 2B-GEOPROF-LIDAR cloud bases.
+
+Data is available at DKRZ or PANGEA (need to look into which one is more
+appropriate). 
 
 \conclusions
 \label{sec:conclusions}
 \par Summary.  How useful is the cloud-base retrieval for various purposes?
 There are two main cases: where accuracy is more important than efficiency, and
-the other way around.  For surface radiative flux, accuracy is more important.
-For cloud properties, efficiency.
-
-\par 
+the other way around.  For surface radiative flux (hyperlinear in CBT), accuracy
+is more important.  For geometric thickness, efficiency.  For subadiabaticity,
+need to do the error propagation.
 
 \begin{acknowledgements}
-
+CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 \end{acknowledgements}
 
 \begin{table}[t]
@@ -318,14 +376,58 @@ For cloud properties, efficiency.
 \end{tabular}
 \end{table}
 
-\begin{figure*}
-  \centering
-  \includegraphics[width=12cm, page=1]{2b-geoprof-lidar-2008.pdf}
-  \caption{Comparison of the 2B-GEOPROF-LIDAR cloud-base retrieval with METARs}
-  \label{fig:metar-geoprof}
-\end{figure*}
 \begin{figure}
   \centering
-  \caption{Comparison of the 2B-GEOPROF-LIDAR cloud-base retrieval with METARs}
+  
+  \caption{Schematic of CALIOP cloud base determination and evaluation strategy.
+    (Draw some clouds with common cloud base, some attenuating the lidar beam,
+    others not.  A ceilometer somewhere in the picture would help.)}
+  \label{fig:method}
 \end{figure}
+
+\begin{figure}
+  \centering
+  
+  \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
+    faceted by the CALIOP VFM QA flag}
+  \label{fig:quality-qa}
+\end{figure}
+
+\begin{figure}
+  \centering
+  
+  \caption{Scatter plot of CBASE versus ceilometer cloud base height}
+  \label{fig:eval}
+\end{figure}
+
+\begin{figure}
+  \centering
+  
+  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer cloud base height}
+  \label{fig:eval-2b}
+\end{figure}
+
+\begin{figure}
+  \centering
+  
+  \caption{Distribution of cloud base error divided by predicted uncertainty;
+    overlaid is a gaussian fit}
+  \label{fig:pull}
+\end{figure}
+
+\begin{figure}
+  \centering
+  
+  \caption{Distribution of predicted uncertainty}
+  \label{fig:uncertainty}
+\end{figure}
+
+\begin{figure}
+  \centering
+  
+  \caption{Geographic distribution of median cloud bases and median cloud
+    thicknesses}
+  \label{fig:geo}
+\end{figure}
+
 \end{document}
