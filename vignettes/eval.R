@@ -276,10 +276,24 @@ ddf <- tune.cbase.lm(df)
 dddf <- correct.cbase.lm(df.val, ddf)
 combo <- cbase.combine(dddf)
 
-## ---- tune --------------------
+## ---- tune-test --------------------
 test.cbase.lm(dddf) %>% mutate(ratio = rmse / pred.rmse) %>% ggplot(aes(x = ratio)) + geom_histogram()
 
-## ---- combo2 --------------------
+## ---- combo-eval-pull --------------------
+ggplot(combo, aes(x = (pred.ceilo - ceilo) / pred.rmse)) +
+    geom_histogram() +
+    labs(x = "$(z - \\hat{z}) / \\sigma", y = "Counts") +
+    theme_bw()
+
+## ---- combo-eval-rmse --------------------
+ggplot(combo, aes(x = pred.rmse)) +
+    geom_histogram() +
+    labs(x = "\\sigma", y = "Counts") +
+    theme_bw()
+## with(combo, mean((ceilo - pred.ceilo) / pred.rmse))
+## with(combo, sd((ceilo - pred.ceilo) / pred.rmse))
+
+## ---- combo-plot --------------------
 res <- combo %>%
     ungroup() %>%
     mutate(dummy = "", dummy2 = "") %>%
@@ -289,7 +303,7 @@ res <- combo %>%
     regression_plot(title = NULL)
 res$ggplot
 
-## ---- combo3 --------------------
+## ---- combo-plot-rmseclass --------------------
 res <- combo %>%
     ungroup() %>%
     mutate(dummy = "", dummy2 = "") %>%
@@ -302,7 +316,7 @@ res <- combo %>%
     regression_plot(title = NULL)
 res$ggplot
 
-## ---- combo3-tbl --------------------
+## ---- combo-tbl-rmseclass --------------------
 regression_table(res)
 
 ## ---- glorious-victory ---------------------
