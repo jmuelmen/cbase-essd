@@ -73,6 +73,9 @@
 \usepackage{mathptmx}
 %% \usepackage[T1]{fontenc}
 
+\newcommand\comment[2]{\{\hlnum{ \textit{#1}: #2}\}}
+\newcommand\commentjm[1]{\comment{$j_\mu$}{#1}}
+
 \begin{document}
 
 <<setup, include=FALSE, cache=FALSE>>=
@@ -82,10 +85,10 @@ library(dplyr)
 library(ggplot2)
 library(cbasetools)
 ## set global chunk options
-opts_chunk$set(fig.path='../figure/method-', cache.path='../cache/method-', 
+opts_chunk$set(fig.path='figure/method-', cache.path='cache/method-', 
                fig.align='center', fig.show='hold', cache = TRUE, warning = FALSE, par=TRUE)
 ## I use = but I can replace it with <-; set code/output width to be 68
-options(formatR.arrow=TRUE, width=68, digits=4)
+options(formatR.arrow=TRUE, width=68, digits=2)
 ## tune details of base graphics (http://yihui.name/knitr/hooks)
 knit_hooks$set(par=function(before, options, envir){
 if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
@@ -259,11 +262,17 @@ The sources of ground-based observations are the following:
 \begin{description}
 \item[METARs] aviation routine and special weather reports (METARs) where the
   cloud base height is measured by ceilometer; to ensure that this is the case,
-  we restrict ourselves to the contiguous continental United States.
-\item[HD(CP)$^2$ ceilometers]
-\item[ICOADS] (human observer ship-based observations)
-\item[R/V \textit{Polarstern} ceilometer]
-\item[MAGIC ceilometer]
+  we restrict ourselves to the contiguous continental United States, where the
+  cloud base height is mostly derived automatically by laser ceilometers that
+  form part of Automated Surface Observing Stations (ASOS)
+\item[HD(CP)$^2$ ceilometers] \commentjm{Unless there is an urgent reason, these
+    will have to wait for a later paper}
+\item[ICOADS] \commentjm{Unless there is an urgent reason, these
+    will have to wait for a later paper}
+\item[R/V \textit{Polarstern} ceilometer] \commentjm{Unfortunately, there is
+    only a minute number of overpasses within 100~km, mostly at high latitudes}
+\item[MAGIC ceilometer] \commentjm{Unfortunately, the number of overpasses here
+    is also very small; need to check that I have all the MAGIC data}
 \end{description}
 
 \subsection{Combination of local cloud bases}
@@ -295,44 +304,52 @@ section.  We determine a combined cloud base height
   \label{eq:combo-z}
   z = \frac{\sum_i w_i z_i}{\sum_i w_i}
 \end{equation}
-with weights $w_i = 1/\sigma_i^2$.  
-
-we calculate the weighted average of retrievals $z_j$ in columns
-$j$ within a given distance $D$ (specified in CloudSat footprints) of the
-desired location:
+with weights
 \begin{equation}
-  \label{eq:z}
-  \hat{z}_i = \frac{\sum\limits_{|i - j| < D} z_j w_{ij}}
-  {\sum\limits_{|i - j| < D} w_{ij}}
+  \label{eq:weights}
+  w_i = 1/\sigma_i^2
 \end{equation}
-where the weight $w_{ij}$ given to each retrieval depends on the distance from
-the desired position:
+(optimal weights for uncorrelated least-squares).  In practice, the individual
+measurements of cloud base are highly correlated with fairly similar
+$\sigma_i$.  The cloud base estimate by Eq.~(\ref{eq:combo-z}) with weights
+given by Eq.~(\ref{eq:weights}) remains unbiased even in the presence of
+correlations.  However, for the combined cloud base uncertainty,
+the uncorrelated weights would yield a biased estimate in the presence of
+correlations.  The expression
 \begin{equation}
-  \label{eq:w}
-  w_{ij} = \left\{
-    \begin{array}{cl}
-      0 & \mbox{if no retrieval in column }j\\
-      \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac12\frac{(i -
-          j)^2}{\sigma^2}\right) & \mbox{otherwise}
-    \end{array}\right.
+  \label{eq:combo-sigma}
+  \sigma^2 = \frac{\sum_i^n \sigma_i^2}{n}
 \end{equation}
-The accuracy of the $\hat{z}_i$ interpolated according to
-(\ref{eq:z})--~(\ref{eq:w}) can be anticipated to decrease as the distance to
-the available retrievals $z_j$ increases.  To be able to quantify this
-dependence later on, we define a mean distance squared (MDS)
-\begin{equation}
-  \label{eq:d}
-  \hat{d}^2_i = \frac{\sum\limits_{|i - j| < D} (i-j)^2 w_{ij}}
-  {\sum\limits_{|i - j| < D} w_{ij}}
-\end{equation}
+yields acceptable results, as would be expected for highly correlated and fairly
+similar $\sigma_i$.
 
 \subsection{Evaluation of cloud base heights and cloud base height errors}
 \label{sec:algorithm:eval}
 
+<<eval-setup,cache=FALSE,echo=FALSE>>=
+@ 
+<<eval-tune-setup,cache=FALSE,results='hide',echo=FALSE>>=
+@ 
+
 Having tuned the algorithm on data from the year 2008, we evaluate it using a
-statistically independent data set from the year 2007.
+statistically independent data set from the year 2007.  In the evaluation data
+set, the ``true'' (i.e., measured by the ceilometer) cloud base height $\hat{z}$
+is known in addition to the estimated cloud base height $z$ and the estimated
+cloud base height uncertainty $\sigma$, determined according to the procedure
+described in the previous section.
 
+For unbiased retrievals of the cloud base height $z$ with correct estimates of the
+base height uncertainty $\sigma$, the pdf of the quantity
+\[ 
+\frac{z - \hat{z}}\sigma
+\]
+has zero mean and unit standard deviation. In our evaluation data set, we find a
+mean of \Sexpr{with(combo, mean((ceilo - pred.ceilo) / pred.rmse))} and a
+standard deviation of \Sexpr{with(combo, sd((ceilo - pred.ceilo) / pred.rmse))}
+-- so both the cloud base estimate and the uncertainty estimate are quite good.
 
+Discussion of representativeness of continental clouds over North America for
+the remainder of the globe.  A marine validation dataset would be very welcome. 
 
 \section{Results and data product availability}
 \label{sec:results}
@@ -378,16 +395,17 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{figure}
   \centering
-  
+  \includegraphics[width=0.5\linewidth,keepaspectratio=true]{CloudFieldCALIOP.pdf}
   \caption{Schematic of CALIOP cloud base determination and evaluation strategy.
-    (Draw some clouds with common cloud base, some attenuating the lidar beam,
-    others not.  A ceilometer somewhere in the picture would help.)}
+    \commentjm{Amazing figure by Christoph.  The only way to make it even better
+      would be to add a ceilometer.}}
   \label{fig:method}
 \end{figure}
 
 \begin{figure}
   \centering
-  
+  <<eval-qual,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
+  @
   \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
     faceted by the CALIOP VFM QA flag}
   \label{fig:quality-qa}
@@ -395,21 +413,16 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{figure}
   \centering
-  
+  <<combo-plot,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  @
   \caption{Scatter plot of CBASE versus ceilometer cloud base height}
   \label{fig:eval}
 \end{figure}
 
 \begin{figure}
   \centering
-  
-  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer cloud base height}
-  \label{fig:eval-2b}
-\end{figure}
-
-\begin{figure}
-  \centering
-  
+  <<combo-eval-pull,dev='tikz',fig.width=4,fig.height=3,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  @
   \caption{Distribution of cloud base error divided by predicted uncertainty;
     overlaid is a gaussian fit}
   \label{fig:pull}
@@ -417,17 +430,37 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{figure}
   \centering
-  
+  <<combo-eval-rmse,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  @
   \caption{Distribution of predicted uncertainty}
   \label{fig:uncertainty}
 \end{figure}
 
 \begin{figure}
   \centering
-  
+  <<eval-2bgeoprof-setup,cache=TRUE,echo=FALSE>>=
+  @ 
+  <<eval-2bgeoprof,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  @
+  %%<<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
+  %%@
+  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer cloud base height}
+  \label{fig:eval-2b}
+\end{figure}
+
+\begin{figure}
+  \centering
+  <<vis-cbase,cache=TRUE>>=
+  @
+  <<vis-cbase2,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  @
   \caption{Geographic distribution of median cloud bases and median cloud
-    thicknesses}
+    thicknesses \commentjm{Make the figure less complex.  One panel with overall
+    CBH.}}
   \label{fig:geo}
 \end{figure}
+
+<<glorious-victory,cache=FALSE,echo=FALSE>>=
+@ 
 
 \end{document}
