@@ -326,9 +326,9 @@ similar $\sigma_i$.
 \subsection{Evaluation of cloud base heights and cloud base height errors}
 \label{sec:algorithm:eval}
 
-<<eval-setup,cache=FALSE,echo=FALSE>>=
+<<eval-setup,cache=TRUE,echo=FALSE>>=
 @ 
-<<eval-tune-setup,cache=FALSE,results='hide',echo=FALSE>>=
+<<eval-tune-setup,cache=TRUE,results='hide',echo=FALSE>>=
 @ 
 
 Having tuned the algorithm on data from the year 2008, we evaluate it using a
@@ -413,7 +413,7 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{figure}
   \centering
-  <<combo-plot,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  <<combo-plot,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
   \caption{Scatter plot of CBASE versus ceilometer cloud base height}
   \label{fig:eval}
@@ -421,10 +421,10 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{figure}
   \centering
-  <<combo-eval-pull,dev='tikz',fig.width=4,fig.height=3,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  <<combo-eval-pull,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
   @
   \caption{Distribution of cloud base error divided by predicted uncertainty;
-    overlaid is a gaussian fit}
+    \commentjm{overlay a gaussian fit}}
   \label{fig:pull}
 \end{figure}
 
@@ -440,7 +440,7 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \centering
   <<eval-2bgeoprof-setup,cache=TRUE,echo=FALSE>>=
   @ 
-  <<eval-2bgeoprof,dev='tikz',fig.width=9.1,fig.height=6,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  <<eval-2bgeoprof,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
   @
   %%<<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
   %%@
@@ -450,7 +450,7 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{figure}
   \centering
-  <<vis-cbase,cache=TRUE>>=
+  <<vis-cbase,cache=TRUE,echo=FALSE,results='hide'>>=
   @
   <<vis-cbase2,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
   @

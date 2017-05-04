@@ -282,13 +282,13 @@ test.cbase.lm(dddf) %>% mutate(ratio = rmse / pred.rmse) %>% ggplot(aes(x = rati
 ## ---- combo-eval-pull --------------------
 ggplot(combo, aes(x = (pred.ceilo - ceilo) / pred.rmse)) +
     geom_histogram() +
-    labs(x = "$(z - \\hat{z}) / \\sigma", y = "Counts") +
+    labs(x = "$(z - \\hat{z}) / \\sigma$", y = "Counts") +
     theme_bw()
 
 ## ---- combo-eval-rmse --------------------
 ggplot(combo, aes(x = pred.rmse)) +
     geom_histogram() +
-    labs(x = "\\sigma", y = "Counts") +
+    labs(x = "$\\sigma$ (m)", y = "Counts") +
     theme_bw()
 ## with(combo, mean((ceilo - pred.ceilo) / pred.rmse))
 ## with(combo, sd((ceilo - pred.ceilo) / pred.rmse))
