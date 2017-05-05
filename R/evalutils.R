@@ -89,8 +89,8 @@ regression_plot <- function(df, title, xlab = "CALIOP base retrieval (km)") {
         (if (max(stats.n$n) < 1e3)
              ggplot2::geom_point(pch = ".")
          else
-             ggplot2::stat_bin2d()) +
-        ggplot2::stat_density2d(geom = "density2d") +
+             ggplot2::stat_bin2d(geom = "raster")) +
+        ggplot2::stat_density2d(geom = "density2d", col = "black") +
         ggplot2::stat_smooth(method = "lm", col = "red", fill = "red", formula = y ~ x) +
         ggplot2::stat_smooth(method = "auto", col = "blue", fill = "blue", formula = y ~ x) +
         ggplot2::geom_abline(intercept = 0, slope = 1000, lty = "dashed", col = "lightgrey") +
