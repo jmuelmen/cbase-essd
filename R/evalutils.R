@@ -78,6 +78,12 @@ regression_plot <- function(df, title, xlab = "CALIOP base retrieval (km)") {
     ##     dplyr::summarize(mean = mean(ceilo),
     ##                      sd = sd(ceilo)) 
     ## str(df.prof)
+
+    ## do not facet on dummy variables
+    gr <- gsub("^dummy.*", ".", as.character(dplyr::groups(df)))
+    ## gr <- replace(gr, as.character(gr) == "dummy", as.name("."))
+    ## gr <- gr[!grepl("^dummy.*", as.character(gr))]
+    gr <- as.formula(sprintf("%s ~ %s", gr[1], gr[2]))
     
     gg <- ggplot2::ggplot(df, ggplot2::aes(caliop, ceilo)) +
         (if (max(stats.n$n) < 1e3)
@@ -89,7 +95,7 @@ regression_plot <- function(df, title, xlab = "CALIOP base retrieval (km)") {
         ggplot2::stat_smooth(method = "auto", col = "blue", fill = "blue", formula = y ~ x) +
         ggplot2::geom_abline(intercept = 0, slope = 1000, lty = "dashed", col = "lightgrey") +
         ggplot2::coord_cartesian(ylim = c(-500,5500)) +
-        ggplot2::facet_grid(dplyr::groups(df)) +
+        (if (any(grepl("[A-Za-z0-9]", gr))) ggplot2::facet_grid(gr)) +
         ggplot2::labs(title = title, x = xlab, y = "Ceilometer base (m)") +
         ggplot2::geom_text(data = stats, ggplot2::aes(x = 5, y = 0,
                                     label = gsub("NA", "'NA'", sprintf("atop(atop(italic(n) == %.0f, italic(r)[loc] == %.2f~ italic(r)[fit] == %.2f), atop(italic(y) == %4.0f* x + %4.0f ~ fit ~ RMSE == %4.0f~m, RMSE == %4.0f~ m~bias == %4.0f~m))",
