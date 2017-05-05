@@ -17,7 +17,7 @@ df <- readRDS("~/r-packages/cbm-all.rds") %>%
 res <- df %>%
     ## filter(lays == 1) %>%
     dplyr::group_by(dummy, feature.qa.lowest.cloud) %>%
-    regression_plot(title = "feature.qa.lowest.cloud")
+    regression_plot(title = NULL)
 res$ggplot
 
 ## ---- eval-qual-tbl ---------------------
@@ -253,7 +253,7 @@ res <- df.2bgeoprof %>%
     dplyr::group_by(dummy, ## dummy2) %>%
         ## lays,
                     flag.base) %>%
-    regression_plot(title = NULL)
+    regression_plot(title = NULL, xlab = "2B-GEOPROF-LIDAR cloud base height (km)")
 res$ggplot
 
 ## ---- eval-2bgeoprof-tbl --------------------
@@ -324,7 +324,7 @@ res <- combo %>%
     ## select(-caliop) %>%
     mutate(caliop = pred.ceilo * 1e-3, caliop.local = caliop) %>%
     group_by(dummy, dummy2) %>%
-    regression_plot(title = NULL)
+    regression_plot(title = NULL, xlab = "CBASE cloud base height (km)")
 res$ggplot
 
 ## ---- combo-plot-rmseclass --------------------
@@ -337,7 +337,7 @@ res <- combo %>%
     ## select(-caliop) %>%
     mutate(caliop = pred.ceilo * 1e-3, caliop.local = caliop) %>%
     group_by(dummy, pred.rmse) %>%
-    regression_plot(title = NULL)
+    regression_plot(title = NULL, xlab = "CBASE cloud base height (km)")
 res$ggplot
 
 ## ---- combo-tbl-rmseclass --------------------
