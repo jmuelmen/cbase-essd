@@ -144,7 +144,16 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
 
 
 \begin{abstract}
-TEXT
+  A measurement technique is presented that uses CALIOP lidar profiles to
+  estimate cloud base heights.  The technique provides cloud base heights even
+  when clouds are thick enough to attenuate the lidar beam (optical thickness
+  $\tau \gtrsim 5$) by treating the cloud base height of nearby thinner clouds as
+  representative of the entire cloud field.  Using ground-based ceilometer data,
+  uncertainty estimates are derived as a function of various properties of the
+  CALIOP lidar profiles.  Evaluation of the predicted cloud base heights and
+  their predicted uncertainty using a second, statistically independent,
+  ceilometer data set shows that cloud base heights and uncertainties are biased
+  by less than 10\%.
 \end{abstract}
 
 
@@ -208,7 +217,7 @@ The algorithm and evaluation proceed in four steps:
   height depending on a number of factors.  
 \item Based on the predicted quality of each local cloud base, we either reject
   the local cloud base or combine it with other local cloud bases within a
-  distance $D$ of the point of interest (POI) $\longrightarrow$ estimate of cloud base
+  distance $D_\text{max}$ of the point of interest (POI) $\longrightarrow$ estimate of cloud base
   height, estimate of cloud base height uncertainty
 \item Using a statistically independent validation dataset, we verify that the
   predicted cloud base height and uncertainty are correct.
@@ -224,7 +233,8 @@ return.
 
 \subsection{Determination of local cloud base quality}
 \label{sec:algorithm:qual}
-We assess the quality of the cloud base retrieval based on the following
+We assess the quality of the CALIOP cloud base height $z$ using the
+ceilometer-observed cloud base height $\hat{z}$ using the following
 metrics: 
 \begin{description}
 \item[Correlation coefficient] between the satellite retrieval and ground-based
@@ -234,13 +244,14 @@ metrics:
 \item[RMS retrieval error,] defined as
   \begin{equation}
     \label{eq:rmse}
-    \mbox{RMSE} = \frac{1}{N}\sqrt{\sum\limits_{i = 1}^{N}\left(\hat z_i - z_{\mathrm{obs}}\right)^2},
+    \mbox{RMSE} = \frac{1}{N}\sqrt{\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right)^2},
   \end{equation}
-(ideally 0)
+  (ideally 0) \commentjm{This is the only metric that is actually used, so maybe
+    we should just get rid of the rest.}
 \item[Retrieval bias,] defined as
   \begin{equation}
     \label{eq:bias}
-    \mbox{bias} = \frac{1}{N}\sum\limits_{i = 1}^{N}\left(\hat z_i - z_{\mathrm{obs}}\right),
+    \mbox{bias} = \frac{1}{N}\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right),
   \end{equation}(ideally 0)
 \item[Efficiency,] i.e., probability that a retrieval is available at the
   desired location (ideally 1).
@@ -346,7 +357,8 @@ base height uncertainty $\sigma$, the pdf of the quantity
 has zero mean and unit standard deviation. In our evaluation data set, we find a
 mean of \Sexpr{with(combo, mean((ceilo - pred.ceilo) / pred.rmse))} and a
 standard deviation of \Sexpr{with(combo, sd((ceilo - pred.ceilo) / pred.rmse))}
--- so both the cloud base estimate and the uncertainty estimate are quite good.
+-- so both the cloud base estimate and the uncertainty estimate are unbiased at
+the better than 10\%\ level.
 
 Discussion of representativeness of continental clouds over North America for
 the remainder of the globe.  A marine validation dataset would be very welcome. 
