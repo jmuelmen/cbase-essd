@@ -104,6 +104,7 @@ regression_plot <- function(df, title, xlab = "CALIOP base retrieval (km)") {
     return(list(stats = stats, ggplot = gg))
 }
 
+#' @export
 sanitize.numbers <- function (str, type, math.style.negative = FALSE, math.style.exponents = FALSE) {
     if (type == "latex") {
         result <- str

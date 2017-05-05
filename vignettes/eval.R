@@ -280,18 +280,42 @@ combo <- cbase.combine(dddf)
 test.cbase.lm(dddf) %>% mutate(ratio = rmse / pred.rmse) %>% ggplot(aes(x = ratio)) + geom_histogram()
 
 ## ---- combo-eval-pull --------------------
-ggplot(combo, aes(x = (pred.ceilo - ceilo) / pred.rmse)) +
-    geom_histogram() +
-    labs(x = "$(z - \\hat{z}) / \\sigma$", y = "Counts") +
-    theme_bw()
+tikz_minus<- function(x) sub("^-", "$-$", format(x))
+tikz_sanitize <- function(x) sanitize.numbers(x, "latex", TRUE, TRUE)
 
-## ---- combo-eval-rmse --------------------
-ggplot(combo, aes(x = pred.rmse)) +
-    geom_histogram() +
-    labs(x = "$\\sigma$ (m)", y = "Counts") +
+# change the default scales
+scale_x_continuous <- function(..., labels=tikz_sanitize)
+                        ggplot2::scale_x_continuous(..., labels=labels)
+
+scale_y_continuous <- function(..., labels=tikz_sanitize)
+    ggplot2::scale_y_continuous(..., labels=labels)
+
+ggplot(combo, aes(x = ((pred.ceilo - ceilo) / pred.rmse))) +
+    geom_histogram(aes(y = ..density..)) +
+    labs(x = "$(z - \\hat{z}) / \\sigma$", y = "Density") +
+    stat_function(fun = dnorm,
+                  args = with(combo, list(mean = mean((ceilo - pred.ceilo) / pred.rmse),
+                                          sd = sd((ceilo - pred.ceilo) / pred.rmse))),
+                  col = "blue") +
     theme_bw()
 ## with(combo, mean((ceilo - pred.ceilo) / pred.rmse))
 ## with(combo, sd((ceilo - pred.ceilo) / pred.rmse))
+
+## ---- combo-eval-rmse --------------------
+tikz_minus<- function(x) sub("^-", "$-$", format(x))
+tikz_sanitize <- function(x) sanitize.numbers(x, "latex", TRUE, TRUE)
+
+# change the default scales
+scale_x_continuous <- function(..., labels=tikz_sanitize)
+                        ggplot2::scale_x_continuous(..., labels=labels)
+
+scale_y_continuous <- function(..., labels=tikz_sanitize)
+    ggplot2::scale_y_continuous(..., labels=labels)
+
+ggplot(combo, aes(x = pred.rmse)) +
+    geom_histogram(aes(y = ..density..)) +
+    labs(x = "$\\sigma$ (m)", y = "Density (m$^{-1}$)") +
+    theme_bw()
 
 ## ---- combo-plot --------------------
 res <- combo %>%
