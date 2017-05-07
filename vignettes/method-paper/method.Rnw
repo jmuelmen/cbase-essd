@@ -156,7 +156,11 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
   by less than 10\%.
 \end{abstract}
 
-
+\commentjm{General comments:
+  \begin{itemize}
+  \item repeat with AGL heights
+  \end{itemize}
+}
 
 \introduction  %% \introduction[modified heading if necessary]
 \label{sec:intro}
@@ -290,7 +294,7 @@ The sources of ground-based observations are the following:
 \label{sec:algorithm:combination}
 These cloud base retrievals only exist sporadically (on average $x$\% of
 columns), when CALIOP happens to hit a sufficiently thin cloud.  To infer the
-cloud base height $\hat{z}$ at a point of interest (POI) that does not necessarily
+cloud base height $z$ at a point of interest (POI) that does not necessarily
 coincide with the location of a CALIOP profile, we proceed as follows.  We first
 select all local CALIOP cloud base heights within a horizontal distance
 $D_\text{max} = 100$~km of the POI.  On the basis of Section~\ref{sec:algorithm:qual}, we
@@ -313,12 +317,12 @@ uncertainty $\sigma_i$ based on the categories established in the previous
 section.  We determine a combined cloud base height
 \begin{equation}
   \label{eq:combo-z}
-  z = \frac{\sum_i w_i z_i}{\sum_i w_i}
+  z = \frac{\sum\limits_i^n w_i z_i}{\sum\limits_i^n w_i}
 \end{equation}
 with weights
 \begin{equation}
   \label{eq:weights}
-  w_i = 1/\sigma_i^2
+  w_i = \frac 1 \sigma_i^2
 \end{equation}
 (optimal weights for uncorrelated least-squares).  In practice, the individual
 measurements of cloud base are highly correlated with fairly similar
@@ -329,7 +333,7 @@ the uncorrelated weights would yield a biased estimate in the presence of
 correlations.  The expression
 \begin{equation}
   \label{eq:combo-sigma}
-  \sigma^2 = \frac{\sum_i^n \sigma_i^2}{n}
+  \sigma^2 = \frac{\sum\limits_i^n \sigma_i^2}{n}
 \end{equation}
 yields acceptable results, as would be expected for highly correlated and fairly
 similar $\sigma_i$.
@@ -337,7 +341,7 @@ similar $\sigma_i$.
 \subsection{Evaluation of cloud base heights and cloud base height errors}
 \label{sec:algorithm:eval}
 
-<<eval-setup,cache=TRUE,echo=FALSE>>=
+<<eval-setup,cache=TRUE,results='hide',echo=FALSE>>=
 @ 
 <<eval-tune-setup,cache=TRUE,results='hide',echo=FALSE>>=
 @ 
@@ -349,16 +353,14 @@ is known in addition to the estimated cloud base height $z$ and the estimated
 cloud base height uncertainty $\sigma$, determined according to the procedure
 described in the previous section.
 
-For unbiased retrievals of the cloud base height $z$ with correct estimates of the
-base height uncertainty $\sigma$, the pdf of the quantity
-\[ 
-\frac{z - \hat{z}}\sigma
-\]
-has zero mean and unit standard deviation. In our evaluation data set, we find a
-mean of \Sexpr{with(combo, mean((ceilo - pred.ceilo) / pred.rmse))} and a
-standard deviation of \Sexpr{with(combo, sd((ceilo - pred.ceilo) / pred.rmse))}
--- so both the cloud base estimate and the uncertainty estimate are unbiased at
-the better than 10\%\ level.
+For satellite-derived measurements of the cloud base height $z$ that are
+unbiased with respect to the ceilometer-observed cloud base heights $\hat{z}$
+and have correctly estimated uncertainties $\sigma$, the pdf of the quantity
+$(z - \hat{z})/\sigma$ has zero mean and unit standard deviation. In our
+evaluation data set, we find a mean of \Sexpr{with(combo, mean((ceilo -
+  pred.ceilo) / pred.rmse))} and a standard deviation of \Sexpr{with(combo,
+  sd((ceilo - pred.ceilo) / pred.rmse))} -- so both the cloud base estimate and
+the uncertainty estimate are unbiased at the better than 10\%\ level.
 
 Discussion of representativeness of continental clouds over North America for
 the remainder of the globe.  A marine validation dataset would be very welcome. 
@@ -369,10 +371,16 @@ the remainder of the globe.  A marine validation dataset would be very welcome.
 Geographic distributions of mean or median cloud base and thickness.  Annual
 cycle (if it's interesting).  
 
-Comparison with 2B-GEOPROF-LIDAR cloud bases.
+Comparison with 2B-GEOPROF-LIDAR cloud bases: distinguish between radar-only and
+lidar-only bases (both is rare for warm cloud).  Radar-only mean error is large
+because the radar cloud base height predominantly clusters around the top of the
+ground clutter region with little dependence on the actual cloud base height.
+Lidar-only 2B-GEOPROF-LIDAR cloud base performs about as well as the CBASE cloud
+base on average, but does not provide an uncertainty estimate (and therefore no
+way to select only low-uncertainty cloud base estimates).
 
 Data is available at DKRZ or PANGEA (need to look into which one is more
-appropriate). 
+appropriate).  \commentjm{Obtain DOI, put it here.}
 
 \conclusions
 \label{sec:conclusions}
@@ -436,7 +444,9 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   <<combo-eval-pull,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
   @
   \caption{Distribution of cloud base error divided by predicted uncertainty;
-    \commentjm{overlay a gaussian fit}}
+    least-squares gaussian fit with mean \Sexpr{with(combo, mean((ceilo -
+      pred.ceilo) / pred.rmse))} and standard deviation \Sexpr{with(combo,
+      sd((ceilo - pred.ceilo) / pred.rmse))} is overlaid.}
   \label{fig:pull}
 \end{figure}
 
@@ -448,24 +458,35 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \label{fig:uncertainty}
 \end{figure}
 
-\begin{figure}
+\begin{figure*}
   \centering
-  <<eval-2bgeoprof-setup,cache=TRUE,echo=FALSE>>=
-  @ 
-  <<eval-2bgeoprof,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
   @
-  %%<<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
-  %%@
-  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer cloud base height}
-  \label{fig:eval-2b}
-\end{figure}
+  \caption{Scatter plot of CBASE versus ceilometer cloud base height for
+    different classes of predicted uncertainty}
+  \label{fig:uncertainty}
+\end{figure*}
 
 \begin{figure*}
   \centering
-  <<vis-cbase,cache=TRUE,echo=FALSE,results='hide'>>=
+  <<eval-2bgeoprof-setup,cache=TRUE,echo=FALSE,results='hide'>>=
+  @ 
+  <<eval-2bgeoprof,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
-  <<vis-cbase2,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
-  @
+  %%<<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
+  %%@
+  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer cloud base
+    height.  \commentjm{I \textit{think} this uses Claudia's algorithm (minimum
+      cloud base within $D_\text{max}$), but I have to check.}}
+  \label{fig:eval-2b}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  %% <<vis-cbase,cache=TRUE,echo=FALSE,results='hide'>>=
+  %% @
+  %% <<vis-cbase2,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  %% @
   \caption{Geographic distribution of median cloud bases and median cloud
     thicknesses \commentjm{Make the figure less complex.  One panel with overall
     CBH.}}
