@@ -2,16 +2,26 @@
 df <- readRDS("~/r-packages/cbm-all.rds") %>%
     factor.vfm() %>%
     dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
-    dplyr::mutate(ceilo = hgts.1 + elevation.m,
-                  caliop = cloud.base.altitude,
+    ## new way: AGL height
+    dplyr::mutate(ceilo = hgts.1,
+                  caliop = cloud.base.altitude - elevation.m * 1e-3,
                   caliop.local = caliop) %>%
+    ## ## old way: MSL height
+    ## dplyr::mutate(ceilo = hgts.1 + elevation.m,
+    ##               caliop = cloud.base.altitude,
+    ##               caliop.local = caliop) %>%
     dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
     mutate(dummy = "",
            dummy2 = "") %>%
     dplyr::filter(region == "K") %>%
-    ## dplyr::filter(dist < 50) %>%
-    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)##  %>%
-    ## dplyr::mutate(train = factor(ifelse(round(runif(nrow(df))), "train", "validate")))
+    ## new way: AGL
+    dplyr::filter(ceilo < 5000,
+                  hgts.1 < 3000,
+                  caliop > 0,
+                  caliop + elevation.m * 1e-3 < 3)
+    ## ## old way: MSL
+    ## dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
+gc()
 
 ## ---- eval-qual ---------------------
 res <- df %>%
@@ -236,9 +246,22 @@ regression_table(res)
 
 ## ---- eval-2bgeoprof-setup --------------------
 df.comp <- readRDS("~/r-packages/atrain-2bgeoprof-metar-comp-2008.rds")[,-c(10:11)]
-df.2bgeoprof <- filter(df.comp, !is.na(base.1)) %>% 
-    mutate(ceilo = base + elev, caliop = base.1 * 1e-3, caliop.local = base.1 * 1e-3) %>%
-    filter(ceilo < 5000, base < 3000, caliop < 3) %>%
+df.2bgeoprof <- filter(df.comp, !is.na(base.1)) %>%
+    ## AGL heights
+    mutate(ceilo = base,
+           caliop = (base.1 - elev) * 1e-3,
+           caliop.local = caliop) %>%
+    ## ## old: MSL heights
+    ## mutate(ceilo = base + elev,
+    ##        caliop = base.1 * 1e-3,
+    ##        caliop.local = base.1 * 1e-3) %>%
+    ## AGL heights
+    dplyr::filter(ceilo < 5000,
+                  base < 3000,
+                  caliop > 0,
+                  base.1 * 1e-3 < 3) %>%
+    ## old: MSL heights
+    ## filter(ceilo < 5000, base < 3000, caliop < 3) %>%
     mutate(region = factor(substr(station.icao, 1,1)),
            type = factor(type, levels = c("FEW", "SCT", "BKN", "OVC"), ordered = TRUE),
            flag.base = factor(flag.base, levels = 0:3, labels = c("None", "Radar", "Lidar", "Radar+Lidar")),
@@ -263,14 +286,26 @@ regression_table(res)
 df.val <- readRDS("~/r-packages/cbm-all-2007.rds") %>%
     factor.vfm() %>%
     dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
-    dplyr::mutate(ceilo = hgts.1 + elevation.m,
-                  caliop = cloud.base.altitude,
+    ## AGL
+    dplyr::mutate(ceilo = hgts.1,
+                  caliop = cloud.base.altitude - elevation.m * 1e-3,
                   caliop.local = caliop) %>%
+    ## ## old: MSL
+    ## dplyr::mutate(ceilo = hgts.1 + elevation.m,
+    ##               caliop = cloud.base.altitude,
+    ##               caliop.local = caliop) %>%
     dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
     mutate(dummy = "",
            dummy2 = "") %>%
     dplyr::filter(region == "K") %>%
-    dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
+    ## ## old: MSL
+    ## dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
+    ## new: AGL
+    dplyr::filter(ceilo < 5000,
+                  hgts.1 < 3000,
+                  caliop > 0,
+                  caliop + elevation.m * 1e-3 < 3)
+gc()
 ## df <- dplyr::mutate(df, train = factor(ifelse(round(runif(nrow(df))), "train", "validate")))
 ddf <- tune.cbase.lm(df)
 dddf <- correct.cbase.lm(df.val, ddf)
