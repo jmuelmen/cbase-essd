@@ -414,22 +414,22 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \label{fig:method}
 \end{figure}
 
-\begin{figure}
+\begin{figure*}
   \centering
   <<eval-qual,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
   @
   \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
     faceted by the CALIOP VFM QA flag}
   \label{fig:quality-qa}
-\end{figure}
+\end{figure*}
 
-\begin{figure}
+\begin{figure*}
   \centering
   <<combo-plot,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
   \caption{Scatter plot of CBASE versus ceilometer cloud base height}
   \label{fig:eval}
-\end{figure}
+\end{figure*}
 
 \begin{figure}
   \centering
@@ -460,7 +460,7 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \label{fig:eval-2b}
 \end{figure}
 
-\begin{figure}
+\begin{figure*}
   \centering
   <<vis-cbase,cache=TRUE,echo=FALSE,results='hide'>>=
   @
@@ -470,7 +470,8 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
     thicknesses \commentjm{Make the figure less complex.  One panel with overall
     CBH.}}
   \label{fig:geo}
-\end{figure}
+\end{figure*}
+
 
 <<glorious-victory,cache=FALSE,echo=FALSE>>=
 @ 
