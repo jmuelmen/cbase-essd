@@ -308,7 +308,7 @@ regression_table(res)
 ##                   caliop + elevation.m * 1e-3 < 3)
 df.val <- df
 gc()
-ddf <- tune.cbase.lm(df)
+ddf <- tune.cbase.lm(df, thresh = 0.5)
 dddf <- correct.cbase.lm(df.val, ddf)
 combo <- cbase.combine(dddf)
 gc()
