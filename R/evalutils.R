@@ -98,10 +98,13 @@ regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)") {
         ## ggplot2::coord_fixed(1) +
         (if (any(grepl("[A-Za-z0-9]", gr))) ggplot2::facet_grid(gr)) +
         ggplot2::labs(title = title, x = xlab, y = "Ceilometer base (m)") +
-        ggplot2::geom_text(data = stats, ggplot2::aes(x = 5, y = 0,
-                                    label = gsub("NA", "'NA'", sprintf("atop(atop(italic(n) == %.0f, italic(r)[loc] == %.2f~ italic(r)[fit] == %.2f), atop(italic(y) == %4.0f* x + %4.0f ~ fit ~ RMSE == %4.0f~m, RMSE == %4.0f~ m~bias == %4.0f~m))",
-                                                    n, cor.loc, cor, slope, icpt, rmse.fit, rmse, bias))),
-                           size = 4, vjust = 0, hjust = 1, parse = TRUE) +
+        ggplot2::geom_text(data = stats,
+                           ggplot2::aes(x = 3, y = 0,
+                                        label = gsub("NA", "'NA'",
+                                                     sprintf("$\\begin{aligned} n = %.0f\\\\r = %.2f\\\\ y = %4.0f x + %4.0f \\quad \\text{fit RMSE} = %4.0f\\ \\text{m}\\\\ \\text{RMSE} = %4.0f\\ \\text{m}\\quad \\text{bias} = %4.0f\\ \\text{m}\\end{aligned}$",
+                                                     ## sprintf(" n &= %.0f\\\\r &= %.2f\\\\ y = %4.0f x + %4.0f \\quad \\text{fit RMSE} = %4.0f\\ \\text{m}\\\\ \\text{RMSE} = %4.0f\\ \\text{m}\\quad \\text{bias} = %4.0f\\ \\text{m}",
+                                                    n, cor, slope, icpt, rmse.fit, rmse, bias))),
+                           size = 4, vjust = 0, hjust = 1, parse = FALSE) +
         ggplot2::scale_fill_distiller(palette = "GnBu") + ## , trans = "log10") +
         ## ggplot2::geom_pointrange(ggplot2::aes(x = caliop, y = mean,
         ##                                      ymin = mean - sd, ymax = mean + sd),
