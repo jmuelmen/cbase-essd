@@ -28,6 +28,7 @@ res <- df %>%
     ## filter(lays == 1) %>%
     dplyr::group_by(dummy, feature.qa.lowest.cloud) %>%
     regression_plot(title = NULL)
+gc()
 res$ggplot
 
 ## ---- eval-qual-tbl ---------------------
@@ -310,6 +311,7 @@ gc()
 ddf <- tune.cbase.lm(df)
 dddf <- correct.cbase.lm(df.val, ddf)
 combo <- cbase.combine(dddf)
+gc()
 
 ## ---- tune-test --------------------
 test.cbase.lm(dddf) %>% mutate(ratio = rmse / pred.rmse) %>% ggplot(aes(x = ratio)) + geom_histogram()
