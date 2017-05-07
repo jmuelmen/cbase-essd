@@ -31,15 +31,21 @@ tune.cbase.lm <- function(df, thresh = NULL) {
                         feature.above.surface,
                     function(df) {
                         index <<- index + 1
-                        models[[index]] <<- lm(ceilo ~ caliop,
-                                               if (is.null(thresh))
-                                                   df
-                                               else
-                                                   dplyr::filter(df, caliop > thresh)
-                                               )
+                        models[[index]] <<- try({
+                            lm(ceilo ~ caliop,
+                               if (is.null(thresh)) {
+                                   df
+                               } else {
+                                   dplyr::filter(df, caliop > thresh)
+                               })
+                        })
                         data.frame(index = index,
                                    rmse = sqrt(mean((df$ceilo - 1e3 * df$caliop)^2)),
-                                   pred.rmse = sqrt(mean(models[[index]]$residuals^2)))
+                                   pred.rmse = if (class(models[[index]]) != "try-error") {
+                                       sqrt(mean(models[[index]]$residuals^2))
+                                   } else {
+                                       NA
+                                   })
                     })
 
     list(models = models, df = df)
@@ -103,7 +109,11 @@ correct.cbase.lm <- function(df, correction) {
         filter(!is.na(index.model)) %>%
         plyr::ddply(~ index.model, function(x) {
             model <- models[[median(x$index.model)]]
-            pred.ceilo <- predict(model, newdata = select(x, caliop))
+            if (class(model) == "try-error") {
+                pred.ceilo <- NA
+            } else {
+                pred.ceilo <- predict(model, newdata = select(x, caliop))
+            }
             dplyr::mutate(x, pred.ceilo = pred.ceilo)
         }, .parallel = FALSE, .progress = "text")##   %>%
 }
@@ -166,7 +176,7 @@ cbase.combine <- function(df.cor) {
                          mean.pred.ceilo = mean(pred.ceilo),
                          sd.pred.rmse = sd(pred.rmse),
                          best.ceilo = pred.ceilo[which.min(pred.rmse)],
-                         pred.ceilo = sum(pred.ceilo / pred.rmse^2) / sum(pred.rmse^-2),
-                         pred.rmse.uncor = sqrt(1 / sum(pred.rmse^-2)),
-                         pred.rmse = sqrt(mean(pred.rmse^2)))
+                         pred.ceilo = sum(pred.ceilo / pred.rmse^2, na.rm = TRUE) / sum(pred.rmse^-2, na.rm = TRUE),
+                         pred.rmse.uncor = sqrt(1 / sum(pred.rmse^-2, na.rm = TRUE)),
+                         pred.rmse = sqrt(mean(pred.rmse^2, na.rm = TRUE)))
 }
