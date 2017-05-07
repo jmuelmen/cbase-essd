@@ -7,9 +7,11 @@
 NULL
 
 #' @describeIn C-BASE_tune Tuning using linear models
-#' 
+#'
+#' @param thresh Numeric.  If non-NULL, exclude retrieved base heights
+#'     below \code{thresh} from the fit.
 #' @export
-tune.cbase.lm <- function(df) {
+tune.cbase.lm <- function(df, thresh = NULL) {
     models <- list()
     index <- 0
 
@@ -29,7 +31,12 @@ tune.cbase.lm <- function(df) {
                         feature.above.surface,
                     function(df) {
                         index <<- index + 1
-                        models[[index]] <<- lm(ceilo ~ caliop, df)
+                        models[[index]] <<- lm(ceilo ~ caliop,
+                                               if (is.null(thresh))
+                                                   df
+                                               else
+                                                   dplyr::filter(df, caliop > thresh)
+                                               )
                         data.frame(index = index,
                                    rmse = sqrt(mean((df$ceilo - 1e3 * df$caliop)^2)),
                                    pred.rmse = sqrt(mean(models[[index]]$residuals^2)))

@@ -5,10 +5,13 @@
 \alias{tune.cbase.lm}
 \title{C-BASE tuning functions}
 \usage{
-tune.cbase.lm(df)
+tune.cbase.lm(df, thresh = NULL)
 }
 \arguments{
 \item{df}{Data.frame.  Contains tuning data set}
+
+\item{thresh}{Numeric.  If non-NULL, exclude retrieved base heights
+below \code{thresh} from the fit.}
 }
 \value{
 A list with two components, a list of tuned models for each
