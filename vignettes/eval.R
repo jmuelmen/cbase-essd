@@ -351,7 +351,17 @@ scale_y_continuous <- function(..., labels=tikz_sanitize)
 
 ggplot(combo, aes(x = pred.rmse)) +
     geom_histogram(aes(y = ..density..)) +
-    labs(x = "$\\sigma$ (m)", y = "Density (m$^{-1}$)") +
+    labs(x = "$\\sigma$ (m)",
+         y = "Density (m$^{-1}$)") +
+    theme_bw()
+
+## ---- combo-eval-rmse-ecdf --------------------
+ggplot(combo, aes(x = pred.rmse)) +
+    stat_ecdf(geom = "geom_histogram") +
+    ## geom_histogram(aes(y = ..density..)) +
+    labs(x = "$\\sigma$ (m)",
+         ## y = "Density (m$^{-1}$)") +
+         y = "Cumulative probability") +
     theme_bw()
 
 ## ---- combo-plot --------------------
@@ -363,6 +373,12 @@ res <- combo %>%
     group_by(dummy, dummy2) %>%
     regression_plot(title = NULL, xlab = "CBASE cloud base height (km)")
 res$ggplot
+
+## ---- combo-qq --------------------
+ggplot(combo, aes(x = sort(pred.ceilo), y = sort(ceilo))) +
+    geom_line() +
+    geom_abline(intercept = 0, slope = 1, lty = "dashed") +
+    theme_bw()
 
 ## ---- combo-plot-rmseclass --------------------
 res <- combo %>%
