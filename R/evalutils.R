@@ -94,7 +94,8 @@ regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)") {
         ggplot2::stat_smooth(method = "lm", col = "red", fill = "red", formula = y ~ x) +
         ggplot2::stat_smooth(method = "auto", col = "blue", fill = "blue", formula = y ~ x) +
         ggplot2::geom_abline(intercept = 0, slope = 1000, lty = "dashed", col = "lightgrey") +
-        ggplot2::coord_cartesian(ylim = c(-500,5500)) +
+        ## ggplot2::coord_cartesian(ylim = c(-500,5500)) +
+        ## ggplot2::coord_fixed(1) +
         (if (any(grepl("[A-Za-z0-9]", gr))) ggplot2::facet_grid(gr)) +
         ggplot2::labs(title = title, x = xlab, y = "Ceilometer base (m)") +
         ggplot2::geom_text(data = stats, ggplot2::aes(x = 5, y = 0,
