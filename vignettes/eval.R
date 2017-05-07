@@ -384,8 +384,10 @@ ggplot(combo, aes(x = sort(pred.ceilo), y = sort(ceilo))) +
 res <- combo %>%
     ungroup() %>%
     mutate(dummy = "", dummy2 = "") %>%
-    plotutils::discretize(pred.rmse, ## quantiles(pred.rmse, seq(0, 1, 0.2)),##
-                          c(0,400,500,600,1000),
+    plotutils::discretize(pred.rmse,
+                          quantile(pred.rmse, seq(0, 1, 0.1)),
+                          ## c(0,400,500,600,1000),
+                          ## c(0,450,500,550,1000),
                           as_factor = TRUE) %>%
     ## select(-caliop) %>%
     mutate(caliop = pred.ceilo * 1e-3, caliop.local = caliop) %>%
