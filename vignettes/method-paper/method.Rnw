@@ -158,7 +158,7 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
 
 \commentjm{General comments:
   \begin{itemize}
-  \item repeat with AGL heights
+  \item switch to heights above ground $\longrightarrow$ done
   \end{itemize}
 }
 
@@ -460,12 +460,20 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{figure*}
   \centering
-  <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,results='hide',echo=FALSE>>=
   @
   \caption{Scatter plot of CBASE versus ceilometer cloud base height for
     different classes of predicted uncertainty}
-  \label{fig:uncertainty}
+  \label{fig:rmseclass}
 \end{figure*}
+
+\begin{table*}[t]
+  \centering
+  \caption{CBASE cloud base statistics by decile of predicted uncertainty}
+  \label{tab:rmseclass}
+  <<combo-tbl-rmseclass,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  @
+\end{table*}
 
 \begin{figure*}
   \centering
