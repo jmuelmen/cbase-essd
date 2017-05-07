@@ -3,9 +3,12 @@
 \name{C-BASE_tune}
 \alias{C-BASE_tune}
 \alias{tune.cbase.lm}
+\alias{tune.cbase.svm}
 \title{C-BASE tuning functions}
 \usage{
 tune.cbase.lm(df, thresh = NULL)
+
+tune.cbase.svm(df)
 }
 \arguments{
 \item{df}{Data.frame.  Contains tuning data set}
@@ -23,5 +26,7 @@ C-BASE tuning functions
 \section{Functions}{
 \itemize{
 \item \code{tune.cbase.lm}: Tuning using linear models
+
+\item \code{tune.cbase.svm}: Tuning using SVM
 }}
 

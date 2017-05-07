@@ -45,6 +45,38 @@ tune.cbase.lm <- function(df, thresh = NULL) {
     list(models = models, df = df)
 }
 
+#' @describeIn C-BASE_tune Tuning using SVM
+#'
+#' @export
+tune.cbase.svm <- function(df) {
+    models <- list()
+    index <- 0
+
+    df <- df %>%
+        factor.cbase.tuning.dist() %>%
+        factor.cbase.tuning.mult() %>%
+        factor.cbase.tuning.thick() %>%
+        dplyr::filter(feature.qa.lowest.cloud == "high",
+                      phase.lowest.cloud == "water",
+                      !(feature.above.surface %in% c("invalid", "no signal")),
+                      horizontal.averaging.lowest.cloud.min < "5 km") %>%
+        plyr::ddply(~ dist +
+                        resolution.out +
+                        feature.qa.lowest.cloud +
+                        thickness +
+                        phase.lowest.cloud +
+                        feature.above.surface,
+                    function(df) {
+                        index <<- index + 1
+                        models[[index]] <<- e1071::lm(ceilo ~ caliop, df)
+                        data.frame(index = index,
+                                   rmse = sqrt(mean((df$ceilo - 1e3 * df$caliop)^2)),
+                                   pred.rmse = sqrt(mean(models[[index]]$residuals^2)))
+                    })
+
+    list(models = models, df = df)
+}
+
 #' @export
 correct.cbase.lm <- function(df, correction) {
     models <- correction$models
