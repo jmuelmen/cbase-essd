@@ -184,7 +184,7 @@ regression_table <- function(df.stats) {
         select(-starts_with("dummy")) %>%
         mutate("$n$" = n,
                "$r$" = cor,
-               "$r_\\text{loc}$" = cor.loc,
+               ## "$r_\\text{loc}$" = cor.loc,
                "RMSE (m)" = rmse,
                "bias (m)" = bias,
                fit = sanitize.numbers(sprintf("$y = %#.3G x %s %#.3G$ m",
@@ -192,8 +192,9 @@ regression_table <- function(df.stats) {
                                               ifelse(icpt < 0, "-", "+"),
                                               abs(icpt)),
                                       type = "latex",
-                                      math.style.exponents = "ensuremath"),
-               "RMSE(fit)" = rmse.fit) %>%
+                                      math.style.exponents = "ensuremath")## ,
+               ## "RMSE(fit)" = rmse.fit
+               ) %>%
         select(-(n:rmse.fit)) %>%
         xtable::xtable(.,
                        auto = TRUE,
