@@ -46,7 +46,7 @@ tune.cbase.lm <- function(df, thresh = NULL) {
                                    } else {
                                        NA
                                    })
-                    })
+                    }, .parallel = FALSE, .progress = "text")
 
     list(models = models, df = df)
 }
@@ -78,7 +78,7 @@ tune.cbase.svm <- function(df) {
                         data.frame(index = index,
                                    rmse = sqrt(mean((df$ceilo - 1e3 * df$caliop)^2)),
                                    pred.rmse = sqrt(mean(models[[index]]$residuals^2)))
-                    })
+                    }, .parallel = FALSE, .progress = "text")
 
     list(models = models, df = df)
 }
