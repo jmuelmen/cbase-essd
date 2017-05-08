@@ -322,7 +322,7 @@ section.  We determine a combined cloud base height
 with weights
 \begin{equation}
   \label{eq:weights}
-  w_i = \frac 1 \sigma_i^2
+  w_i = \frac 1 {\sigma_i^2}
 \end{equation}
 (optimal weights for uncorrelated least-squares).  In practice, the individual
 measurements of cloud base are highly correlated with fairly similar
@@ -333,7 +333,7 @@ the uncorrelated weights would yield a biased estimate in the presence of
 correlations.  The expression
 \begin{equation}
   \label{eq:combo-sigma}
-  \sigma^2 = \frac{\sum\limits_i^n \sigma_i^2}{n}
+  \sigma^2 = \frac 1 n \sum\limits_i^n \sigma_i^2
 \end{equation}
 yields acceptable results, as would be expected for highly correlated and fairly
 similar $\sigma_i$.
@@ -394,24 +394,24 @@ need to do the error propagation.
 CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 \end{acknowledgements}
 
-\begin{table}[t]
-\caption{}
-\vskip4mm
-\centering
-\begin{tabular}{p{\parindent}l|lll|lll}
-\hline\hline
-&& \multicolumn{3}{c|}{Local retrieval} & \multicolumn{3}{c}{C-BASE retrieval} \\
-&& 2BGL & DARDAR & CAL & 2BGL & DARDAR & CAL \\
-\hline
-\multicolumn{2}{l|}{Efficiency} & & \\
-& METAR & \\
-& MAGIC & \\
-& \chem{HD(CP)^2} & \\
-\multicolumn{2}{l|}{Bias} & \\
-\multicolumn{2}{l|}{RMSE} \\
-\hline\hline
-\end{tabular}
-\end{table}
+%% \begin{table}[t]
+%% \caption{}
+%% \vskip4mm
+%% \centering
+%% \begin{tabular}{p{\parindent}l|lll|lll}
+%% \hline\hline
+%% && \multicolumn{3}{c|}{Local retrieval} & \multicolumn{3}{c}{C-BASE retrieval} \\
+%% && 2BGL & DARDAR & CAL & 2BGL & DARDAR & CAL \\
+%% \hline
+%% \multicolumn{2}{l|}{Efficiency} & & \\
+%% & METAR & \\
+%% & MAGIC & \\
+%% & \chem{HD(CP)^2} & \\
+%% \multicolumn{2}{l|}{Bias} & \\
+%% \multicolumn{2}{l|}{RMSE} \\
+%% \hline\hline
+%% \end{tabular}
+%% \end{table}
 
 \begin{figure}
   \centering
@@ -458,19 +458,21 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \label{fig:uncertainty}
 \end{figure}
 
-\begin{figure*}
-  \centering
-  <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,results='hide',echo=FALSE>>=
-  @
-  \caption{Scatter plot of CBASE versus ceilometer cloud base height for
-    different classes of predicted uncertainty}
-  \label{fig:rmseclass}
-\end{figure*}
+%% \begin{figure*}
+%%   \centering
+%%   <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,results='hide',echo=FALSE>>=
+%%   @
+%%   \caption{Scatter plot of CBASE versus ceilometer cloud base height for
+%%     different classes of predicted uncertainty}
+%%   \label{fig:rmseclass}
+%% \end{figure*}
 
 \begin{table*}[t]
   \centering
   \caption{CBASE cloud base statistics by decile of predicted uncertainty}
   \label{tab:rmseclass}
+  <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,results='hide',echo=FALSE>>=
+  @
   <<combo-tbl-rmseclass,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
   @
 \end{table*}

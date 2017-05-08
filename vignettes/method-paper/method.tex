@@ -353,7 +353,7 @@ section.  We determine a combined cloud base height
 with weights
 \begin{equation}
   \label{eq:weights}
-  w_i = \frac 1 \sigma_i^2
+  w_i = \frac 1 {\sigma_i^2}
 \end{equation}
 (optimal weights for uncorrelated least-squares).  In practice, the individual
 measurements of cloud base are highly correlated with fairly similar
@@ -364,7 +364,7 @@ the uncorrelated weights would yield a biased estimate in the presence of
 correlations.  The expression
 \begin{equation}
   \label{eq:combo-sigma}
-  \sigma^2 = \frac{\sum\limits_i^n \sigma_i^2}{n}
+  \sigma^2 = \frac 1 n \sum\limits_i^n \sigma_i^2
 \end{equation}
 yields acceptable results, as would be expected for highly correlated and fairly
 similar $\sigma_i$.
@@ -386,7 +386,7 @@ For satellite-derived measurements of the cloud base height $z$ that are
 unbiased with respect to the ceilometer-observed cloud base heights $\hat{z}$
 and have correctly estimated uncertainties $\sigma$, the pdf of the quantity
 $(z - \hat{z})/\sigma$ has zero mean and unit standard deviation. In our
-evaluation data set, we find a mean of 0 and a standard deviation of 1.03 -- so both the cloud base estimate and
+evaluation data set, we find a mean of 0.03 and a standard deviation of 1.05 -- so both the cloud base estimate and
 the uncertainty estimate are unbiased at the better than 10\%\ level.
 
 Discussion of representativeness of continental clouds over North America for
@@ -421,24 +421,24 @@ need to do the error propagation.
 CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 \end{acknowledgements}
 
-\begin{table}[t]
-\caption{}
-\vskip4mm
-\centering
-\begin{tabular}{p{\parindent}l|lll|lll}
-\hline\hline
-&& \multicolumn{3}{c|}{Local retrieval} & \multicolumn{3}{c}{C-BASE retrieval} \\
-&& 2BGL & DARDAR & CAL & 2BGL & DARDAR & CAL \\
-\hline
-\multicolumn{2}{l|}{Efficiency} & & \\
-& METAR & \\
-& MAGIC & \\
-& \chem{HD(CP)^2} & \\
-\multicolumn{2}{l|}{Bias} & \\
-\multicolumn{2}{l|}{RMSE} \\
-\hline\hline
-\end{tabular}
-\end{table}
+% \begin{table}[t]
+% \caption{}
+% \vskip4mm
+% \centering
+% \begin{tabular}{p{\parindent}l|lll|lll}
+% \hline\hline
+% && \multicolumn{3}{c|}{Local retrieval} & \multicolumn{3}{c}{C-BASE retrieval} \\
+% && 2BGL & DARDAR & CAL & 2BGL & DARDAR & CAL \\
+% \hline
+% \multicolumn{2}{l|}{Efficiency} & & \\
+% & METAR & \\
+% & MAGIC & \\
+% & \chem{HD(CP)^2} & \\
+% \multicolumn{2}{l|}{Bias} & \\
+% \multicolumn{2}{l|}{RMSE} \\
+% \hline\hline
+% \end{tabular}
+% \end{table}
 
 \begin{figure}
   \centering
@@ -495,7 +495,7 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \end{knitrout}
   \caption{Distribution of cloud base error divided by predicted uncertainty;
-    least-squares gaussian fit with mean 0 and standard deviation 1.03 is overlaid.}
+    least-squares gaussian fit with mean 0.03 and standard deviation 1.05 is overlaid.}
   \label{fig:pull}
 \end{figure}
 
@@ -515,44 +515,37 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \label{fig:uncertainty}
 \end{figure}
 
-\begin{figure*}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=0.95\textwidth]{figure/method-combo-plot-rmseclass-1} 
-
-}
-
-
-
-\end{knitrout}
-  \caption{Scatter plot of CBASE versus ceilometer cloud base height for
-    different classes of predicted uncertainty}
-  \label{fig:rmseclass}
-\end{figure*}
+%% \begin{figure*}
+%%   \centering
+%%   <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,results='hide',echo=FALSE>>=
+%%   @
+%%   \caption{Scatter plot of CBASE versus ceilometer cloud base height for
+%%     different classes of predicted uncertainty}
+%%   \label{fig:rmseclass}
+%% \end{figure*}
 
 \begin{table*}[t]
   \centering
   \caption{CBASE cloud base statistics by decile of predicted uncertainty}
   \label{tab:rmseclass}
+
 % latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Sun May  7 14:05:45 2017
+% Mon May  8 15:03:11 2017
 \begin{tabular}{lrrrrl}
   \hline
 \hline
 pred.rmse & $n$ & $r$ & RMSE (m) & bias (m) & fit \\ 
   \hline
-(187,436] & 2512 & 0.759 & 358. & 7.00 & $y = 1.20 x - 143.$ m \\ 
-  (436,462] & 2512 & 0.750 & 419. & $-$13.8 & $y = 1.27 x - 268.$ m \\ 
-  (462,479] & 2512 & 0.717 & 459. & $-$20.2 & $y = 1.23 x - 238.$ m \\ 
-  (479,494] & 2512 & 0.664 & 484. & $-$2.81 & $y = 1.18 x - 195.$ m \\ 
-  (494,507] & 2512 & 0.622 & 518. & 9.43 & $y = 1.17 x - 209.$ m \\ 
-  (507,517] & 2516 & 0.558 & 539. & 24.8 & $y = 1.14 x - 190.$ m \\ 
-  (517,530] & 2507 & 0.609 & 537. & $-$6.05 & $y = 1.18 x - 201.$ m \\ 
-  (530,551] & 2518 & 0.588 & 566. & 8.10 & $y = 1.19 x - 240.$ m \\ 
-  (551,586] & 2506 & 0.550 & 640. & $-$1.97 & $y = 1.19 x - 226.$ m \\ 
-  (586,764] & 2512 & 0.472 & 710. & 12.0 & $y = 1.12 x - 154.$ m \\ 
+(187,436] & 2624 & 0.749 & 403. & $-$33.2 & $y = 1.14 x - 63.5$ m \\ 
+  (436,461] & 2624 & 0.722 & 429. & $-$26.4 & $y = 1.20 x - 186.$ m \\ 
+  (461,478] & 2624 & 0.725 & 460. & $-$26.3 & $y = 1.25 x - 256.$ m \\ 
+  (478,492] & 2624 & 0.693 & 466. & $-$29.4 & $y = 1.19 x - 182.$ m \\ 
+  (492,506] & 2635 & 0.616 & 512. & $-$0.0279 & $y = 1.14 x - 157.$ m \\ 
+  (506,517] & 2721 & 0.564 & 550. & $-$12.7 & $y = 1.14 x - 157.$ m \\ 
+  (517,530] & 2516 & 0.566 & 562. & $-$0.809 & $y = 1.11 x - 131.$ m \\ 
+  (530,550] & 2624 & 0.566 & 569. & $-$29.9 & $y = 1.15 x - 150.$ m \\ 
+  (550,582] & 2624 & 0.497 & 640. & $-$11.8 & $y = 1.06 x - 66.1$ m \\ 
+  (582,764] & 2624 & 0.446 & 716. & 13.1 & $y = 0.977 x + 14.6$ m \\ 
    \hline
 \hline
 \end{tabular}

@@ -288,32 +288,36 @@ val.self <- FALSE
 if (val.self) {
     df.val <- df
 } else {
-df.val <- readRDS("~/r-packages/cbm-all-2007.rds") %>%
-    factor.vfm() %>%
-    dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
-    ## AGL
-    dplyr::mutate(ceilo = hgts.1,
-                  caliop = cloud.base.altitude - elevation.m * 1e-3,
-                  caliop.local = caliop) %>%
-    ## ## old: MSL
-    ## dplyr::mutate(ceilo = hgts.1 + elevation.m,
-    ##               caliop = cloud.base.altitude,
-    ##               caliop.local = caliop) %>%
-    dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
-    mutate(dummy = "",
-           dummy2 = "") %>%
-    dplyr::filter(region == "K") %>%
-    ## ## old: MSL
-    ## dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
-    ## new: AGL
-    dplyr::filter(ceilo < 5000,
-                  hgts.1 < 3000,
-                  caliop > 0,
-                  caliop + elevation.m * 1e-3 < 3)
+    df.val <- readRDS("~/r-packages/cbm-all-2007.rds") %>%
+        factor.vfm() %>%
+        dplyr::mutate(region = factor(substr(station.icao, 1,1))) %>%
+        ## AGL
+        dplyr::mutate(ceilo = hgts.1,
+                      caliop = cloud.base.altitude - elevation.m * 1e-3,
+                      caliop.local = caliop) %>%
+        ## ## old: MSL
+        ## dplyr::mutate(ceilo = hgts.1 + elevation.m,
+        ##               caliop = cloud.base.altitude,
+        ##               caliop.local = caliop) %>%
+        dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude) %>%
+        mutate(dummy = "",
+               dummy2 = "") %>%
+        dplyr::filter(region == "K") %>%
+        ## ## old: MSL
+        ## dplyr::filter(ceilo < 5000, hgts.1 < 3000, caliop < 3)
+        ## new: AGL
+        dplyr::filter(ceilo < 5000,
+                      hgts.1 < 3000,
+                      caliop > 0,
+                      caliop + elevation.m * 1e-3 < 3)
 }
 gc()
-## ddf <- tune.cbase.lm(df, thresh = 0.5)
-ddf <- tune.cbase.svm(df)
+val.svm <- FALSE
+if (val.svm) {
+    ddf <- tune.cbase.svm(df)
+} else {
+    ddf <- tune.cbase.lm(df)
+}
 dddf <- correct.cbase.lm(df.val, ddf)
 combo <- cbase.combine(dddf)
 gc()
@@ -398,7 +402,7 @@ res <- combo %>%
     mutate(caliop = pred.ceilo * 1e-3, caliop.local = caliop) %>%
     group_by(dummy, pred.rmse) %>%
     regression_plot(title = NULL, xlab = "CBASE cloud base height (km)")
-res$ggplot
+## res$ggplot
 
 ## ---- combo-tbl-rmseclass --------------------
 regression_table(res)
