@@ -74,7 +74,7 @@ tune.cbase.svm <- function(df) {
                         feature.above.surface,
                     function(df) {
                         index <<- index + 1
-                        models[[index]] <<- e1071::lm(ceilo ~ caliop, df)
+                        models[[index]] <<- e1071::svm(ceilo ~ caliop, df)
                         data.frame(index = index,
                                    rmse = sqrt(mean((df$ceilo - 1e3 * df$caliop)^2)),
                                    pred.rmse = sqrt(mean(models[[index]]$residuals^2)))
