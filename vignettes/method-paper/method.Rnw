@@ -90,9 +90,9 @@ opts_chunk$set(fig.path='figure/method-', cache.path='cache/method-',
 ## I use = but I can replace it with <-; set code/output width to be 68
 options(formatR.arrow=TRUE, width=68, digits=2)
 ## tune details of base graphics (http://yihui.name/knitr/hooks)
-knit_hooks$set(par=function(before, options, envir){
-if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
-})
+## knit_hooks$set(par=function(before, options, envir){
+## if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
+## })
 ## evaluation code chunks
 read_chunk("../eval.R")
 ## visualization code chunks
@@ -164,40 +164,49 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
 
 \introduction  %% \introduction[modified heading if necessary]
 \label{sec:intro}
-Cloud base height is one of the most important parameters of a cloud.  It
-controls how much downwelling longwave radiation the cloud emits.  Aerosol
-concentration and updraft speed at that level control the microphysics of the
-cloud.  It is one of the parameters that is necessary to calculate the
-subadiabaticity of the cloud.  However, it is also one of the most difficult
-parameters to retrieve from satellite.  Oxygen absorption bands: planning to
-evaluate these too.  VIIRS cloud-base temperature method: Zhu et al.~(2014, doi
-10.1002/2013GL058970).  MISR stereoscopic imager method: working on it.
-However, these are all not on the A-Train.  CloudSat misses the small droplets
-at the base and cannot retrieve in the ground clutter region.  Calipso detects
-the bases of only the thinnest clouds ($\tau < 5$, according to Mace and Zhang,
-10.1002/2013JD021374); frequently, these are not the clouds you are looking for.
+Cloud base height is an important geometric parameter of a cloud.  It controls
+how much downwelling longwave radiation the cloud emits.  Aerosol concentration
+and updraft speed at that level control the microphysics of the cloud.  It is
+one of the parameters that is required in the calculation of the subadiabaticity
+of the cloud.  However, due to the viewing geometry, it is also one of the most
+difficult parameters to retrieve from satellite.  
 
-Because the lifting condensation level is approximately homogeneous within an
-airmass, the cloud bases retried by CALIOP for thin clouds may be a good proxy
-for the cloud base heights of the entire cloud cluster, including the optically
-thicker clouds within the cluster.  We have designed an algorithm that
-extrapolates the CALIOP cloud-base measurements into locations where CALIOP
-attenuates before reaching cloud base.  This algorithm is called CBASE (Cloud
-Base Altitude Spatial Extrapolator).  In this paper we evaluate its performance
-by comparing CBASE cloud base heights against cloud base heights observed by
-ground-based ceilometers.
+Multiple methods have been proposed for satellite determination of the cloud
+base height.  VIIRS cloud-base temperature method: Zhu et al.~(2014, doi
+10.1002/2013GL058970).  Results of evaluating cloud base heights inferred from
+oxygen absorption bands and from MISR stereoscopic images will be reported in
+separate manuscripts.  For analyses wishing to combine cloud base information
+with other cloud properties retrieved by A-Train satellites, these methods share
+the disadvantage that the required instruments are not part of the A-Train.
+Methods that are applicable to A-Train satellites are based on MODIS cloud
+properties retrieved near cloud top and integrated along moist adiabats to
+determine the cloud thickness (Meerk\"otter and Zinner (2007)
+(10.1029/2007GL030347)) or on active remote sensing by CloudSat (2B-GEOPROF,
+Marchand et al) or a combination of CloudSat and CALIOP (2B-GEOPROF-LIDAR, Mace
+and Zhang 2014).  The MODIS-derived cloud thickness assumes adiabatic cloud
+profiles and therefore cannot be used to constrain subadiabaticity.  CloudSat
+misses the small droplets at the base of nonprecipitating clouds, and retrievals
+are further degraded in the ground clutter region.  CALIOP detects the bases of
+only the thinnest clouds ($\tau < 5$, according to Mace and Zhang,
+10.1002/2013JD021374); frequently, it is desirable to know the base height of
+thick clouds as well.
+
+In this paper, we revisit the CALIOP cloud base determination.  Because the
+lifting condensation level is approximately homogeneous within an airmass, the
+cloud bases retried by CALIOP for thin clouds may be a good proxy for the cloud
+base heights of an entire cloud field, including the optically thicker clouds
+within the filed.  We have designed an algorithm that extrapolates the CALIOP
+cloud-base measurements into locations where CALIOP attenuates before reaching
+cloud base.  This algorithm is called CBASE (Cloud Base Altitude Spatial
+Extrapolator).  In this paper we evaluate its performance by comparing CBASE
+cloud base heights against cloud base heights observed by ground-based
+ceilometers.
 
 Section~\ref{sec:data} describes the data sources used in determining and
 evaluating the cloud base height.  In Section~\ref{sec:algorithm} we describe
 the algorithm and evaluate its performance, including error statistics.  We
 conclude in Section~\ref{sec:conclusions} with an outlook on the longstanding
-questions that this retrieval can help address.
-
-Literature: Meerk\"otter and Zinner (2007) (10.1029/2007GL030347) retrievals
-using cloud top properties and adiabatic assumption; presumably there are
-others.  Zhu et al.~(2014) for cloud base temperature using the thinnest cloud in
-a cloud cluster.  Mace and Zhang (2014) using CPR and CALIOP.  At least one more
-using CloudSat; check Stephens et al (2012) energy-balance paper.
+questions that this retrieval can address.
 
 \section{Data}
 \label{sec:data}
