@@ -258,8 +258,8 @@ At several points in the algorithm development, it is necessary to know the true
 the year 2008 at those points.  A statistically independent data set is required
 for an unbiased evaluation of the algorithm performance; we use the year 2007.
 
-This section is divided into four subsections, one for each step enumerated
-above.
+This section is divided into four subsections, one for each algorithm step
+enumerated above.
 
 Figure~\ref{fig:method} illustrates the method.
 
@@ -356,15 +356,17 @@ We can now consider the joint distribution of CALIOP and ceilometer cloud bases
 for each combination of the above variables.  (Base heights above ground are
 used to remove an intrinsic correlation due to terrain.)  Because of the viewing
 geometry, high CALIOP cloud bases tend to be overestimates where a higher layer
-obscures a lower layer.  It is desirable to correct for this bias.  The options
-are no correction, a linear correction (which partially corrects for the high
-bias of high CALIOP base heights but introduces a counterbias at low CALIOP base
-heights), and a nonlinear correction that does not suffer from the counterbias
-at low CALIOP base heights.  Our choice for nonlinear correction is a support
-vector machine.  The final choice of correction is based on the performance of
-the three options on the tuning sample after combination has been performed
-according to the next step of the algorithm
-(Section~\ref{sec:algorithm:combination}). 
+obscures a lower layer.  \commentjm{Isn't the actual reason a combination of
+  regression dilution at the extremes of the distribution and phase space
+  truncation at a physical boundary for low cloud bases?}  It is desirable to
+correct for this bias.  The options are no correction, a linear correction
+(which partially corrects for the high bias of high CALIOP base heights but
+introduces a counterbias at low CALIOP base heights), and a nonlinear correction
+that does not suffer from the counterbias at low CALIOP base heights.  Our
+choice for nonlinear correction is a support vector machine.  The final choice
+of correction is based on the performance of the three options on the tuning
+sample after combination has been performed according to the next step of the
+algorithm (Section~\ref{sec:algorithm:combination}).
 
 Following bias correction, the sample RMSE is calculated for each combination of
 $D$, $n$, and $\Delta z$.  The sample RMSE is taken as an estimate of the
@@ -372,23 +374,13 @@ statistical uncertainty $\sigma(D,n,\Delta z)$ on the CALIOP cloud base height.
 
 \subsection{Combination of local cloud bases}
 \label{sec:algorithm:combination}
-CALIOP cloud base heights only exist sporadically (on average $x$\% of columns),
-when CALIOP happens to hit a sufficiently thin cloud.  To infer the cloud base
-height $z$ at a point of interest (POI) that does not necessarily coincide with
-the location of a CALIOP profile, we proceed as follows.  We first select all
-local CALIOP cloud base heights within a horizontal distance
-$D_\text{max} = 100$~km of the POI.  On the basis of
-Section~\ref{sec:algorithm:qual}, we discard cloud base heights unless
-\begin{itemize}
-\item VFM quality flag high confidence in the lowest cloud feature
-\item lowest cloud feature is liquid (required because not enough data is
-  available for reliable uncertainty prediction)
-\item minimum horizontal averaging distance required for detection of the lowest
-  cloud layer is 1~km or 1/3~km
-\item geometric thickness of the lowest cloud layer is less than 1~km
-\item the feature immediately above the surface is neither ``invalid'' nor ``no
-  signal'' 
-\end{itemize}
+CALIOP cloud base heights only exist sporadically \commentjm{(on average $x$\%
+  of columns)}, when CALIOP happens to hit a sufficiently thin cloud.  To infer
+the cloud base height $z$ at a point of interest (POI) that does not necessarily
+coincide with the location of a CALIOP profile, we proceed as follows.  We first
+select all local CALIOP cloud base heights within a horizontal distance
+$D_\text{max} = 100$~km of the POI that satisfy the additional quality cuts
+described in Section~\ref{sec:algorithm:qual}.
 
 For each remaining local cloud base height $z_i$, we determine the predicted
 uncertainty $\sigma_i$ based on the categories established in the previous
@@ -415,6 +407,16 @@ correlations.  The expression
 \end{equation}
 yields acceptable results, as would be expected for highly correlated and fairly
 similar $\sigma_i$.
+
+One choice remains to be made, namely which of the bias correction methods
+described in Section~\ref{sec:algorithm:qual} to apply to the local cloud base
+heights before combination.  The uncorrected local base heights result in a high
+bias (Figure~S1), as would be expected from the high bias on the constituent
+local cloud base heights.  The linear correction, which reduces the high bias
+for high cloud base heights but introduces a counterbias for low cloud base
+heights, leads to a low bias in the combined base height (Figure~S2), again as
+would be expected.  Among the correction methods investigated, the SVM-based
+correction results in the behavior closest to the 1-to-1 line.
 
 \subsection{Evaluation of cloud base heights and cloud base height errors}
 \label{sec:algorithm:eval}
