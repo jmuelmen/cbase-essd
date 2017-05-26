@@ -195,114 +195,54 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
 
 \introduction  %% \introduction[modified heading if necessary]
 \label{sec:intro}
-Cloud base height is one of the most important parameters of a cloud.  It
-controls how much downwelling longwave radiation the cloud emits.  Aerosol
-concentration and updraft speed at that level control the microphysics of the
-cloud.  It is one of the parameters that is necessary to calculate the
-subadiabaticity of the cloud.  However, it is also one of the most difficult
-parameters to retrieve from satellite.  Oxygen absorption bands: planning to
-evaluate these too.  VIIRS cloud-base temperature method: Zhu et al.~(2014, doi
-10.1002/2013GL058970).  MISR stereoscopic imager method: working on it.
-However, these are all not on the A-Train.  CloudSat misses the small droplets
-at the base and cannot retrieve in the ground clutter region.  Calipso detects
-the bases of only the thinnest clouds ($\tau < 5$, according to Mace and Zhang,
-10.1002/2013JD021374); frequently, these are not the clouds you are looking for.
+Cloud base height is an important geometric parameter of a cloud.  It controls
+how much downwelling longwave radiation the cloud emits.  Aerosol concentration
+and updraft speed at that level control the microphysics of the cloud.  It is
+one of the parameters that is required in the calculation of the subadiabaticity
+of the cloud.  However, due to the viewing geometry, it is also one of the most
+difficult parameters to retrieve from satellite.  
 
-Because the lifting condensation level is approximately homogeneous within an
-airmass, the cloud bases retried by CALIOP for thin clouds may be a good proxy
-for the cloud base heights of the entire cloud cluster, including the optically
-thicker clouds within the cluster.  We have designed an algorithm that
-extrapolates the CALIOP cloud-base measurements into locations where CALIOP
-attenuates before reaching cloud base.  This algorithm is called CBASE (Cloud
-Base Altitude Spatial Extrapolator).  In this paper we evaluate its performance
-by comparing CBASE cloud base heights against cloud base heights observed by
-ground-based ceilometers.
+Multiple methods have been proposed for satellite determination of the cloud
+base height.  VIIRS cloud-base temperature method: Zhu et al.~(2014, doi
+10.1002/2013GL058970).  Results of evaluating cloud base heights inferred from
+oxygen absorption bands and from MISR stereoscopic images will be reported in
+separate manuscripts.  For analyses wishing to combine cloud base information
+with other cloud properties retrieved by A-Train satellites, these methods share
+the disadvantage that the required instruments are not part of the A-Train.
+Methods that are applicable to A-Train satellites are based on MODIS cloud
+properties retrieved near cloud top and integrated along moist adiabats to
+determine the cloud thickness (Meerk\"otter and Zinner (2007)
+(10.1029/2007GL030347)) or on active remote sensing by CloudSat (2B-GEOPROF,
+Marchand et al) or a combination of CloudSat and CALIOP (2B-GEOPROF-LIDAR, Mace
+and Zhang 2014).  The MODIS-derived cloud thickness assumes adiabatic cloud
+profiles and therefore cannot be used to constrain subadiabaticity.  CloudSat
+misses the small droplets at the base of nonprecipitating clouds, and retrievals
+are further degraded in the ground clutter region.  CALIOP detects the bases of
+only the thinnest clouds ($\tau < 5$, according to Mace and Zhang,
+10.1002/2013JD021374); frequently, it is desirable to know the base height of
+thick clouds as well.
+
+In this paper, we revisit the CALIOP cloud base determination.  Because the
+lifting condensation level is approximately homogeneous within an airmass, the
+cloud bases retried by CALIOP for thin clouds may be a good proxy for the cloud
+base heights of an entire cloud field, including the optically thicker clouds
+within the filed.  We have designed an algorithm that extrapolates the CALIOP
+cloud-base measurements into locations where CALIOP attenuates before reaching
+cloud base.  This algorithm is called CBASE (Cloud Base Altitude Spatial
+Extrapolator).  In this paper we evaluate its performance by comparing CBASE
+cloud base heights against cloud base heights observed by ground-based
+ceilometers.
 
 Section~\ref{sec:data} describes the data sources used in determining and
 evaluating the cloud base height.  In Section~\ref{sec:algorithm} we describe
 the algorithm and evaluate its performance, including error statistics.  We
 conclude in Section~\ref{sec:conclusions} with an outlook on the longstanding
-questions that this retrieval can help address.
-
-Literature: Meerk\"otter and Zinner (2007) (10.1029/2007GL030347) retrievals
-using cloud top properties and adiabatic assumption; presumably there are
-others.  Zhu et al.~(2014) for cloud base temperature using the thinnest cloud in
-a cloud cluster.  Mace and Zhang (2014) using CPR and CALIOP.  At least one more
-using CloudSat; check Stephens et al (2012) energy-balance paper.
+questions that this retrieval can address.
 
 \section{Data}
 \label{sec:data}
 
 Description of the CALIOP VFM data.
-
-Description of the airport ceilometers.  METARs:
-\verb+https://library.wmo.int/pmb_ged/wmo_49-v2_2013_en.pdf+; ASOS:
-\verb+http://www.nws.noaa.gov/asos/pdfs/aum-toc.pdf+ 
-
-\section{Algorithm and evaluation}
-\label{sec:algorithm}
-
-The algorithm and evaluation proceed in four steps:
-\begin{enumerate}
-\item We determine the cloud base height from all CALIOP profiles where the
-  surface generates a return ($\longrightarrow$ lidar is not attenuated above
-  cloud base).  We refer to these cloud base heights as \textit{local cloud base
-    heights} in the sense that they are local to the CALIOP profile.
-\item Using ground-based ceilometer data, we determine quality of cloud base
-  height depending on a number of factors.  
-\item Based on the predicted quality of each local cloud base, we either reject
-  the local cloud base or combine it with other local cloud bases within a
-  distance $D_\text{max}$ of the point of interest (POI) $\longrightarrow$ estimate of cloud base
-  height, estimate of cloud base height uncertainty
-\item Using a statistically independent validation dataset, we verify that the
-  predicted cloud base height and uncertainty are correct.
-\end{enumerate}
-
-This section is divided into four subsections, one for each step enumerated
-above.  Figure~\ref{fig:method} illustrates the method.
-
-\subsection{Determination of local cloud base height}
-\label{sec:algorithm:local}
-Source of local cloud base from the CALIOP VFM: any profile with a surface
-return.  
-
-\subsection{Determination of local cloud base quality}
-\label{sec:algorithm:qual}
-We assess the quality of the CALIOP cloud base height $z$ using the
-ceilometer-observed cloud base height $\hat{z}$ using the following
-metrics: 
-\begin{description}
-\item[Correlation coefficient] between the satellite retrieval and ground-based
-  observation of the cloud base.  We use the Pearson correlation coefficient.
-  Ideally the correlation coefficient would be unity.  
-\item[Linear regression slope and intercept] (ideally 1 and 0, respectively).  
-\item[RMS retrieval error,] defined as
-  \begin{equation}
-    \label{eq:rmse}
-    \mbox{RMSE} = \frac{1}{N}\sqrt{\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right)^2},
-  \end{equation}
-  (ideally 0) \commentjm{This is the only metric that is actually used, so maybe
-    we should just get rid of the rest.}
-\item[Retrieval bias,] defined as
-  \begin{equation}
-    \label{eq:bias}
-    \mbox{bias} = \frac{1}{N}\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right),
-  \end{equation}(ideally 0)
-\item[Efficiency,] i.e., probability that a retrieval is available at the
-  desired location (ideally 1).
-\end{description}
-
-These metrics are calculated based on the set of all ground-based observations
-for which a Calipso overpass is available and which meet the following
-additional conditions:
-\begin{itemize}
-\item the ground-based cloud base height is below 3~km above ground level (AGL);
-  this is the height to which the ceilometer-based aviation cloud base reports
-  are reliable
-\item for the evaluation of low-cloud retrievals, the ground-based cloud base
-  height is below 3~km above mean sea level; this threshold height emulates the
-  ISCCP definition of low cloud (cloud top pressure below 690~hPa)
-\end{itemize}
 
 The sources of ground-based observations are the following:
 \begin{description}
@@ -321,27 +261,157 @@ The sources of ground-based observations are the following:
     is also very small; need to check that I have all the MAGIC data}
 \end{description}
 
+Description of the airport ceilometers.  METARs:
+\verb+https://library.wmo.int/pmb_ged/wmo_49-v2_2013_en.pdf+; ASOS:
+\verb+http://www.nws.noaa.gov/asos/pdfs/aum-toc.pdf+ 
+
+\section{Algorithm and evaluation}
+\label{sec:algorithm}
+
+The algorithm and evaluation proceed in four steps:
+\begin{enumerate}
+\item We determine the cloud base height from all CALIOP profiles where the
+  surface generates a return ($\longrightarrow$ lidar is not attenuated above
+  cloud base).  We refer to these cloud base heights as \textit{local cloud base
+    heights} in the sense that they are local to the CALIOP profile.
+\item Using ground-based ceilometer data, we determine quality of cloud base
+  height depending on a number of factors.  
+\item Based on the predicted quality of each local cloud base, we either reject
+  the local cloud base or combine it with other local cloud bases within a
+  distance $D_\text{max}$ of the point of interest (POI) $\longrightarrow$
+  estimate of cloud base height, estimate of cloud base height uncertainty
+\item Using a statistically independent validation dataset, we verify that the
+  predicted cloud base height and uncertainty are correct.
+\end{enumerate}
+
+At several points in the algorithm development, it is necessary to know the true
+(ceilometer-observerd) cloud base height.  We use ceilometer observations from
+the year 2008 at those points.  A statistically independent data set is required
+for an unbiased evaluation of the algorithm performance; we use the year 2007.
+
+This section is divided into four subsections, one for each algorithm step
+enumerated above.
+
+Figure~\ref{fig:method} illustrates the method.
+
+\subsection{Determination of local cloud base height}
+\label{sec:algorithm:local}
+Source of local cloud base from the CALIOP VFM: any profile with a surface
+return.  
+
+\subsection{Determination of local cloud base quality}
+\label{sec:algorithm:qual}
+We assess the quality of the CALIOP cloud base height $z$ using the
+ceilometer-observed cloud base height $\hat{z}$ using root mean square error
+(RMSE), defined as
+\begin{equation}
+  \label{eq:rmse}
+  E = \sqrt{\frac{1}{N}\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right)^2}.
+\end{equation}
+The sum runs over all CALIOP profiles containing a cloud layer and a surface
+return that are within 100~km horizontal distance of the ceilometer, occurred
+within 3600~s of a ceilometer observation, and have their lowest CALIOP cloud
+feature within 3~km of the surface.  Ceilometer observations are only used if
+the observation closest in time to the Calipso overpass contains a cloud within
+3~km of the surface.  A height limit is imposed because a subset of the
+ceilometers has a range limit of 12500~feet, and all ceilometers report ceilings
+above 10000~feet with reduced granularity (500~feet); the 3~km threshold avoids
+those ceilometer limitations and mimics the ISCCP definition of low cloud
+($p > 690\text{ hPa}$).
+
+The following metrics, which are useful for a qualitative assessment of the
+quality of the satellite cloud base, are also calculated, but play no
+quantitative role in the algorithm:
+\begin{description}
+\item[Correlation coefficient] between the CALIOP cloud base and ground-based
+  observation of the cloud base.  We use the Pearson correlation coefficient.
+  Ideally the correlation coefficient would be unity.  
+\item[Linear regression slope and intercept] (ideally 1 and 0, respectively).  
+\item[Retrieval bias,] defined as
+  \begin{equation}
+    \label{eq:bias}
+    \mbox{bias} = \frac{1}{N}\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right),
+  \end{equation}(ideally 0)
+\item[Efficiency,] i.e., probability that a retrieval is available at the
+  desired location (ideally 1).
+\end{description}
+
+CALIOP's ability to detect cloud base depends on the properties of the cloud.
+Therefore, we expect that the cloud base height quality will vary between
+different cloud profiles.  Measuring the quality as a function of various
+properties of the CALIOP column may allow us to predict the quality of other
+columns with the same combination of properties.  The properties that are easily
+accessible in a single column and have the greatest effect on quality are:
+\begin{itemize}
+\item horizontal distance $D$ from the ceilometer,
+\item number of column cloud bases within horizontal distance $D_\text{max}$,
+\item CALIOP VFM feature quality assurance flag,
+\item geometric thickness of the lowest cloud layer,
+\item CALIOP thermodynamic phase determination of lowest cloud,
+\item feature type, if any, detected between the lowest cloud and the surface,
+\item and horizontal averaging distance required for CALIOP cloud feature
+  detection.
+\end{itemize}
+For illustrative purposes, Figure~\ref{fig:quality-qa} shows the joint
+distribution of CALIOP and ceilometer cloud base height faceted by the CALIOP
+VFM feature quality assurance flag.  
+
+Based on determining the retrieval quality one variable at a time, the following
+classes of CALIOP profiles are discarded:
+\begin{itemize}
+\item CALIOP VFM quality assurance worse than ``high'' ,
+\item ``invalid'' or ``no signal'' layers between the surface and the lowest
+  cloud layer (indicating that although the surface may generate a detectable
+  return, the lidar is sufficiently attenuated that the cloud base, which
+  scatters less strongly than the surface, is unreliable),
+\item minimum CALIOP cloud detection horizontal averaging distance within the
+  lowest cloud layer greater than 1~km,
+\item or phase of the lowest layer determined to be other than liquid by the
+  CALIOP VFM algorithm (the reason for this is that not enough such columns
+  exist to determine the RMSE reliably in each of the categories defined below).
+\end{itemize}
+
+The remaining variables are discretized roughly into quintiles with the
+following boundaries:
+\begin{itemize}
+\item horizontal distance $D$ from the ceilometer, with boundaries 0, 40, 60,
+  75, 88, and 100~km (distance greater than 100~km is discarded),
+\item number of CALIOP columns $n$ with a cloud layer and a surface return
+  within 100~km horizontal distance from the ceilometer, with boundaries at 0,
+  175, 250, 325, 400 (multiplicities greater than 400 are accepted),
+\item geometric thickness $\Delta z$ of the lowest cloud layer, with boundaries
+  at 0, 0.25, 0.45, 0.625, and 1~km (thickness greater than 1~km is accepted).
+\end{itemize}
+
+We can now consider the joint distribution of CALIOP and ceilometer cloud bases
+for each combination of the above variables.  (Base heights above ground are
+used to remove an intrinsic correlation due to terrain.)  Because of the viewing
+geometry, high CALIOP cloud bases tend to be overestimates where a higher layer
+obscures a lower layer.  \commentjm{Isn't the actual reason a combination of
+  regression dilution at the extremes of the distribution and phase space
+  truncation at a physical boundary for low cloud bases?}  It is desirable to
+correct for this bias.  The options are no correction, a linear correction
+(which partially corrects for the high bias of high CALIOP base heights but
+introduces a counterbias at low CALIOP base heights), and a nonlinear correction
+that does not suffer from the counterbias at low CALIOP base heights.  Our
+choice for nonlinear correction is a support vector machine.  The final choice
+of correction is based on the performance of the three options on the tuning
+sample after combination has been performed according to the next step of the
+algorithm (Section~\ref{sec:algorithm:combination}).
+
+Following bias correction, the sample RMSE is calculated for each combination of
+$D$, $n$, and $\Delta z$.  The sample RMSE is taken as an estimate of the
+statistical uncertainty $\sigma(D,n,\Delta z)$ on the CALIOP cloud base height.
+
 \subsection{Combination of local cloud bases}
 \label{sec:algorithm:combination}
-These cloud base retrievals only exist sporadically (on average $x$\% of
-columns), when CALIOP happens to hit a sufficiently thin cloud.  To infer the
-cloud base height $z$ at a point of interest (POI) that does not necessarily
+CALIOP cloud base heights only exist sporadically \commentjm{(on average $x$\%
+  of columns)}, when CALIOP happens to hit a sufficiently thin cloud.  To infer
+the cloud base height $z$ at a point of interest (POI) that does not necessarily
 coincide with the location of a CALIOP profile, we proceed as follows.  We first
 select all local CALIOP cloud base heights within a horizontal distance
-$D_\text{max} = 100$~km of the POI.  On the basis of Section~\ref{sec:algorithm:qual}, we
-discard cloud base heights unless
-\begin{itemize}
-\item VFM quality flag high confidence in the lowest cloud feature
-\item lowest cloud feature is liquid (required because not enough data is
-  available for reliable uncertainty prediction)
-\item minimum horizontal averaging distance required for detection of the lowest
-  cloud layer is 1~km or 1/3~km
-\item geometric thickness of the lowest cloud layer is less than 1~km
-\item the feature immediately above the surface is neither ``invalid'' nor ``no
-  signal'' (indicating that although the surface may generate a detectable
-  return, the lidar is sufficiently attenuated that the cloud base, which
-  scatters less strongly than the surface, is unreliable)
-\end{itemize}
+$D_\text{max} = 100$~km of the POI that satisfy the additional quality cuts
+described in Section~\ref{sec:algorithm:qual}.
 
 For each remaining local cloud base height $z_i$, we determine the predicted
 uncertainty $\sigma_i$ based on the categories established in the previous
@@ -368,6 +438,16 @@ correlations.  The expression
 \end{equation}
 yields acceptable results, as would be expected for highly correlated and fairly
 similar $\sigma_i$.
+
+One choice remains to be made, namely which of the bias correction methods
+described in Section~\ref{sec:algorithm:qual} to apply to the local cloud base
+heights before combination.  The uncorrected local base heights result in a high
+bias (Figure~S1), as would be expected from the high bias on the constituent
+local cloud base heights.  The linear correction, which reduces the high bias
+for high cloud base heights but introduces a counterbias for low cloud base
+heights, leads to a low bias in the combined base height (Figure~S2), again as
+would be expected.  Among the correction methods investigated, the SVM-based
+correction results in the behavior closest to the 1-to-1 line.
 
 \subsection{Evaluation of cloud base heights and cloud base height errors}
 \label{sec:algorithm:eval}
