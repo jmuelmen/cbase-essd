@@ -438,7 +438,10 @@ statistically independent data set from the year 2007.  In the evaluation data
 set, the ``true'' (i.e., measured by the ceilometer) cloud base height $\hat{z}$
 is known in addition to the estimated cloud base height $z$ and the estimated
 cloud base height uncertainty $\sigma$, determined according to the procedure
-described in the previous section.
+described in the previous section.  Figure~\ref{fig:eval} shows the joint
+distribution of CBASE and ceilometer-observed cloud base heights.  (The
+difference between this figure and Figure~S3 is that the underlying data is the
+validation, rather than the tuning, data set.)
 
 For satellite-derived measurements of the cloud base height $z$ that are
 unbiased with respect to the ceilometer-observed cloud base heights $\hat{z}$
@@ -446,11 +449,34 @@ and have correctly estimated uncertainties $\sigma$, the pdf of the quantity
 $(z - \hat{z})/\sigma$ has zero mean and unit standard deviation. In our
 evaluation data set, we find a mean of \Sexpr{with(combo, mean((ceilo -
   pred.ceilo) / pred.rmse))} and a standard deviation of \Sexpr{with(combo,
-  sd((ceilo - pred.ceilo) / pred.rmse))} -- so both the cloud base estimate and
-the uncertainty estimate are unbiased at the better than 10\%\ level.
+  sd((ceilo - pred.ceilo) / pred.rmse))}, shown in Figure~\ref{fig:pull}; this
+corresponds to a cloud base height bias of %
+\Sexpr{round(100 * with(combo, mean((ceilo - pred.ceilo) / pred.rmse)))}\%
+and uncertainty bias of %
+\Sexpr{round(100 * (with(combo, sd((ceilo - pred.ceilo) / pred.rmse)) -
+  1))}\%, both relative to the predicted uncertainty.  Thus, we find that both
+the cloud base estimate and the uncertainty estimate are unbiased at the better
+than 10\%\ level.
 
-Discussion of representativeness of continental clouds over North America for
-the remainder of the globe.  A marine validation dataset would be very welcome. 
+It is possible that cloud base height estimates outside North America could have
+greater biases or that greater uncertainty than this evaluation leads us to
+believe.  This would be the case if continental clouds over North America are
+not representative of clouds elsewhere in a way that is not accounted for by the
+cloud properties taken into account by the uncertainty estimate.  Since the
+validation sample spans an entire year on a continental scale, we expect that
+most cloud morphologies are included.  However, certain cloud types exist that
+occur predominantly over ocean and present a particular challenge to the method,
+namely marine stratocumulus with horizontally extensive but vertically thin
+liquid-phase anvils.  Due to the typical cloud base height uncertainty of
+several hundred m, the method is unlikely to be applied to stratocumulus cloud;
+nevertheless, a marine-cloud validation data set would be desirable.  For the
+present work, no suitable marine-cloud evaluation data set was available;
+ship-based cloud base height observations were either based on human observers
+(unknown quality) or available only over a limited duration at limited
+locations, resulting in a severely statistics-limited set of coincidences with
+the CALIOP track.
+
+\commentjm{Add a plot or table on layer geometry}
 
 \section{Results and data product availability}
 \label{sec:results}
