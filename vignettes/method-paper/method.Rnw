@@ -504,11 +504,34 @@ Data \commentjm{for 2007 and 2008; do the other years later, perhaps with
 
 \conclusions
 \label{sec:conclusions}
-\par Summary.  How useful is the cloud-base retrieval for various purposes?
-There are two main cases: where accuracy is more important than efficiency, and
-the other way around.  For surface radiative flux (hyperlinear in CBT), accuracy
-is more important.  For geometric thickness, efficiency.  For subadiabaticity,
-need to do the error propagation.
+
+We have presented the CBASE algorithm, which derives cloud base heights from
+CALIOP lidar profiles.  This algorithm produces cloud base heights not only for
+thin clouds but also for clouds thick enough to attenuate the lidar (optical
+thickness $\tau \gtrsim 5$), based on the assumed homogeneity of cloud base
+height within an airmass.  In addition to the cloud base height estimate, the
+CBASE algorithm supplies an expected uncertainty on the cloud base height.
+The CBASE data is available for the years 2007 and 2008 at \commentjm{insert DOI}.
+
+CBASE cloud base height and its uncertainty have been evaluated using
+ground-based airport ceilometer data over the contiguous United States, using a
+data sample unbiased by the tuning of the algorithm.  The evaluation showed that
+cloud base height and cloud base height uncertainty is unbiased at the better
+than 10\% level: the bias on the cloud base height is %
+\Sexpr{round(100 * with(combo, mean((ceilo - pred.ceilo) / pred.rmse)))}\%,
+and the bias on the uncertainty is %
+\Sexpr{round(100 * (with(combo, sd((ceilo - pred.ceilo) / pred.rmse)) -
+  1))}\%, both relative to the expected uncertainty.
+
+The performance of CBASE cloud base heights is similar to that of
+2B-GEOPROF-LIDAR lidar-only cloud base heights, which are based on the same
+underlying physical measurement.  However, the validated cloud base height
+uncertainty provided by CBASE allows for selection of only accurate cloud base
+heights or for statistically weighting of cloud base heights according to their
+expected uncertainty.  This, in turn, makes the CBASE cloud base heights useful
+for pressing problems in climate research that require accurate knowledge of
+cloud geometry, such as cloud subadiabaticity, which will be presented in future
+work. 
 
 \begin{acknowledgements}
 CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
