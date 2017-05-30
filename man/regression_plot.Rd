@@ -4,7 +4,8 @@
 \alias{regression_plot}
 \title{Make a ggplot the way we like them, based on a grouped data frame}
 \usage{
-regression_plot(df, title, xlab = "CALIOP base retrieval (km)")
+regression_plot(df, title, xlab = "CALIOP cloud base height (km)",
+  base_size = 11)
 }
 \value{
 

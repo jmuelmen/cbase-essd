@@ -67,7 +67,8 @@ statistify.df <- function(df) {
 #'
 #' @examples
 #' 
-regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)") {
+regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)",
+                            base_size = 11) {
     stats <- statistify(df)
     stats.n <- summarize(df, n = n())
     print(stats.n)
@@ -111,7 +112,7 @@ regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)") {
         ## ggplot2::geom_pointrange(ggplot2::aes(x = caliop, y = mean,
         ##                                      ymin = mean - sd, ymax = mean + sd),
         ##                          df.prof) +
-        ggplot2::theme_bw()
+        ggplot2::theme_bw(base_size)
     ## print(gg)
     return(list(stats = stats, ggplot = gg))
 }
