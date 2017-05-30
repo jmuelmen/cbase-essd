@@ -27,7 +27,7 @@ gc()
 res <- df %>%
     ## filter(lays == 1) %>%
     dplyr::group_by(dummy, feature.qa.lowest.cloud) %>%
-    regression_plot(title = NULL)
+    regression_plot(title = NULL, base_size = 14)
 gc()
 res$ggplot
 
@@ -277,7 +277,7 @@ res <- df.2bgeoprof %>%
     dplyr::group_by(dummy, ## dummy2) %>%
         ## lays,
                     flag.base) %>%
-    regression_plot(title = NULL, xlab = "2B-GEOPROF-LIDAR cloud base height (km)")
+    regression_plot(title = NULL, xlab = "2B-GEOPROF-LIDAR cloud base height (km)", base_size = 14)
 res$ggplot
 
 ## ---- eval-2bgeoprof-tbl --------------------
@@ -380,7 +380,7 @@ res <- combo %>%
     ## select(-caliop) %>%
     mutate(caliop = pred.ceilo * 1e-3, caliop.local = caliop) %>%
     group_by(dummy, dummy2) %>%
-    regression_plot(title = NULL, xlab = "CBASE cloud base height (km)")
+    regression_plot(title = NULL, xlab = "CBASE cloud base height (km)", base_size = 14)
 res$ggplot
 
 ## ---- combo-qq --------------------
