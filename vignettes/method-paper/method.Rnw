@@ -157,12 +157,6 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
   by less than 10\%.
 \end{abstract}
 
-\commentjm{General comments:
-  \begin{itemize}
-  \item switch to heights above ground $\longrightarrow$ done
-  \end{itemize}
-}
-
 \introduction  %% \introduction[modified heading if necessary]
 \label{sec:intro}
 Cloud base height is an important geometric parameter of a cloud.  It controls
@@ -205,40 +199,47 @@ ceilometers.
 
 Section~\ref{sec:data} describes the data sources used in determining and
 evaluating the cloud base height.  In Section~\ref{sec:algorithm} we describe
-the algorithm and evaluate its performance, including error statistics.  We
-conclude in Section~\ref{sec:conclusions} with an outlook on the longstanding
-questions that this retrieval can address.
+the algorithm and evaluate its performance, including error statistics.  The
+processed CBASE output available at DKRZ is described in
+Section~\ref{sec:results}.  We conclude in Section~\ref{sec:conclusions} with an
+outlook on the longstanding questions that the CBASE data set can address.
 
 \section{Data}
 \label{sec:data}
 
 Description of the CALIOP VFM data.
 
-The sources of ground-based observations are the following:
-\begin{description}
-\item[METARs] aviation routine and special weather reports (METARs) where the
-  cloud base height is measured by ceilometer; to ensure that this is the case,
-  we restrict ourselves to the contiguous continental United States, where the
-  cloud base height is mostly derived automatically by laser ceilometers that
-  form part of Automated Surface Observing Stations (ASOS)
-\item[HD(CP)$^2$ ceilometers] \commentjm{Unless there is an urgent reason, these
-    will have to wait for a later paper}
-\item[ICOADS] \commentjm{Unless there is an urgent reason, these
-    will have to wait for a later paper}
-\item[R/V \textit{Polarstern} ceilometer] \commentjm{Unfortunately, there is
-    only a minute number of overpasses within 100~km, mostly at high latitudes}
-\item[MAGIC ceilometer] \commentjm{Unfortunately, the number of overpasses here
-    is also very small; need to check that I have all the MAGIC data}
-\end{description}
+For optimizing several tunable parameters of the algorithm, and for evaluation
+of the tuned algorithm,``true'' cloud base heights need to be known.  The source
+of these ``true'' cloud base heights in this work are ground-based cloud
+observations in aviation routine and special weather reports (METARs and
+SPECIs, collectively referred to as METARs henceforth).  In METARs, cloud base
+heights are measured by ceilometer over a period of time (tens of minutes) and
+objectively grouped into cloud layers and their respective fractional coverages,
+using the temporal variation at a fixed point under an advected cloud field as a
+proxy for spatial variability of the cloud field.
+
+To ensure that the ceilometer cloud base heights are of high and spatially
+uniform quality, we restrict ourselves to METARs from the contiguous continental
+United States, where the cloud base height is mostly derived automatically by
+laser ceilometers that form part of Automated Surface Observing Stations (ASOS)
+system.  In other parts of the world, the cloud bases may be estimated by human
+observers or may be omitted under certain conditions when the lowest cloud base
+is higher than 5000~feet.
+
+To obtain an unbiased estimate of the algorithm performance, it is necessary to
+use an evaluation data set that is statistically independent of the tuning data
+set.  We use METARs from the year 2008 for tuning.  Once the tuning is complete,
+we then use METARs from the year 2007 for evaluation.
 
 Description of the airport ceilometers.  METARs:
 \verb+https://library.wmo.int/pmb_ged/wmo_49-v2_2013_en.pdf+; ASOS:
 \verb+http://www.nws.noaa.gov/asos/pdfs/aum-toc.pdf+ 
 
-\section{Algorithm and evaluation}
+\section{CBASE Algorithm and evaluation}
 \label{sec:algorithm}
 
-The algorithm and evaluation proceed in four steps:
+The CBASE algorithm and evaluation proceed in four steps:
 \begin{enumerate}
 \item We determine the cloud base height from all CALIOP profiles where the
   surface generates a return ($\longrightarrow$ lidar is not attenuated above
@@ -257,7 +258,9 @@ The algorithm and evaluation proceed in four steps:
 At several points in the algorithm development, it is necessary to know the true
 (ceilometer-observerd) cloud base height.  We use ceilometer observations from
 the year 2008 at those points.  A statistically independent data set is required
-for an unbiased evaluation of the algorithm performance; we use the year 2007.
+for an unbiased evaluation of the algorithm performance; we use the year
+2007. \commentjm{Not sure whether this paragraph is better placed here or in the
+previous section.}
 
 This section is divided into four subsections, one for each algorithm step
 enumerated above.
@@ -407,17 +410,20 @@ correlations.  The expression
   \sigma^2 = \frac 1 n \sum\limits_i^n \sigma_i^2
 \end{equation}
 yields acceptable results, as would be expected for highly correlated and fairly
-similar $\sigma_i$.
+similar $\sigma_i$.  \commentjm{This $i$ could be confused with the $i$ in the
+  previous section; rethink notation.}
 
 One choice remains to be made, namely which of the bias correction methods
 described in Section~\ref{sec:algorithm:qual} to apply to the local cloud base
-heights before combination.  The uncorrected local base heights result in a high
-bias (Figure~S1), as would be expected from the high bias on the constituent
-local cloud base heights.  The linear correction, which reduces the high bias
-for high cloud base heights but introduces a counterbias for low cloud base
-heights, leads to a low bias in the combined base height (Figure~S2), again as
-would be expected.  Among the correction methods investigated, the SVM-based
-correction results in the behavior closest to the 1-to-1 line.
+heights before combination.  Combining the uncorrected local base heights result
+in a high bias (Figure~S1), as would be expected from the high bias on the
+constituent local cloud base heights.  The linear correction, which reduces the
+high bias for high cloud base heights but introduces a counterbias for low cloud
+base heights, leads to a low bias in the combined base height (Figure~S2), again
+as would be expected.  Among the correction methods investigated, the SVM-based
+correction results in the behavior closest to the 1-to-1 line (Figure~S3).
+Based on this performance, we use the SVM-corrected local base heights as input
+to combination step of the CBASE algorithm.
 
 \subsection{Evaluation of cloud base heights and cloud base height errors}
 \label{sec:algorithm:eval}
