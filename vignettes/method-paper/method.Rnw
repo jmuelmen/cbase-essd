@@ -559,9 +559,10 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 \begin{figure}
   \centering
   \includegraphics[width=0.5\linewidth,keepaspectratio=true]{CloudFieldCALIOP.pdf}
-  \caption{Schematic of CALIOP cloud base determination and evaluation strategy.
-    \commentjm{Amazing figure by Christoph.  The only way to make it even better
-      would be to add a ceilometer.}}
+  \caption{Schematic of CALIOP cloud base determination and evaluation
+    strategy.  In optically thick clouds, the lidar attenuates before reaching
+    the cloud base, but the cloud base height of thin clouds can be used as a
+    proxy for thick clouds in a cloud field with homogeneous cloud base height.}
   \label{fig:method}
 \end{figure}
 
@@ -570,15 +571,37 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   <<eval-qual,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
   @
   \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
-    faceted by the CALIOP VFM QA flag}
+    faceted by the CALIOP VFM QA flag.  Color indicates the number of CALIOP
+    profiles within each bin of ceilometer and CALIOP cloud base height; black
+    lines are contours of the empirical joint probability density; the red line
+    is a linear least-squares fit, with 95\% confidence interval shaded in light
+    red; the blue line is a generalized additive model regression
+    \citep{Wood2004,Wood2011}, with 95\% confidence interval shaded in light
+    blue; the dashed gray line is the one-to-one line.  Statistics of the
+    relationship between CALIOP and ceilometer base heights are provided in
+    Table~\ref{tab:quality-qa}.}
   \label{fig:quality-qa}
 \end{figure*}
+
+\begin{table}
+  \centering
+
+  \caption{Statistics of the relationship between ceilometer and CALIOP cloud
+    base height faceted by CALIOP VFM QA flag.  Shown are the number of CALIOP
+    profiles $n$, the product-moment correlation coefficient $r$ between CALIOP
+    and ceilometer cloud base heights, the RMSE, bias, and linear least-squares
+    fit parameters.}
+  \label{tab:quality-qa}
+\end{table}
 
 \begin{figure*}
   \centering
   <<combo-plot,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
-  \caption{Scatter plot of CBASE versus ceilometer cloud base height}
+  \caption{Scatter plot of CBASE versus ceilometer cloud base height; for
+    description of the plot elements, see Figure~\ref{fig:quality-qa}.  The
+    linear fit has slope \Sexpr{res$stats$slope * 1e-3} and intercept
+    $\Sexpr{res$stats$icpt}$~m.}
   \label{fig:eval}
 \end{figure*}
 
@@ -586,10 +609,13 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \centering
   <<combo-eval-pull,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
   @
-  \caption{Distribution of cloud base error divided by predicted uncertainty;
-    least-squares gaussian fit with mean \Sexpr{with(combo, mean((ceilo -
-      pred.ceilo) / pred.rmse))} and standard deviation \Sexpr{with(combo,
-      sd((ceilo - pred.ceilo) / pred.rmse))} is overlaid.}
+  \caption{Distribution function of cloud base error divided by predicted
+    uncertainty; for the ideal case of unbiased cloud base heights and unbiased
+    uncertainty, the distribution would be gaussian with zero mean and unit
+    standard deviation.  The superimposed least-squares gaussian fit (blue line)
+    has mean \Sexpr{with(combo, mean((ceilo - pred.ceilo) / pred.rmse))} and
+    standard deviation \Sexpr{with(combo, sd((ceilo - pred.ceilo) /
+      pred.rmse))}.}
   \label{fig:pull}
 \end{figure}
 
@@ -597,7 +623,7 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \centering
   <<combo-eval-rmse,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
   @
-  \caption{Distribution of predicted uncertainty}
+  \caption{Distribution of predicted cloud base height uncertainty.}
   \label{fig:uncertainty}
 \end{figure}
 
@@ -612,7 +638,9 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{table*}[t]
   \centering
-  \caption{CBASE cloud base statistics by decile of predicted uncertainty}
+  \caption{CBASE cloud base statistics by decile of predicted uncertainty; see
+    Table~\ref{tab:quality-qa} for a description of the 
+    statistics provided.}
   \label{tab:rmseclass}
   <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,results='hide',echo=FALSE>>=
   @
@@ -628,11 +656,23 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   @
   %%<<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
   %%@
-  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer cloud base
-    height.  \commentjm{I \textit{think} this uses Claudia's algorithm (minimum
-      cloud base within $D_\text{max}$), but I have to check.}}
+  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer cloud base height
+    faceted by the source of the cloud base (radar-only or lidar-only; due to
+    their rare occurrence, combined radar--lidar base heights are not shown).
+    For description of the plot elements, see Figure~\ref{fig:quality-qa}.
+    \commentjm{I \textit{think} this uses Claudia's algorithm (minimum cloud
+      base within $D_\text{max}$), but I have to check.}}
   \label{fig:eval-2b}
 \end{figure*}
+
+\begin{table}
+  \centering
+
+  \caption{Statistics of the relationship between ceilometer and
+    2B-GEOPROF-LIDAR cloud base height; see Table~\ref{tab:quality-qa} for a
+    description of the statistics provided.}
+  \label{tab:quality-qa}
+\end{table}
 
 \begin{figure*}
   \centering
