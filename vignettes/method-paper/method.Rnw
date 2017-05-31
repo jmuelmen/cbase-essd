@@ -89,10 +89,6 @@ opts_chunk$set(fig.path='figure/method-', cache.path='cache/method-',
                fig.align='center', fig.show='hold', cache = TRUE, warning = FALSE, par=TRUE)
 ## I use = but I can replace it with <-; set code/output width to be 68
 options(formatR.arrow=TRUE, width=68, digits=2)
-## tune details of base graphics (http://yihui.name/knitr/hooks)
-## knit_hooks$set(par=function(before, options, envir){
-## if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
-## })
 ## evaluation code chunks
 read_chunk("../eval.R")
 ## visualization code chunks
@@ -121,11 +117,12 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
 
 
 
-\runningtitle{Cloud base height retrievals from CALIOP}
+\runningtitle{Cloud base heights from CALIOP}
 
 \runningauthor{M\"ulmenst\"adt et al.}
 
-\correspondence{Johannes M\"ulmenst\"adt (\href{mailto:johannes.muelmenstaedt@uni-leipzig.de}{johannes.muelmenstaedt@uni-leipzig.de})}
+\correspondence{Johannes M\"ulmenst\"adt
+  (\href{mailto:johannes.muelmenstaedt@uni-leipzig.de}{johannes.muelmenstaedt@uni-leipzig.de})}
 
 
 
