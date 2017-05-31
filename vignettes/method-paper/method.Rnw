@@ -606,7 +606,8 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{table}
   \centering
-
+  <<combo-tbl-rmseclass,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  @
   \caption{Statistics of the relationship between ceilometer and CALIOP cloud
     base height faceted by CALIOP VFM QA flag.  Shown are the number of CALIOP
     profiles $n$, the product-moment correlation coefficient $r$ between CALIOP
@@ -688,7 +689,8 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{table}
   \centering
-
+  <<eval-2bgeoprof-tbl,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  @
   \caption{Statistics of the relationship between ceilometer and
     2B-GEOPROF-LIDAR cloud base height; see Table~\ref{tab:quality-qa} for a
     description of the statistics provided.}
