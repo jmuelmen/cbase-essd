@@ -604,17 +604,17 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \label{fig:quality-qa}
 \end{figure*}
 
-\begin{table}
+\begin{table*}
   \centering
-  <<combo-tbl-rmseclass,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-  @
   \caption{Statistics of the relationship between ceilometer and CALIOP cloud
     base height faceted by CALIOP VFM QA flag.  Shown are the number of CALIOP
     profiles $n$, the product-moment correlation coefficient $r$ between CALIOP
     and ceilometer cloud base heights, the RMSE, bias, and linear least-squares
     fit parameters.}
   \label{tab:quality-qa}
-\end{table}
+  <<combo-tbl-rmseclass,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  @
+\end{table*}
 
 \begin{figure*}
   \centering
@@ -681,21 +681,23 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer cloud base height
     faceted by the source of the cloud base (radar-only or lidar-only; due to
     their rare occurrence, combined radar--lidar base heights are not shown).
-    For description of the plot elements, see Figure~\ref{fig:quality-qa}.
+    For description of the plot elements, see Figure~\ref{fig:quality-qa}.  Statistics of the
+    relationship between 2B-GEOPROF-LIDAR and ceilometer base heights are provided in
+    Table~\ref{tab:2bgeoprof}.
     \commentjm{I \textit{think} this uses Claudia's algorithm (minimum cloud
       base within $D_\text{max}$), but I have to check.}}
   \label{fig:eval-2b}
 \end{figure*}
 
-\begin{table}
-  \centering
-  <<eval-2bgeoprof-tbl,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-  @
+\begin{table*}
   \caption{Statistics of the relationship between ceilometer and
     2B-GEOPROF-LIDAR cloud base height; see Table~\ref{tab:quality-qa} for a
     description of the statistics provided.}
-  \label{tab:quality-qa}
-\end{table}
+  \label{tab:2bgeoprof}
+  \centering
+  <<eval-2bgeoprof-tbl,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  @
+\end{table*}
 
 \begin{figure*}
   \centering
