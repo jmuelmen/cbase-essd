@@ -210,6 +210,8 @@ The second class is ground-based observations of ``true'' cloud base height used
 to tune and evaluate the algorithm by which cloud base height is determined from
 the satellite data.
 
+\subsection{CALIOP VFM}
+
 The input satellite data to our analysis is the CALIOP vertical feature mask
 (VFM).  For each CALIOP lidar backscatter profile, the VFM identifies features
 such as clear air, cloud, aerosol, or surface; this is termed the ``feature
@@ -227,6 +229,8 @@ In the present analysis, we use VFM version 4.10 \citep{Caliop}, the current
   Vertical Feature Mask Data, version 4.10, Hampton, VA, USA: NASA Atmospheric
   Science Data Center (ASDC), Accessed <author citing data inserts date here> at
   doi: 10.5067/CALIOP/CALIPSO/LID_L2_VFM-Standard-V4-10}
+
+\subsection{Airport ceilometers}
 
 For optimizing several tunable parameters of the algorithm, and for evaluation
 of the tuned algorithm,``true'' cloud base heights need to be known.  The source
