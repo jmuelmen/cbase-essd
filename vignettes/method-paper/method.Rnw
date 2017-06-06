@@ -483,6 +483,12 @@ and uncertainty bias of %
 the cloud base estimate and the uncertainty estimate are unbiased at the better
 than 10\%\ level.
 
+As a further test of the reliability of the expected uncertainty, we divide the
+validation data set into deciles of the expected uncertainty.
+Table~\ref{tab:rmseclass} shows that the actual RMSE within each decile is
+within 10\% of the expected uncertainty and that linear regressions within each
+decile are close to the one-to-one line.
+
 It is possible that cloud base height estimates outside North America could have
 greater biases or that greater uncertainty than this evaluation leads us to
 believe.  This would be the case if continental clouds over North America are
