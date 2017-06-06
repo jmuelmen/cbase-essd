@@ -109,7 +109,7 @@ correct.cbase.lm <- function(df, correction) {
         filter(!is.na(index.model)) %>%
         plyr::ddply(~ index.model, function(x) {
             model <- models[[median(x$index.model)]]
-            if (class(model) == "try-error") {
+            if (any(class(model) == "try-error")) {
                 pred.ceilo <- NA
             } else {
                 pred.ceilo <- predict(model, newdata = select(x, caliop))
