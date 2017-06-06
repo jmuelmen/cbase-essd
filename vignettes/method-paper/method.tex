@@ -141,21 +141,23 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
 
 \Author[1]{Johannes}{M\"ulmenst\"adt}
 \Author[1]{Odran}{Sourdeval}
+\Author[2]{Christoph}{B\"ohm}
 %%\Author[1]{Edward}{Gryspeerdt}
 \Author[1]{Johannes}{Quaas}
 
 \affil[1]{Institute of Meteorology, Universit\"at Leipzig, Leipzig, Germany}
-\affil[2]{Anyone else?}
+\affil[2]{Institute of Meteorology, Universit\"at K\"oln, K\"oln, Germany}
 
 %% The [] brackets identify the author with the corresponding affiliation. 1, 2, 3, etc. should be inserted.
 
 
 
-\runningtitle{Cloud base height retrievals from CALIOP}
+\runningtitle{Cloud base heights from CALIOP}
 
 \runningauthor{M\"ulmenst\"adt et al.}
 
-\correspondence{Johannes M\"ulmenst\"adt (\href{mailto:johannes.muelmenstaedt@uni-leipzig.de}{johannes.muelmenstaedt@uni-leipzig.de})}
+\correspondence{Johannes M\"ulmenst\"adt
+  (\href{mailto:johannes.muelmenstaedt@uni-leipzig.de}{johannes.muelmenstaedt@uni-leipzig.de})}
 
 
 
@@ -186,12 +188,6 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
   ceilometer data set shows that cloud base heights and uncertainties are biased
   by less than 10\%.
 \end{abstract}
-
-\commentjm{General comments:
-  \begin{itemize}
-  \item switch to heights above ground $\longrightarrow$ done
-  \end{itemize}
-}
 
 \introduction  %% \introduction[modified heading if necessary]
 \label{sec:intro}
@@ -235,40 +231,75 @@ ceilometers.
 
 Section~\ref{sec:data} describes the data sources used in determining and
 evaluating the cloud base height.  In Section~\ref{sec:algorithm} we describe
-the algorithm and evaluate its performance, including error statistics.  We
-conclude in Section~\ref{sec:conclusions} with an outlook on the longstanding
-questions that this retrieval can address.
+the algorithm and evaluate its performance, including error statistics.  The
+processed CBASE output available at DKRZ is described in
+Section~\ref{sec:results}.  We conclude in Section~\ref{sec:conclusions} with an
+outlook on the longstanding questions that the CBASE data set can address.
 
 \section{Data}
 \label{sec:data}
 
-Description of the CALIOP VFM data.
+Two classes of data are used in this work.  The first class satellite data,
+which we use with the intent of deriving a global data set of cloud base height.
+The second class is ground-based observations of ``true'' cloud base height used
+to tune and evaluate the algorithm by which cloud base height is determined from
+the satellite data.
 
-The sources of ground-based observations are the following:
-\begin{description}
-\item[METARs] aviation routine and special weather reports (METARs) where the
-  cloud base height is measured by ceilometer; to ensure that this is the case,
-  we restrict ourselves to the contiguous continental United States, where the
-  cloud base height is mostly derived automatically by laser ceilometers that
-  form part of Automated Surface Observing Stations (ASOS)
-\item[HD(CP)$^2$ ceilometers] \commentjm{Unless there is an urgent reason, these
-    will have to wait for a later paper}
-\item[ICOADS] \commentjm{Unless there is an urgent reason, these
-    will have to wait for a later paper}
-\item[R/V \textit{Polarstern} ceilometer] \commentjm{Unfortunately, there is
-    only a minute number of overpasses within 100~km, mostly at high latitudes}
-\item[MAGIC ceilometer] \commentjm{Unfortunately, the number of overpasses here
-    is also very small; need to check that I have all the MAGIC data}
-\end{description}
+\subsection{CALIOP VFM}
 
-Description of the airport ceilometers.  METARs:
-\verb+https://library.wmo.int/pmb_ged/wmo_49-v2_2013_en.pdf+; ASOS:
-\verb+http://www.nws.noaa.gov/asos/pdfs/aum-toc.pdf+ 
+The input satellite data to our analysis is the CALIOP vertical feature mask
+(VFM).  For each CALIOP lidar backscatter profile, the VFM identifies features
+such as clear air, cloud, aerosol, or surface; this is termed the ``feature
+type''.  In addition to the feature type, the VFM records the degree of
+confidence in the identification (``none'' to ``high'', termed the ``feature
+type QA flag''); the thermodynamic phase of a layer identified as cloud as well
+as the degree of confidence therein (termed ``ice water phase'' and ``ice water
+phase QA flag''); the horizontal distance over which the algorithm had to
+average to identify a feature above noise and molecular atmospheric scattering
+(``horizontal averaging distance'').  
 
-\section{Algorithm and evaluation}
+In the present analysis, we use VFM version 4.10 \citep{Caliop}, the current
+``standard'' release.  The VFM files are obtained from ICARE.
+% \commentjm{Citation: CALIPSO Science Team (2016), CALIPSO/CALIOP Level 2,
+%   Vertical Feature Mask Data, version 4.10, Hampton, VA, USA: NASA Atmospheric
+%   Science Data Center (ASDC), Accessed <author citing data inserts date here> at
+%   doi: 10.5067/CALIOP/CALIPSO/LID_L2_VFM-Standard-V4-10}
+
+\subsection{Airport ceilometers}
+
+For optimizing several tunable parameters of the algorithm, and for evaluation
+of the tuned algorithm,``true'' cloud base heights need to be known.  The source
+of these ``true'' cloud base heights in this work are ground-based cloud
+observations in aviation routine and special weather reports (METARs and SPECIs,
+collectively referred to as METARs henceforth;
+\verb+https://library.wmo.int/pmb_ged/wmo_49-v2_2013_en.pdf+).  In METARs, cloud
+base heights are measured by ceilometer over a period of time (tens of minutes)
+and objectively grouped into cloud layers and their respective fractional
+coverages, using the temporal variation at a fixed point under an advected cloud
+field as a proxy for spatial variability of the cloud field.
+
+To ensure that the ceilometer cloud base heights are of high and spatially
+uniform quality, we restrict ourselves to METARs from the contiguous continental
+United States, where the cloud base height is mostly derived automatically by
+laser ceilometers that form part of Automated Surface Observing Stations (ASOS,
+\verb+http://www.nws.noaa.gov/asos/pdfs/aum-toc.pdf+) system.  In other parts of
+the world, the cloud bases may be estimated by human observers or may be omitted
+under certain conditions when the lowest cloud base is higher than 5000~feet.
+
+To obtain an unbiased estimate of the algorithm performance, it is necessary to
+use an evaluation data set that is statistically independent of the tuning data
+set.  We use METARs from the year 2008 for tuning.  Once the tuning is complete,
+we then use METARs from the year 2007 for evaluation.  
+
+\commentjm{The ASOS data is used, among other purposes, for assimilation in NWP
+  (HRRR and IFS citation).  In METAR format, it is distributed globally by the
+  WMO and widely archived.  The data for the present analysis was downloaded
+  from the Weather Underground (citation?). }
+
+\section{CBASE Algorithm and evaluation}
 \label{sec:algorithm}
 
-The algorithm and evaluation proceed in four steps:
+The CBASE algorithm and evaluation proceed in four steps:
 \begin{enumerate}
 \item We determine the cloud base height from all CALIOP profiles where the
   surface generates a return ($\longrightarrow$ lidar is not attenuated above
@@ -287,7 +318,9 @@ The algorithm and evaluation proceed in four steps:
 At several points in the algorithm development, it is necessary to know the true
 (ceilometer-observerd) cloud base height.  We use ceilometer observations from
 the year 2008 at those points.  A statistically independent data set is required
-for an unbiased evaluation of the algorithm performance; we use the year 2007.
+for an unbiased evaluation of the algorithm performance; we use the year
+2007. \commentjm{Not sure whether this paragraph is better placed here or in the
+previous section.}
 
 This section is divided into four subsections, one for each algorithm step
 enumerated above.
@@ -437,17 +470,20 @@ correlations.  The expression
   \sigma^2 = \frac 1 n \sum\limits_i^n \sigma_i^2
 \end{equation}
 yields acceptable results, as would be expected for highly correlated and fairly
-similar $\sigma_i$.
+similar $\sigma_i$.  \commentjm{This $i$ could be confused with the $i$ in the
+  previous section; rethink notation.}
 
 One choice remains to be made, namely which of the bias correction methods
 described in Section~\ref{sec:algorithm:qual} to apply to the local cloud base
-heights before combination.  The uncorrected local base heights result in a high
-bias (Figure~S1), as would be expected from the high bias on the constituent
-local cloud base heights.  The linear correction, which reduces the high bias
-for high cloud base heights but introduces a counterbias for low cloud base
-heights, leads to a low bias in the combined base height (Figure~S2), again as
-would be expected.  Among the correction methods investigated, the SVM-based
-correction results in the behavior closest to the 1-to-1 line.
+heights before combination.  Combining the uncorrected local base heights result
+in a high bias (Figure~S1), as would be expected from the high bias on the
+constituent local cloud base heights.  The linear correction, which reduces the
+high bias for high cloud base heights but introduces a counterbias for low cloud
+base heights, leads to a low bias in the combined base height (Figure~S2), again
+as would be expected.  Among the correction methods investigated, the SVM-based
+correction results in the behavior closest to the 1-to-1 line (Figure~S3).
+Based on this performance, we use the SVM-corrected local base heights as input
+to combination step of the CBASE algorithm.
 
 \subsection{Evaluation of cloud base heights and cloud base height errors}
 \label{sec:algorithm:eval}
@@ -460,72 +496,133 @@ statistically independent data set from the year 2007.  In the evaluation data
 set, the ``true'' (i.e., measured by the ceilometer) cloud base height $\hat{z}$
 is known in addition to the estimated cloud base height $z$ and the estimated
 cloud base height uncertainty $\sigma$, determined according to the procedure
-described in the previous section.
+described in the previous section.  Figure~\ref{fig:eval} shows the joint
+distribution of CBASE and ceilometer-observed cloud base heights.  (The
+difference between this figure and Figure~S3 is that the underlying data is the
+validation, rather than the tuning, data set.)
 
 For satellite-derived measurements of the cloud base height $z$ that are
 unbiased with respect to the ceilometer-observed cloud base heights $\hat{z}$
 and have correctly estimated uncertainties $\sigma$, the pdf of the quantity
 $(z - \hat{z})/\sigma$ has zero mean and unit standard deviation. In our
-evaluation data set, we find a mean of 0.03 and a standard deviation of 1.05 -- so both the cloud base estimate and
-the uncertainty estimate are unbiased at the better than 10\%\ level.
+evaluation data set, we find a mean of 0.03 and a standard deviation of 1.05, shown in Figure~\ref{fig:pull}; this
+corresponds to a cloud base height bias of %
+3\%
+and uncertainty bias of %
+5\%, both relative to the predicted uncertainty.  Thus, we find that both
+the cloud base estimate and the uncertainty estimate are unbiased at the better
+than 10\%\ level.
 
-Discussion of representativeness of continental clouds over North America for
-the remainder of the globe.  A marine validation dataset would be very welcome. 
+As a further test of the reliability of the expected uncertainty, we divide the
+validation data set into deciles of the expected uncertainty.
+Table~\ref{tab:rmseclass} shows that the actual RMSE within each decile is
+within 10\% of the expected uncertainty and that linear regressions within each
+decile are close to the one-to-one line.
+
+It is possible that cloud base height estimates outside North America could have
+greater biases or that greater uncertainty than this evaluation leads us to
+believe.  This would be the case if continental clouds over North America are
+not representative of clouds elsewhere in a way that is not accounted for by the
+cloud properties taken into account by the uncertainty estimate.  Since the
+validation sample spans an entire year on a continental scale, we expect that
+most cloud morphologies are included.  However, certain cloud types exist that
+occur predominantly over ocean and present a particular challenge to the method,
+namely marine stratocumulus with horizontally extensive but vertically thin
+liquid-phase anvils.  Due to the typical cloud base height uncertainty of
+several hundred m, the method is unlikely to be applied to stratocumulus cloud;
+nevertheless, a marine-cloud validation data set would be desirable.  For the
+present work, no suitable marine-cloud evaluation data set was available;
+ship-based cloud base height observations were either based on human observers
+(unknown quality) or available only over a limited duration at limited
+locations, resulting in a severely statistics-limited set of coincidences with
+the CALIOP track.
+
+\commentjm{Add a plot or table on layer geometry}
 
 \section{Results and data product availability}
 \label{sec:results}
 
-Geographic distributions of mean or median cloud base and thickness.  Annual
-cycle (if it's interesting).  
+Geographic distributions of mean and median cloud base and thickness are shown
+in Figure~\ref{fig:geo} \commentjm{(which will be made from the CBASE data set
+  when it's ready)}.
 
-Comparison with 2B-GEOPROF-LIDAR cloud bases: distinguish between radar-only and
-lidar-only bases (both is rare for warm cloud).  Radar-only mean error is large
+Comparison with 2B-GEOPROF-LIDAR cloud bases is shown in
+Figure~\ref{fig:eval-2b}.   2B-GEOPROF-LIDAR distinguishes between radar-only,
+lidar-only, and radar--lidar combined cloud bases; the latter category is rare
+for warm cloud and is not shown.  For radar-only clouds, the mean error is large
 because the radar cloud base height predominantly clusters around the top of the
 ground clutter region with little dependence on the actual cloud base height.
-Lidar-only 2B-GEOPROF-LIDAR cloud base performs about as well as the CBASE cloud
-base on average, but does not provide an uncertainty estimate (and therefore no
-way to select only low-uncertainty cloud base estimates).
+Lidar-only 2B-GEOPROF-LIDAR cloud base performs comparably to the CBASE cloud
+base on average; this is to be expected, as the underlying physical measurement
+is the same.   Unlike 2B-GEOPROF-LIDAR, CBASE provides a validated uncertainty
+estimate, which allows an analysis using the cloud base heights to select only
+low-uncertainty cases or to statistically weight cloud base heights according to
+their uncertainty, as appropriate for the application.
 
-Data is available at DKRZ or PANGEA (need to look into which one is more
-appropriate).  \commentjm{Obtain DOI, put it here.}
+Data \commentjm{for 2007 and 2008; do the other years later, perhaps with
+  funding for the subadiabaticity study from somewhere} is available at DKRZ.
+\commentjm{Obtain DOI, put it here.}
 
 \conclusions
 \label{sec:conclusions}
-\par Summary.  How useful is the cloud-base retrieval for various purposes?
-There are two main cases: where accuracy is more important than efficiency, and
-the other way around.  For surface radiative flux (hyperlinear in CBT), accuracy
-is more important.  For geometric thickness, efficiency.  For subadiabaticity,
-need to do the error propagation.
+
+We have presented the CBASE algorithm, which derives cloud base heights from
+CALIOP lidar profiles.  This algorithm produces cloud base heights not only for
+thin clouds but also for clouds thick enough to attenuate the lidar (optical
+thickness $\tau \gtrsim 5$), based on the assumed homogeneity of cloud base
+height within an airmass.  In addition to the cloud base height estimate, the
+CBASE algorithm supplies an expected uncertainty on the cloud base height.
+The CBASE data is available for the years 2007 and 2008 at \commentjm{insert DOI}.
+
+CBASE cloud base height and its uncertainty have been evaluated using
+ground-based airport ceilometer data over the contiguous United States, using a
+data sample unbiased by the tuning of the algorithm.  The evaluation showed that
+cloud base height and cloud base height uncertainty is unbiased at the better
+than 10\% level: the bias on the cloud base height is %
+3\%,
+and the bias on the uncertainty is %
+5\%, both relative to the expected uncertainty.
+
+The performance of CBASE cloud base heights is similar to that of
+2B-GEOPROF-LIDAR lidar-only cloud base heights, which are based on the same
+underlying physical measurement.  However, the validated cloud base height
+uncertainty provided by CBASE allows for selection of only accurate cloud base
+heights or for statistically weighting of cloud base heights according to their
+expected uncertainty.  This, in turn, makes the CBASE cloud base heights useful
+for pressing problems in climate research that require accurate knowledge of
+cloud geometry, such as cloud subadiabaticity, which will be presented in future
+work. 
 
 \begin{acknowledgements}
-CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
+CALIOP VFM from ICARE.  Computing and data hosting at DKRZ.  Funding.
 \end{acknowledgements}
 
-% \begin{table}[t]
-% \caption{}
-% \vskip4mm
-% \centering
-% \begin{tabular}{p{\parindent}l|lll|lll}
-% \hline\hline
-% && \multicolumn{3}{c|}{Local retrieval} & \multicolumn{3}{c}{C-BASE retrieval} \\
-% && 2BGL & DARDAR & CAL & 2BGL & DARDAR & CAL \\
-% \hline
-% \multicolumn{2}{l|}{Efficiency} & & \\
-% & METAR & \\
-% & MAGIC & \\
-% & \chem{HD(CP)^2} & \\
-% \multicolumn{2}{l|}{Bias} & \\
-% \multicolumn{2}{l|}{RMSE} \\
-% \hline\hline
-% \end{tabular}
-% \end{table}
+%% \begin{table}[t]
+%% \caption{}
+%% \vskip4mm
+%% \centering
+%% \begin{tabular}{p{\parindent}l|lll|lll}
+%% \hline\hline
+%% && \multicolumn{3}{c|}{Local retrieval} & \multicolumn{3}{c}{C-BASE retrieval} \\
+%% && 2BGL & DARDAR & CAL & 2BGL & DARDAR & CAL \\
+%% \hline
+%% \multicolumn{2}{l|}{Efficiency} & & \\
+%% & METAR & \\
+%% & MAGIC & \\
+%% & \chem{HD(CP)^2} & \\
+%% \multicolumn{2}{l|}{Bias} & \\
+%% \multicolumn{2}{l|}{RMSE} \\
+%% \hline\hline
+%% \end{tabular}
+%% \end{table}
 
 \begin{figure}
   \centering
   \includegraphics[width=0.5\linewidth,keepaspectratio=true]{CloudFieldCALIOP.pdf}
-  \caption{Schematic of CALIOP cloud base determination and evaluation strategy.
-    \commentjm{Amazing figure by Christoph.  The only way to make it even better
-      would be to add a ceilometer.}}
+  \caption{Schematic of CALIOP cloud base determination and evaluation
+    strategy.  In optically thick clouds, the lidar attenuates before reaching
+    the cloud base, but the cloud base height of thin clouds can be used as a
+    proxy for thick clouds in a cloud field with homogeneous cloud base height.}
   \label{fig:method}
 \end{figure}
 
@@ -542,9 +639,42 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \end{knitrout}
   \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
-    faceted by the CALIOP VFM QA flag}
+    faceted by the CALIOP VFM QA flag.  Color indicates the number of CALIOP
+    profiles within each bin of ceilometer and CALIOP cloud base height; black
+    lines are contours of the empirical joint probability density; the red line
+    is a linear least-squares fit, with 95\% confidence interval shaded in light
+    red; the blue line is a generalized additive model regression
+    \citep{Wood2004,Wood2011}, with 95\% confidence interval shaded in light
+    blue; the dashed gray line is the one-to-one line.  Statistics of the
+    relationship between CALIOP and ceilometer base heights are provided in
+    Table~\ref{tab:quality-qa}.}
   \label{fig:quality-qa}
 \end{figure*}
+
+\begin{table*}
+  \centering
+  \caption{Statistics of the relationship between ceilometer and CALIOP cloud
+    base height faceted by CALIOP VFM QA flag.  Shown are the number of CALIOP
+    profiles $n$, the product-moment correlation coefficient $r$ between CALIOP
+    and ceilometer cloud base heights, the RMSE, bias, and linear least-squares
+    fit parameters.}
+  \label{tab:quality-qa}
+% latex table generated in R 3.2.3 by xtable 1.8-3 package
+% Tue Jun  6 11:27:36 2017
+\begin{tabular}{lrrrrl}
+  \hline
+\hline
+feature.qa.lowest.cloud & $n$ & $r$ & RMSE (m) & bias (m) & fit \\ 
+  \hline
+none & 1410553 & 0.192 & $1.05 \times 10^{3}$ & $-$471. & $y = 0.193 x + \ensuremath{1.03 \times 10^{3}}$ m \\ 
+  low & 301250 & 0.471 & 710. & $-$115. & $y = 0.456 x + 650.$ m \\ 
+  medium & 212723 & 0.502 & 707. & $-$77.1 & $y = 0.476 x + 602.$ m \\ 
+  high & 2877967 & 0.554 & 629. & 9.85 & $y = 0.526 x + 485.$ m \\ 
+   \hline
+\hline
+\end{tabular}
+
+\end{table*}
 
 \begin{figure*}
   \centering
@@ -558,7 +688,10 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 
 \end{knitrout}
-  \caption{Scatter plot of CBASE versus ceilometer cloud base height}
+  \caption{Scatter plot of CBASE versus ceilometer cloud base height; for
+    description of the plot elements, see Figure~\ref{fig:quality-qa}.  The
+    linear fit has slope 1.11 and intercept
+    $-108.5$~m.}
   \label{fig:eval}
 \end{figure*}
 
@@ -574,8 +707,12 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 
 \end{knitrout}
-  \caption{Distribution of cloud base error divided by predicted uncertainty;
-    least-squares gaussian fit with mean 0.03 and standard deviation 1.05 is overlaid.}
+  \caption{Distribution function of cloud base error divided by predicted
+    uncertainty; for the ideal case of unbiased cloud base heights and unbiased
+    uncertainty, the distribution would be gaussian with zero mean and unit
+    standard deviation.  The superimposed least-squares gaussian fit (blue line)
+    has mean 0.03 and
+    standard deviation 1.05.}
   \label{fig:pull}
 \end{figure}
 
@@ -591,7 +728,7 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 
 \end{knitrout}
-  \caption{Distribution of predicted uncertainty}
+  \caption{Distribution of predicted cloud base height uncertainty.}
   \label{fig:uncertainty}
 \end{figure}
 
@@ -606,11 +743,13 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{table*}[t]
   \centering
-  \caption{CBASE cloud base statistics by decile of predicted uncertainty}
+  \caption{CBASE cloud base statistics by decile of predicted uncertainty; see
+    Table~\ref{tab:quality-qa} for a description of the 
+    statistics provided.}
   \label{tab:rmseclass}
 
 % latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Mon May  8 15:03:11 2017
+% Tue Jun  6 11:27:41 2017
 \begin{tabular}{lrrrrl}
   \hline
 \hline
@@ -647,11 +786,37 @@ pred.rmse & $n$ & $r$ & RMSE (m) & bias (m) & fit \\
 \end{knitrout}
   %%<<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
   %%@
-  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer cloud base
-    height.  \commentjm{I \textit{think} this uses Claudia's algorithm (minimum
-      cloud base within $D_\text{max}$), but I have to check.}}
+  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer cloud base height
+    faceted by the source of the cloud base (radar-only or lidar-only; due to
+    their rare occurrence, combined radar--lidar base heights are not shown).
+    For description of the plot elements, see Figure~\ref{fig:quality-qa}.  Statistics of the
+    relationship between 2B-GEOPROF-LIDAR and ceilometer base heights are provided in
+    Table~\ref{tab:2bgeoprof}.
+    \commentjm{I \textit{think} this uses Claudia's algorithm (minimum cloud
+      base within $D_\text{max}$), but I have to check.}}
   \label{fig:eval-2b}
 \end{figure*}
+
+\begin{table*}
+  \caption{Statistics of the relationship between ceilometer and
+    2B-GEOPROF-LIDAR cloud base height; see Table~\ref{tab:quality-qa} for a
+    description of the statistics provided.}
+  \label{tab:2bgeoprof}
+  \centering
+% latex table generated in R 3.2.3 by xtable 1.8-3 package
+% Tue Jun  6 11:27:44 2017
+\begin{tabular}{lrrrrl}
+  \hline
+\hline
+flag.base & $n$ & $r$ & RMSE (m) & bias (m) & fit \\ 
+  \hline
+Radar & 15061 & 0.265 & 782. & 98.1 & $y = 0.461 x + 466.$ m \\ 
+  Lidar & 12813 & 0.564 & 594. & 16.3 & $y = 0.555 x + 399.$ m \\ 
+   \hline
+\hline
+\end{tabular}
+
+\end{table*}
 
 \begin{figure*}
   \centering
