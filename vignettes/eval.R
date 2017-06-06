@@ -312,9 +312,11 @@ if (val.self) {
                       caliop + elevation.m * 1e-3 < 3)
 }
 gc()
-val.svm <- FALSE
+val.svm <- TRUE
 if (val.svm) {
-    ddf <- tune.cbase.svm(df)
+    ## ddf <- tune.cbase.svm(df)
+    library(e1071)
+    ddf <- readRDS("~/r-packages/models.svm.rds")
 } else {
     ddf <- tune.cbase.lm(df)
 }

@@ -505,11 +505,11 @@ For satellite-derived measurements of the cloud base height $z$ that are
 unbiased with respect to the ceilometer-observed cloud base heights $\hat{z}$
 and have correctly estimated uncertainties $\sigma$, the pdf of the quantity
 $(z - \hat{z})/\sigma$ has zero mean and unit standard deviation. In our
-evaluation data set, we find a mean of 0.03 and a standard deviation of 1.05, shown in Figure~\ref{fig:pull}; this
+evaluation data set, we find a mean of 0.04 and a standard deviation of 1.06, shown in Figure~\ref{fig:pull}; this
 corresponds to a cloud base height bias of %
-3\%
+4\%
 and uncertainty bias of %
-5\%, both relative to the predicted uncertainty.  Thus, we find that both
+6\%, both relative to the predicted uncertainty.  Thus, we find that both
 the cloud base estimate and the uncertainty estimate are unbiased at the better
 than 10\%\ level.
 
@@ -579,9 +579,9 @@ ground-based airport ceilometer data over the contiguous United States, using a
 data sample unbiased by the tuning of the algorithm.  The evaluation showed that
 cloud base height and cloud base height uncertainty is unbiased at the better
 than 10\% level: the bias on the cloud base height is %
-3\%,
+4\%,
 and the bias on the uncertainty is %
-5\%, both relative to the expected uncertainty.
+6\%, both relative to the expected uncertainty.
 
 The performance of CBASE cloud base heights is similar to that of
 2B-GEOPROF-LIDAR lidar-only cloud base heights, which are based on the same
@@ -660,7 +660,7 @@ CALIOP VFM from ICARE.  Computing and data hosting at DKRZ.  Funding.
     fit parameters.}
   \label{tab:quality-qa}
 % latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Jun  6 11:27:36 2017
+% Tue Jun  6 11:47:29 2017
 \begin{tabular}{lrrrrl}
   \hline
 \hline
@@ -690,8 +690,8 @@ none & 1410553 & 0.192 & $1.05 \times 10^{3}$ & $-$471. & $y = 0.193 x + \ensure
 \end{knitrout}
   \caption{Scatter plot of CBASE versus ceilometer cloud base height; for
     description of the plot elements, see Figure~\ref{fig:quality-qa}.  The
-    linear fit has slope 1.11 and intercept
-    $-108.5$~m.}
+    linear fit has slope 0.98 and intercept
+    $34.96$~m.}
   \label{fig:eval}
 \end{figure*}
 
@@ -711,8 +711,8 @@ none & 1410553 & 0.192 & $1.05 \times 10^{3}$ & $-$471. & $y = 0.193 x + \ensure
     uncertainty; for the ideal case of unbiased cloud base heights and unbiased
     uncertainty, the distribution would be gaussian with zero mean and unit
     standard deviation.  The superimposed least-squares gaussian fit (blue line)
-    has mean 0.03 and
-    standard deviation 1.05.}
+    has mean 0.04 and
+    standard deviation 1.06.}
   \label{fig:pull}
 \end{figure}
 
@@ -749,22 +749,22 @@ none & 1410553 & 0.192 & $1.05 \times 10^{3}$ & $-$471. & $y = 0.193 x + \ensure
   \label{tab:rmseclass}
 
 % latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Jun  6 11:27:41 2017
+% Tue Jun  6 11:47:36 2017
 \begin{tabular}{lrrrrl}
   \hline
 \hline
 pred.rmse & $n$ & $r$ & RMSE (m) & bias (m) & fit \\ 
   \hline
-(187,436] & 2624 & 0.749 & 403. & $-$33.2 & $y = 1.14 x - 63.5$ m \\ 
-  (436,461] & 2624 & 0.722 & 429. & $-$26.4 & $y = 1.20 x - 186.$ m \\ 
-  (461,478] & 2624 & 0.725 & 460. & $-$26.3 & $y = 1.25 x - 256.$ m \\ 
-  (478,492] & 2624 & 0.693 & 466. & $-$29.4 & $y = 1.19 x - 182.$ m \\ 
-  (492,506] & 2635 & 0.616 & 512. & $-$0.0279 & $y = 1.14 x - 157.$ m \\ 
-  (506,517] & 2721 & 0.564 & 550. & $-$12.7 & $y = 1.14 x - 157.$ m \\ 
-  (517,530] & 2516 & 0.566 & 562. & $-$0.809 & $y = 1.11 x - 131.$ m \\ 
-  (530,550] & 2624 & 0.566 & 569. & $-$29.9 & $y = 1.15 x - 150.$ m \\ 
-  (550,582] & 2624 & 0.497 & 640. & $-$11.8 & $y = 1.06 x - 66.1$ m \\ 
-  (582,764] & 2624 & 0.446 & 716. & 13.1 & $y = 0.977 x + 14.6$ m \\ 
+(167,427] & 2624 & 0.741 & 404. & $-$46.9 & $y = 1.03 x + 28.0$ m \\ 
+  (427,453] & 2624 & 0.719 & 429. & $-$28.4 & $y = 1.06 x - 32.0$ m \\ 
+  (453,469] & 2624 & 0.703 & 461. & $-$18.8 & $y = 1.09 x - 87.7$ m \\ 
+  (469,484] & 2624 & 0.685 & 463. & $-$17.8 & $y = 1.03 x - 18.3$ m \\ 
+  (484,497] & 2624 & 0.628 & 506. & $-$6.06 & $y = 0.976 x + 33.4$ m \\ 
+  (497,508] & 2624 & 0.574 & 547. & $-$8.73 & $y = 0.986 x + 25.5$ m \\ 
+  (508,522] & 2624 & 0.596 & 547. & $-$14.1 & $y = 1.01 x + 5.37$ m \\ 
+  (522,541] & 2624 & 0.572 & 562. & $-$9.26 & $y = 0.967 x + 49.6$ m \\ 
+  (541,573] & 2624 & 0.502 & 639. & $-$22.7 & $y = 0.939 x + 96.8$ m \\ 
+  (573,748] & 2624 & 0.447 & 720. & 7.36 & $y = 0.829 x + 197.$ m \\ 
    \hline
 \hline
 \end{tabular}
@@ -804,7 +804,7 @@ pred.rmse & $n$ & $r$ & RMSE (m) & bias (m) & fit \\
   \label{tab:2bgeoprof}
   \centering
 % latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Jun  6 11:27:44 2017
+% Tue Jun  6 11:47:40 2017
 \begin{tabular}{lrrrrl}
   \hline
 \hline
