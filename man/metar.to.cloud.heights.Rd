@@ -19,4 +19,3 @@ Data frame containing up to three cloud base heights (in
 \description{
 (up to three layers)
 }
-

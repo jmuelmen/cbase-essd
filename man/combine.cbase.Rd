@@ -19,4 +19,3 @@ A data frame containing information from both
 \description{
 Combine evaluation dataset with retrievals to be evaluated
 }
-

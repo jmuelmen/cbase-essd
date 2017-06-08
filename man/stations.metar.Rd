@@ -9,4 +9,3 @@ stations.metar()
 \description{
 Get list of METAR stations
 }
-

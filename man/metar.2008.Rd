@@ -26,4 +26,3 @@ A dataset containing METARs downloaded from wunderground.com at
 A-Train overpass locations in 2008
 }
 \keyword{datasets}
-

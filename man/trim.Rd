@@ -15,4 +15,3 @@ Character without leading or trailing whitespace
 \description{
 Trim whitespace from string
 }
-

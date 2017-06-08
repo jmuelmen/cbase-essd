@@ -9,4 +9,3 @@ get.metar.2007()
 \description{
 Get METARs at A-Train overpass locations (2007)
 }
-

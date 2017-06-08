@@ -25,4 +25,3 @@ metar.2007 <- dplyr::filter(df, valid)
 save(metar.2007, file = "metar.2007.rda")
 
 }
-

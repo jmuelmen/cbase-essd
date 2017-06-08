@@ -17,4 +17,3 @@ to a data frame or grouped data frame
 \examples{
 
 }
-

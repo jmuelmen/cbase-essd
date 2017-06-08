@@ -21,4 +21,3 @@ df.to.db(dd, fname, name, indexes = list("lon", "lat"))
 \description{
 Save a data.frame to an SQL database
 }
-

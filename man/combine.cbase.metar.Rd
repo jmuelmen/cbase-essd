@@ -11,4 +11,3 @@ combine.cbase.metar(eval = get.metar.2008(),
 \description{
 Combine METAR with cloud base retrievals
 }
-

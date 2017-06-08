@@ -2,14 +2,14 @@
 % Please edit documentation in R/c-base.gen.R
 \name{C-BASE_gen}
 \alias{C-BASE_gen}
-\alias{bases.2b.geoprof.lidar}
 \alias{bases.cbase}
 \alias{bases.cbase.dardar}
+\alias{bases.2b.geoprof.lidar}
 \title{C-BASE generator functions}
 \usage{
-
-  bases.cbase(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
-  out.name = "cloud-bases.rds")
+bases.cbase(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
+  pattern = "CAL_LID_L2_VFM-Standard-V4-10.*hdf",
+  out.name = "cloud-bases.rds", ncores = 72)
 
 
   bases.cbase.dardar(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",

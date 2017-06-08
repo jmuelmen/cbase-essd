@@ -18,4 +18,3 @@ factor.relabel(x, labels, ordered = FALSE)
 Utility function for converting character or integer vectors to
     factor
 }
-

@@ -3,9 +3,9 @@
 \name{resolution}
 \alias{resolution}
 \alias{resolution.all}
+\alias{resolution.min_dist}
 \alias{resolution.min_cbh}
 \alias{resolution.min_cbh.qual}
-\alias{resolution.min_dist}
 \alias{resolution.quantile_cbh.qual}
 \title{Methods to resolve multiple retrievals at the same location}
 \usage{

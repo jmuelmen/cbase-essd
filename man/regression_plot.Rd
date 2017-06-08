@@ -16,4 +16,3 @@ Make a ggplot the way we like them, based on a grouped data frame
 \examples{
 
 }
-

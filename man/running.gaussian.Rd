@@ -15,4 +15,3 @@ Apply gaussian filter to vector
 \examples{
 
 }
-

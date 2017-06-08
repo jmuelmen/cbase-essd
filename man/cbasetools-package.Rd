@@ -46,4 +46,7 @@ internally to the package}
 \item{tools.R}{Functions that are also useful outside the package}
 }
 }
+\author{
+\strong{Maintainer}: Johannes Muelmenstaedt \email{johannes.muelmenstaedt@uni-leipzig.de}
 
+}

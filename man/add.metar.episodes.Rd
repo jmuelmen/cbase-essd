@@ -20,4 +20,3 @@ convert.date(time))} first
 \examples{
 
 }
-

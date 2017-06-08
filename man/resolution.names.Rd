@@ -12,4 +12,3 @@ resolution.names(resolution)
 \description{
 Get resolution names from function or function list
 }
-

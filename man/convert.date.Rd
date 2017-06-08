@@ -18,4 +18,3 @@ Convert standard time to format to Y/m/d date
 \examples{
 
 }
-

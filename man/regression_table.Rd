@@ -20,4 +20,3 @@ Make an xtable from statistics of a grouped data frame
 \examples{
 
 }
-

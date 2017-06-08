@@ -12,4 +12,3 @@ vis.geo(df)
 \description{
 Visualization of geographical distribution of cloud bases
 }
-

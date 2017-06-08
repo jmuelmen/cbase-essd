@@ -24,4 +24,3 @@ Calculate great-circle distances based on the haversin formula
 \examples{
 
 }
-
