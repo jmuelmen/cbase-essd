@@ -36,6 +36,8 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         lat <- hdf::h4read(fname,sds,"Latitude") %>% rep(each = 15)
         time <- hdf::h4read(fname,sds,"Profile_Time") %>% rep(each = 15)
         profile <- rep(1:15, length.out = length(time))
+        ipoint.40  <- rep(1 : ceiling(length(lat) / 3 / 40 ), each = 3 * 40 )[1 : length(lat)]
+        ipoint.100 <- rep(1 : ceiling(length(lat) / 3 / 100), each = 3 * 100)[1 : length(lat)]
         ## lon.interp <- approx(x = seq_len(length(lon)) - 1,
         ##                      y = lon,
         ##                      xout = (seq_len((length(lon)) * 15) - 8) / 15)$y 
@@ -98,11 +100,23 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
             mutate(profile = rep(profile, each = 290),
                    lon = rep(lon, each = 290),
                    lat = rep(lat, each = 290),
+                   ipoint.40  = rep(ipoint.40 , each = 290),
+                   ipoint.100 = rep(ipoint.100, each = 290),
                    Feature_Type = (Feature_Type),
                    Feature_Type_QA = (Feature_Type_QA),
                    Ice_Water_Phase = (Ice_Water_Phase),
                    Ice_Water_Phase_QA = (Ice_Water_Phase_QA),
-                   Horizontal_averaging = Horizontal_averaging)
+                   Horizontal_averaging = Horizontal_averaging) %>%
+            group_by(ipoint.40, altitude) %>%
+            mutate(lon.40 = lon[ceiling(n() / 2)],
+                   lat.40 = lat[ceiling(n() / 2)],
+                   time.40 = time[ceiling(n() / 2)]) %>%
+            group_by(ipoint.100, altitude) %>%
+            mutate(lon.100 = lon[ceiling(n() / 2)],
+                   lat.100 = lat[ceiling(n() / 2)],
+                   time.100 = time[ceiling(n() / 2)]) %>%
+            ungroup()
+                   
 
         ## helper function to identify feature above surface
         feature.above.surface <- function(vfm) {
@@ -163,11 +177,17 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                 lev.surface = min(which(Feature_Type == "surface")),
                 surface.elevation = altitude[lev.surface],
                 lon = lon[1], lat = lat[1],
+                ipoint.40 = ipoint.40[1], lon.40 = lon.40[1],
+                lat.40 = lat.40[1], time.40 = time.40[1],
+                ipoint.100 = ipoint.100[1], lon.100 = lon.100[1],
+                lat.100 = lat.100[1], time.100 = time.100[1],
                 len = n()
             ) %>%
             ungroup() %>%
             select(time, profile, ## len,
                    lon, lat,
+                   ipoint.40, lon.40, lat.40, time.40,
+                   ipoint.100, lon.100, lat.100, time.100,
                    feature.qa.lowest.cloud,
                    ## horizontal.averaging.lowest.cloud.median,
                    horizontal.averaging.lowest.cloud.min,
