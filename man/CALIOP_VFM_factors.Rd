@@ -3,9 +3,11 @@
 \name{CALIOP_VFM_factors}
 \alias{CALIOP_VFM_factors}
 \alias{factor.feature.type}
-\alias{factor.horizontal.averaging}
-\alias{factor.ice.water.phase}
 \alias{factor.qa}
+\alias{factor.ice.water.phase}
+\alias{factor.horizontal.averaging}
+\alias{factor.land.sea}
+\alias{factor.day.night}
 \alias{factor.vfm}
 \title{CALIOP VFM factors}
 \usage{
@@ -16,6 +18,10 @@ factor.qa(x)
 factor.ice.water.phase(x)
 
 factor.horizontal.averaging(x)
+
+factor.land.sea(x)
+
+factor.day.night(x)
 
 factor.vfm(df)
 }
@@ -45,6 +51,10 @@ CALIOP VFM factors
 \item \code{factor.ice.water.phase}: Convert feature type from string to factor
 
 \item \code{factor.horizontal.averaging}: Convert feature type from string to factor
+
+\item \code{factor.land.sea}: Convert feature type from string to factor
+
+\item \code{factor.day.night}: Convert feature type from string to factor
 
 \item \code{factor.vfm}: Convert CALIOP VFM strings to factors in a data.frame
 }}

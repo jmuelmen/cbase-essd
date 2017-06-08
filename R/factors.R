@@ -69,6 +69,32 @@ factor.horizontal.averaging <- function(x) {
                    ordered = TRUE)
 }
 
+#' @describeIn CALIOP_VFM_factors Convert feature type from string to factor
+#' @export
+factor.land.sea <- function(x) {
+    factor.relabel(x,
+                   labels = c(
+                       "shallow ocean",
+                       "land",
+                       "coastlines",
+                       "shallow inland water",
+                       "intermittent water",
+                       "deep inland water",
+                       "continental ocean",
+                       "deep ocean"),
+                   ordered = FALSE)
+}
+
+#' @describeIn CALIOP_VFM_factors Convert feature type from string to factor
+#' @export
+factor.day.night <- function(x) {
+    factor.relabel(x,
+                   labels = c(
+                       "day",
+                       "night"),
+                   ordered = FALSE)
+}
+
 #' @describeIn CALIOP_VFM_factors Convert CALIOP VFM strings to factors in a data.frame
 #'
 #' @param df Data.frame.  A data frame containing the variables
