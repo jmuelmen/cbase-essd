@@ -8,14 +8,16 @@ NULL
 #' @describeIn C-BASE_gen Bases by non-attenuated CALIOP in thin
 #'     clouds (using CALIOP VFM)
 #' @export
-bases.cbase <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
-                        out.name = "cloud-bases.rds") {
+bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
+                        pattern = "CAL_LID_L2_VFM-Standard-V4-10.*hdf",
+                        out.name = "cloud-bases.rds",
+                        ncores = 72) {
     lf <- ## "/tmp/CER-NEWS_CCCM_Aqua-FM3-MODIS-CAL-CS_RelB1_905906.20071226.hdf"
-        list.files(path = path, pattern = "CAL_LID_.*hdf", recursive = TRUE, full.names = TRUE)
+        list.files(path = path, pattern = pattern, recursive = TRUE, full.names = TRUE)
 
     sds <- hdf::h4list(lf[1])
 
-    doParallel::registerDoParallel(cores = 72)
+    doParallel::registerDoParallel(cores = ncores)
     res <- plyr::adply(lf, 1, function(fname) {
         cal.datestring <- strsplit(basename(fname), "\\.")[[1]][2]
         cal.date <- as.POSIXlt(cal.datestring, format = "%Y-%m-%d", tz = "UTC") +
