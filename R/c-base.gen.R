@@ -19,6 +19,11 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
 
     doParallel::registerDoParallel(cores = ncores)
     res <- plyr::adply(lf, 1, function(fname) {
+        ## can we take the easy way out (results are already cached)?
+        out.fname <- paste("cloud-bases", gsub(".hdf", ".rds", basename(fname)), sep = "/")
+        if (length(list.files("cloud-bases", gsub(".hdf", ".rds", basename(fname)))) != 0)
+            return(readRDS(out.fname))
+
         cal.datestring <- strsplit(basename(fname), "\\.")[[1]][2]
         cal.date <- as.POSIXlt(cal.datestring, format = "%Y-%m-%d", tz = "UTC") +
             (hdf::h4read(fname,sds,"Profile_UTC_Time")[1] %% 1) * 86400
