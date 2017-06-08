@@ -203,10 +203,11 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         ## print(out.fname)
         saveRDS(res, file = out.fname)
         return(res)
-    }, .parallel = TRUE)
+    }, .parallel = TRUE, .id = "ifile")
 
-    dplyr::select(res, -X1) %>%
-        saveRDS(out.name)
+    res <- dplyr::mutate(res, ifile = factor(ifile, levels = 1 : length(lf), labels = basename(lf)))
+    
+    saveRDS(res, out.name)
     return(res)
 }
 
