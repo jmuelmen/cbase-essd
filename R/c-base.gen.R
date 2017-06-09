@@ -50,44 +50,49 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         ##                       method = "hyman")$y + cal.date
         
         Feature_Type <- bitwAnd(Feature_Classification_Flags, 7)  %>%
-            factor(levels = 0:7, labels = c("invalid",
-                                            "clear air",
-                                            "cloud",
-                                            "aerosol",
-                                            "stratospheric feature",
-                                            "surface",
-                                            "subsurface",
-                                            "no signal"))
+            factor.feature.type()
+            ## factor(levels = 0:7, labels = c("invalid",
+            ##                                 "clear air",
+            ##                                 "cloud",
+            ##                                 "aerosol",
+            ##                                 "stratospheric feature",
+            ##                                 "surface",
+            ##                                 "subsurface",
+            ##                                 "no signal"))
         ## dim(Feature_Type) <- dim(Feature_Classification_Flags)
         
         Feature_Type_QA <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,3)) %>% bitwShiftR(3) %>%
-            factor(levels = 0:3, labels = c("none",
-                                            "low",
-                                            "medium",
-                                            "high"), ordered = TRUE)
+            factor.qa()
+            ## factor(levels = 0:3, labels = c("none",
+            ##                                 "low",
+            ##                                 "medium",
+            ##                                 "high"), ordered = TRUE)
         ## dim(Feature_Type_QA) <- dim(Feature_Classification_Flags)
 
         Ice_Water_Phase <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,5)) %>% bitwShiftR(5) %>%
-            factor(levels = 0:3, labels = c("unknown",
-                                            "randomly oriented ice",
-                                            "water",
-                                            "horizontally oriented ice"))
+            factor.ice.water.phase()
+            ## factor(levels = 0:3, labels = c("unknown",
+            ##                                 "randomly oriented ice",
+            ##                                 "water",
+            ##                                 "horizontally oriented ice"))
         ## dim(Ice_Water_Phase) <- dim(Feature_Classification_Flags)
 
         Ice_Water_Phase_QA <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,7)) %>% bitwShiftR(7) %>%
-            factor(levels = 0:3, labels = c("none",
-                                            "low",
-                                            "medium",
-                                            "high"), ordered = TRUE)
+            factor.qa()
+            ## factor(levels = 0:3, labels = c("none",
+            ##                                 "low",
+            ##                                 "medium",
+            ##                                 "high"), ordered = TRUE)
         ## dim(Ice_Water_Phase_QA) <- dim(Feature_Classification_Flags)
 
         Horizontal_averaging <- bitwAnd(Feature_Classification_Flags, bitwShiftL(7,13)) %>% bitwShiftR(13) %>%
-            factor(levels = 0:5, labels = c("NA",
-                                            "1/3 km",
-                                            "1 km",
-                                            "5 km",
-                                            "20 km",
-                                            "80 km"), ordered = TRUE)
+            factor.horizontal.averaging()
+            ## factor(levels = 0:5, labels = c("NA",
+            ##                                 "1/3 km",
+            ##                                 "1 km",
+            ##                                 "5 km",
+            ##                                 "20 km",
+            ##                                 "80 km"), ordered = TRUE)
         ## mask <- aaply(array(Feature_Type, dim(Feature_Classification_Flags)), 2, function(x) {
         ##     any(x == "surface") && any(x == "cloud")
         ## }, .progress = "text")
