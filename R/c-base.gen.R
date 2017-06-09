@@ -35,6 +35,12 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         lon <- hdf::h4read(fname,sds,"Longitude") %>% rep(each = 15)
         lat <- hdf::h4read(fname,sds,"Latitude") %>% rep(each = 15)
         time <- hdf::h4read(fname,sds,"Profile_Time") %>% rep(each = 15)
+        Day_Night_Flag <- hdf::h4read(fname,sds,"Day_Night_Flag") %>%
+            factor.day.night() %>%
+            rep(each = 15)
+        Land_Water_Mask <- hdf::h4read(fname,sds,"Land_Water_Mask") %>%
+            factor.land.sea() %>%
+            rep(each = 15)
         profile <- rep(1:15, length.out = length(time))
         ipoint.40  <- rep(1 : ceiling(length(lat) / 3 / 40 ), each = 3 * 40 )[1 : length(lat)]
         ipoint.100 <- rep(1 : ceiling(length(lat) / 3 / 100), each = 3 * 100)[1 : length(lat)]
@@ -111,7 +117,9 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                    Feature_Type_QA = (Feature_Type_QA),
                    Ice_Water_Phase = (Ice_Water_Phase),
                    Ice_Water_Phase_QA = (Ice_Water_Phase_QA),
-                   Horizontal_averaging = Horizontal_averaging) %>%
+                   Horizontal_averaging = Horizontal_averaging,
+                   Day_Night_Flag = rep(Day_Night_Flag, each = 290),
+                   Land_Water_Mask = rep(Land_Water_Mask, each = 290)) %>%
             group_by(ipoint.40, altitude) %>%
             mutate(lon.40 = lon[ceiling(n() / 2)],
                    lat.40 = lat[ceiling(n() / 2)],
@@ -186,6 +194,8 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                 lat.40 = lat.40[1], time.40 = time.40[1],
                 ipoint.100 = ipoint.100[1], lon.100 = lon.100[1],
                 lat.100 = lat.100[1], time.100 = time.100[1],
+                day.night.flag = Day_Night_Flag[1],
+                land.water.mask = Land_Water_Mask[1],
                 len = n()
             ) %>%
             ungroup() %>%
@@ -193,6 +203,7 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                    lon, lat,
                    ipoint.40, lon.40, lat.40, time.40,
                    ipoint.100, lon.100, lat.100, time.100,
+                   day.night.flag, land.water.mask,
                    feature.qa.lowest.cloud,
                    ## horizontal.averaging.lowest.cloud.median,
                    horizontal.averaging.lowest.cloud.min,
