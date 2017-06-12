@@ -198,6 +198,7 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                 land.water.mask = Land_Water_Mask[1],
                 len = n()
             ) %>%
+            factor.vfm() %>%
             ungroup() %>%
             select(time, profile, ## len,
                    lon, lat,

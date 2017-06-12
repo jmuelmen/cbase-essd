@@ -15,6 +15,8 @@ NULL
 factor.relabel <- function(x, labels, ordered = FALSE) {
     if (is.character(x)) {
         factor(x, levels = labels, labels = labels, ordered = ordered)
+    } else if (is.factor(x)) {
+        factor.relabel(as.character(x), labels, ordered)
     } else {
         factor(x, levels = 0 : (length(labels) - 1), labels = labels,
                ordered = ordered)
