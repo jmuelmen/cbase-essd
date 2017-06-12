@@ -18,7 +18,9 @@ Imports:
     xtable,
     hdf,
     getopt,
-    RSQLite
+    RSQLite,
+    e1071,
+    plotutils
 RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown
