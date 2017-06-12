@@ -252,6 +252,23 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                 gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-40", .) %>%
                 paste("cloud-bases", ., sep = "/") %>%
                 saveRDS(res.40, .)
+
+            ## correct and combine bases for 100 km segments
+            res.100 <- res.prep %>%
+                dplyr::group_by(ipoint.100) %>%
+                ## distance from segment midpoint
+                dplyr::mutate(dist = dist.gc(lon, lon.100, lat, lat.100)) %>%
+                ## multiplicity 
+                dplyr::mutate(resolution.out = n()) %>%
+                dplyr::ungroup() %>%
+                correct.cbase.lm(cor.svm) %>%
+                dplyr::mutate(segment = ipoint.100) %>%
+                cbase.combine.segment()
+            
+            gsub(".hdf", ".rds", basename(fname)) %>%
+                gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-100", .) %>%
+                paste("cloud-bases", ., sep = "/") %>%
+                saveRDS(res.100, .)
         }
         
         return(res)
