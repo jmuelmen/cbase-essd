@@ -214,10 +214,7 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                    cloud.top.altitude,
                    cloud.base.altitude,
                    surface.elevation) -> res
-        
-        out.fname <- paste("cloud-bases", gsub(".hdf", ".rds", basename(fname)), sep = "/")
-        ## str(res)
-        ## print(out.fname)
+
         saveRDS(res, file = out.fname)
         return(res)
     }, .parallel = TRUE, .id = "ifile")
