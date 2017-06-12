@@ -11,7 +11,16 @@ NULL
 bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                         pattern = "CAL_LID_L2_VFM-Standard-V4-10.*hdf",
                         out.name = "cloud-bases.rds",
+                        combination = TRUE,
                         ncores = 72) {
+
+    ## Combine local bases?  if so, we'll need the SVM models for
+    ## local base correction
+    if (combination) {
+        library(e1071)
+        cor.svm <- readRDS("~/r-packages/models.svm.rds")
+    }
+    
     lf <- ## "/tmp/CER-NEWS_CCCM_Aqua-FM3-MODIS-CAL-CS_RelB1_905906.20071226.hdf"
         list.files(path = path, pattern = pattern, recursive = TRUE, full.names = TRUE)
 
@@ -216,6 +225,35 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                    surface.elevation) -> res
 
         saveRDS(res, file = out.fname)
+        ## res <- readRDS(file = out.fname)
+        
+        if (combination) {
+            ## some preparatory work: add thickness, AGL heights, filter
+            res.prep <- res %>%
+                dplyr::mutate(caliop = cloud.base.altitude - surface.elevation) %>%
+                dplyr::filter(cloud.base.altitude < 3,
+                              caliop > 0) %>%
+                dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude)
+
+            ## correct and combine bases for 40 km segments
+            res.40 <- res.prep %>%
+                dplyr::group_by(ipoint.40) %>%
+                ## distance from segment midpoint
+                dplyr::mutate(dist = dist.gc(lon, lon.40, lat, lat.40)) %>%
+                ## multiplicity (extrapolated to D_max = 100 km, which
+                ## was used for tuning)
+                dplyr::mutate(resolution.out = n() * 2.5) %>%
+                dplyr::ungroup() %>%
+                correct.cbase.lm(cor.svm) %>%
+                dplyr::mutate(segment = ipoint.40) %>%
+                cbase.combine.segment()
+
+            gsub(".hdf", ".rds", basename(fname)) %>%
+                gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-40", .) %>%
+                paste("cloud-bases", ., sep = "/") %>%
+                saveRDS(res.40, .)
+        }
+        
         return(res)
     }, .parallel = TRUE, .id = "ifile")
 
