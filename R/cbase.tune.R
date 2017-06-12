@@ -1,12 +1,12 @@
-#' C-BASE tuning functions
+#' CBASE tuning functions
 #' 
 #' @param df Data.frame.  Contains tuning data set
 #' @return A list with two components, a list of tuned models for each
 #'     data category and a data.frame containing the index into said list of models 
-#' @name C-BASE_tune
+#' @name CBASE_tune
 NULL
 
-#' @describeIn C-BASE_tune Tuning using linear models
+#' @describeIn CBASE_tune Tuning using linear models
 #'
 #' @param thresh Numeric.  If non-NULL, exclude retrieved base heights
 #'     below \code{thresh} from the fit.
@@ -51,7 +51,7 @@ tune.cbase.lm <- function(df, thresh = NULL) {
     list(models = models, df = df)
 }
 
-#' @describeIn C-BASE_tune Tuning using SVM
+#' @describeIn CBASE_tune Tuning using SVM
 #'
 #' @export
 tune.cbase.svm <- function(df) {
@@ -83,16 +83,16 @@ tune.cbase.svm <- function(df) {
     list(models = models, df = df)
 }
 
-#' C-BASE local cloud base correction functions
+#' CBASE local cloud base correction functions
 #' 
 #' @param df Data.frame.  Contains local cloud bases to be corrected
-#' @param correction List produced by the \code{\link{C-BASE_tune}}
+#' @param correction List produced by the \code{\link{CBASE_tune}}
 #'     functions
 #' @return Data frame with corrected local cloud bases
-#' @name C-BASE_correct
+#' @name CBASE_correct
 NULL
 
-#' @describeIn C-BASE_correct Correct using linear model or inherited
+#' @describeIn CBASE_correct Correct using linear model or inherited
 #'     classes (including SVM)
 #' @export
 correct.cbase.lm <- function(df, correction) {
@@ -127,7 +127,7 @@ correct.cbase.lm <- function(df, correction) {
         }, .parallel = FALSE)
 }
 
-#' @describeIn C-BASE_correct "Identity" (i.e., no) correction
+#' @describeIn CBASE_correct "Identity" (i.e., no) correction
 #' @export
 correct.cbase.ident <- function(df, correction) {
     models <- correction$models
@@ -172,14 +172,14 @@ test.cbase.lm <- function(df) {
                        })
 }
 
-#' C-BASE combination of local cloud bases into C-BASE product
+#' CBASE combination of local cloud bases into CBASE product
 #' 
 #' @param df.cor Data.frame.  Contains (corrected) local cloud bases
 #' @return Data frame with combined cloud bases
-#' @name C-BASE_combine
+#' @name CBASE_combine
 NULL
 
-#' @describeIn C-BASE_combine Combination around a ground station
+#' @describeIn CBASE_combine Combination around a ground station
 #'     overpass
 #' @export
 cbase.combine.station <- function(df.cor) {
@@ -189,7 +189,7 @@ cbase.combine.station <- function(df.cor) {
         cbase.combine()
 }
 
-#' @describeIn C-BASE_combine Combination within a Calipso track
+#' @describeIn CBASE_combine Combination within a Calipso track
 #'     segment
 #' @export
 cbase.combine.segment <- function(df.cor) {
@@ -203,7 +203,7 @@ cbase.combine.segment <- function(df.cor) {
         cbase.combine()
 }
 
-#' @describeIn C-BASE_combine Actual worker function
+#' @describeIn CBASE_combine Actual worker function
 #' @export
 cbase.combine <- function(df.cor) {
     dplyr::summarize(df.cor,

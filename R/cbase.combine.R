@@ -1,9 +1,9 @@
-#' Combination of local thin-cloud CALIOP bases into C-BASE product
+#' Combination of local thin-cloud CALIOP bases into CBASE product
 #'
 #' @param local.cbase Database containing the local cloud bases
 #' @return A data frame containing information from both
 #' @export
-#' @describeIn C-BASE_gen Combine local
+#' @describeIn CBASE_gen Combine local
 #' @export
 bases.cbase.combine <-
     function(local.cbase = dbtools::db_spec("cloud-bases-2008-local.sqlite",

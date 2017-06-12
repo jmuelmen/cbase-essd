@@ -1,11 +1,11 @@
-#' C-BASE generator functions
+#' CBASE generator functions
 #' @param path Character.  Apply algorithm to all HDF files in this path
 #' @param out.name Character.  Output file name
 #' @return A data frame containing cloud bases
-#' @name C-BASE_gen
+#' @name CBASE_gen
 NULL
 
-#' @describeIn C-BASE_gen Bases by non-attenuated CALIOP in thin
+#' @describeIn CBASE_gen Bases by non-attenuated CALIOP in thin
 #'     clouds (using CALIOP VFM)
 #' @export
 bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
@@ -280,7 +280,7 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
     return(res)
 }
 
-#' @describeIn C-BASE_gen Bases by non-attenuated CALIOP in thin clouds (using DARDAR mask)
+#' @describeIn CBASE_gen Bases by non-attenuated CALIOP in thin clouds (using DARDAR mask)
 #' @export
 bases.cbase.dardar <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
                                out.name = "cloud-bases.rds") {
@@ -344,7 +344,7 @@ bases.cbase.dardar <- function(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SE
     return(res)
 }
 
-#' @describeIn C-BASE_gen Bases by 2B-GEOPROF-LIDAR CloudSat/CALIOP combination
+#' @describeIn CBASE_gen Bases by 2B-GEOPROF-LIDAR CloudSat/CALIOP combination
 #' @export
 bases.2b.geoprof.lidar <- function(path = "/projekt3/climate/DATA/SATELLITE/CLOUDSAT/2B-GEOPROF-LIDAR/2008") {
     lf <- ## "/tmp/CER-NEWS_CCCM_Aqua-FM3-MODIS-CAL-CS_RelB1_905906.20071226.hdf"
