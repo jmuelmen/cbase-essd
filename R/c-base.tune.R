@@ -161,18 +161,38 @@ test.cbase.lm <- function(df) {
 }
 
 #' @export
-cbase.combine <- function(df.cor) {
+cbase.combine.station <- function(df.cor) {
+    ## group by ground station overpass
     df.cor %>%
         dplyr::group_by(station.icao, datetime, date, episode) %>%
-        dplyr::summarize(n = n(),
-                         all = all(ceilo == mean(ceilo)),
-                         sd.ceilo = sd(ceilo),
-                         ceilo = mean(ceilo),
-                         sd.pred.ceilo = sd(pred.ceilo),
-                         mean.pred.ceilo = mean(pred.ceilo),
-                         sd.pred.rmse = sd(pred.rmse),
-                         best.ceilo = pred.ceilo[which.min(pred.rmse)],
-                         pred.ceilo = sum(pred.ceilo / pred.rmse^2, na.rm = TRUE) / sum(pred.rmse^-2, na.rm = TRUE),
-                         pred.rmse.uncor = sqrt(1 / sum(pred.rmse^-2, na.rm = TRUE)),
-                         pred.rmse = sqrt(mean(pred.rmse^2, na.rm = TRUE)))
+        cbase.combine()
+}
+
+#' @export
+cbase.combine.segment <- function(df.cor) {
+    ## in general, ceilometer "true" values are not known
+    if (!(any(names(df.cor) == "ceilo"))) {
+        df.cor <- mutate(df.cor, ceilo = NA)
+    }
+    ## group by Calipso track segment
+    df.cor %>%
+        dplyr::group_by(segment) %>%
+        cbase.combine()
+}
+
+#' @export
+cbase.combine <- function(df.cor) {
+    dplyr::summarize(df.cor,
+                     n = n(),
+                     all = all(ceilo == mean(ceilo)),
+                     sd.ceilo = sd(ceilo),
+                     ceilo = mean(ceilo),
+                     sd.pred.ceilo = sd(pred.ceilo),
+                     mean.pred.ceilo = mean(pred.ceilo),
+                     sd.pred.rmse = sd(pred.rmse),
+                     best.ceilo = pred.ceilo[which.min(pred.rmse)],
+                     pred.ceilo = sum(pred.ceilo / pred.rmse^2, na.rm = TRUE) /
+                         sum(pred.rmse^-2, na.rm = TRUE),
+                     pred.rmse.uncor = sqrt(1 / sum(pred.rmse^-2, na.rm = TRUE)),
+                     pred.rmse = sqrt(mean(pred.rmse^2, na.rm = TRUE)))
 }
