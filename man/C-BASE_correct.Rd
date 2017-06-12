@@ -13,7 +13,8 @@ correct.cbase.ident(df, correction)
 \arguments{
 \item{df}{Data.frame.  Contains local cloud bases to be corrected}
 
-\item{correction}{List produced by the \ref{C-BASE_tune} functions}
+\item{correction}{List produced by the \code{\link{C-BASE_tune}}
+functions}
 }
 \value{
 Data frame with corrected local cloud bases

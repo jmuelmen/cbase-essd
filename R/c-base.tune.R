@@ -86,7 +86,8 @@ tune.cbase.svm <- function(df) {
 #' C-BASE local cloud base correction functions
 #' 
 #' @param df Data.frame.  Contains local cloud bases to be corrected
-#' @param correction List produced by the \ref{C-BASE_tune} functions
+#' @param correction List produced by the \code{\link{C-BASE_tune}}
+#'     functions
 #' @return Data frame with corrected local cloud bases
 #' @name C-BASE_correct
 NULL
