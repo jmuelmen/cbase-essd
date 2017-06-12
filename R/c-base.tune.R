@@ -83,6 +83,16 @@ tune.cbase.svm <- function(df) {
     list(models = models, df = df)
 }
 
+#' C-BASE local cloud base correction functions
+#' 
+#' @param df Data.frame.  Contains local cloud bases to be corrected
+#' @param correction List produced by the \ref{C-BASE_tune} functions
+#' @return Data frame with corrected local cloud bases
+#' @name C-BASE_correct
+NULL
+
+#' @describeIn C-BASE_correct Correct using linear model or inherited
+#'     classes (including SVM)
 #' @export
 correct.cbase.lm <- function(df, correction) {
     models <- correction$models
@@ -116,6 +126,7 @@ correct.cbase.lm <- function(df, correction) {
         }, .parallel = FALSE)
 }
 
+#' @describeIn C-BASE_correct "Identity" (i.e., no) correction
 #' @export
 correct.cbase.ident <- function(df, correction) {
     models <- correction$models
@@ -160,6 +171,15 @@ test.cbase.lm <- function(df) {
                        })
 }
 
+#' C-BASE combination of local cloud bases into C-BASE product
+#' 
+#' @param df.cor Data.frame.  Contains (corrected) local cloud bases
+#' @return Data frame with combined cloud bases
+#' @name C-BASE_combine
+NULL
+
+#' @describeIn C-BASE_combine Combination around a ground station
+#'     overpass
 #' @export
 cbase.combine.station <- function(df.cor) {
     ## group by ground station overpass
@@ -168,6 +188,8 @@ cbase.combine.station <- function(df.cor) {
         cbase.combine()
 }
 
+#' @describeIn C-BASE_combine Combination within a Calipso track
+#'     segment
 #' @export
 cbase.combine.segment <- function(df.cor) {
     ## in general, ceilometer "true" values are not known
@@ -180,6 +202,7 @@ cbase.combine.segment <- function(df.cor) {
         cbase.combine()
 }
 
+#' @describeIn C-BASE_combine Actual worker function
 #' @export
 cbase.combine <- function(df.cor) {
     dplyr::summarize(df.cor,
