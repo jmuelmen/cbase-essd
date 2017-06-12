@@ -88,8 +88,6 @@ correct.cbase.lm <- function(df, correction) {
     models <- correction$models
     df.cor <- correction$df
 
-    doParallel::registerDoParallel(8)
-    
     df <- df %>%
         factor.cbase.tuning.dist() %>%
         factor.cbase.tuning.mult() %>%
@@ -115,7 +113,7 @@ correct.cbase.lm <- function(df, correction) {
                 pred.ceilo <- predict(model, newdata = select(x, caliop))
             }
             dplyr::mutate(x, pred.ceilo = pred.ceilo)
-        }, .parallel = FALSE, .progress = "text")##   %>%
+        }, .parallel = FALSE)
 }
 
 #' @export
@@ -123,8 +121,6 @@ correct.cbase.ident <- function(df, correction) {
     models <- correction$models
     df.cor <- correction$df
 
-    doParallel::registerDoParallel(8)
-    
     df <- df %>%
         factor.cbase.tuning.dist() %>%
         factor.cbase.tuning.mult() %>%
@@ -144,7 +140,7 @@ correct.cbase.ident <- function(df, correction) {
         filter(!is.na(index.model)) %>%
         plyr::ddply(~ index.model, function(x) {
             dplyr::mutate(x, pred.ceilo = 1e3 * caliop, pred.rmse = rmse)
-        }, .parallel = FALSE, .progress = "text")##   %>%
+        }, .parallel = FALSE)
 }
 
 #' @export
