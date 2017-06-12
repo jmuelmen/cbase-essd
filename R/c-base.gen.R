@@ -42,8 +42,8 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
             factor.land.sea() %>%
             rep(each = 15)
         profile <- rep(1:15, length.out = length(time))
-        ipoint.40  <- rep(1 : ceiling(length(lat) / 3 / 40 ), each = 3 * 40 )[1 : length(lat)]
-        ipoint.100 <- rep(1 : ceiling(length(lat) / 3 / 100), each = 3 * 100)[1 : length(lat)]
+        ipoint.40  <- rep(1 : ceiling(length(lat) / 3 / 80 ), each = 3 * 80 )[1 : length(lat)]
+        ipoint.100 <- rep(1 : ceiling(length(lat) / 3 / 200), each = 3 * 200)[1 : length(lat)]
         ## lon.interp <- approx(x = seq_len(length(lon)) - 1,
         ##                      y = lon,
         ##                      xout = (seq_len((length(lon)) * 15) - 8) / 15)$y 
