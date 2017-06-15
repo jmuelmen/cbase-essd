@@ -36,9 +36,12 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         cal.datestring <- strsplit(basename(fname), "\\.")[[1]][2]
         cal.date <- as.POSIXlt(cal.datestring, format = "%Y-%m-%d", tz = "UTC") +
             (hdf::h4read(fname,sds,"Profile_UTC_Time")[1] %% 1) * 86400
-        
-        Feature_Classification_Flags <- hdf::h4read(fname, sds, "Feature_Classification_Flags")[1166:5515,] ## lower troposphere
-        dim(Feature_Classification_Flags) <- dim(Feature_Classification_Flags) * c(1/15, 15) ## rearrange the packed structure
+
+        ## lower troposphere
+        Feature_Classification_Flags <- hdf::h4read(fname, sds,
+                                                    "Feature_Classification_Flags")[1166:5515,] 
+        ## rearrange the packed structure
+        dim(Feature_Classification_Flags) <- dim(Feature_Classification_Flags) * c(1/15, 15) 
 
         altitude <- seq(-0.5, 8.17, by = 30e-3) %>% rev()
         lon <- hdf::h4read(fname,sds,"Longitude") %>% rep(each = 15)
@@ -53,71 +56,29 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         profile <- rep(1:15, length.out = length(time))
         ipoint.40  <- rep(1 : ceiling(length(lat) / 3 / 80 ), each = 3 * 80 )[1 : length(lat)]
         ipoint.100 <- rep(1 : ceiling(length(lat) / 3 / 200), each = 3 * 200)[1 : length(lat)]
-        ## lon.interp <- approx(x = seq_len(length(lon)) - 1,
-        ##                      y = lon,
-        ##                      xout = (seq_len((length(lon)) * 15) - 8) / 15)$y 
-        ## lat.interp <- approx(x = seq_len(length(lat)) - 1,
-        ##                      y = lat,
-        ##                      xout = (seq_len((length(lat)) * 15) - 8) / 15)$y 
-        ## time.interp <- spline(x = seq_len(length(time)) - 1,
-        ##                       y = time - time[1],
-        ##                       xout = (seq_len((length(time)) * 15) - 8) / 15,
-        ##                       method = "hyman")$y + cal.date
         
-        Feature_Type <- bitwAnd(Feature_Classification_Flags, 7)  %>%
+        Feature_Type <- bitwAnd(Feature_Classification_Flags, 7) %>%
             factor.feature.type()
-            ## factor(levels = 0:7, labels = c("invalid",
-            ##                                 "clear air",
-            ##                                 "cloud",
-            ##                                 "aerosol",
-            ##                                 "stratospheric feature",
-            ##                                 "surface",
-            ##                                 "subsurface",
-            ##                                 "no signal"))
-        ## dim(Feature_Type) <- dim(Feature_Classification_Flags)
-        
-        Feature_Type_QA <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,3)) %>% bitwShiftR(3) %>%
-            factor.qa()
-            ## factor(levels = 0:3, labels = c("none",
-            ##                                 "low",
-            ##                                 "medium",
-            ##                                 "high"), ordered = TRUE)
-        ## dim(Feature_Type_QA) <- dim(Feature_Classification_Flags)
 
-        Ice_Water_Phase <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,5)) %>% bitwShiftR(5) %>%
+        Feature_Type_QA <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,3)) %>%
+            bitwShiftR(3) %>%
+            factor.qa()
+
+        Ice_Water_Phase <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,5)) %>%
+            bitwShiftR(5) %>%
             factor.ice.water.phase()
-            ## factor(levels = 0:3, labels = c("unknown",
-            ##                                 "randomly oriented ice",
-            ##                                 "water",
-            ##                                 "horizontally oriented ice"))
-        ## dim(Ice_Water_Phase) <- dim(Feature_Classification_Flags)
 
-        Ice_Water_Phase_QA <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,7)) %>% bitwShiftR(7) %>%
+        Ice_Water_Phase_QA <- bitwAnd(Feature_Classification_Flags, bitwShiftL(3,7)) %>%
+            bitwShiftR(7) %>%
             factor.qa()
-            ## factor(levels = 0:3, labels = c("none",
-            ##                                 "low",
-            ##                                 "medium",
-            ##                                 "high"), ordered = TRUE)
-        ## dim(Ice_Water_Phase_QA) <- dim(Feature_Classification_Flags)
 
-        Horizontal_averaging <- bitwAnd(Feature_Classification_Flags, bitwShiftL(7,13)) %>% bitwShiftR(13) %>%
+        Horizontal_averaging <- bitwAnd(Feature_Classification_Flags, bitwShiftL(7,13)) %>%
+            bitwShiftR(13) %>%
             factor.horizontal.averaging()
-            ## factor(levels = 0:5, labels = c("NA",
-            ##                                 "1/3 km",
-            ##                                 "1 km",
-            ##                                 "5 km",
-            ##                                 "20 km",
-            ##                                 "80 km"), ordered = TRUE)
-        ## mask <- aaply(array(Feature_Type, dim(Feature_Classification_Flags)), 2, function(x) {
-        ##     any(x == "surface") && any(x == "cloud")
-        ## }, .progress = "text")
-
-        ## which(mask) %>%
-        ##     head(30) %>%
-        ##     as.vector()
         
-        df <- expand.grid(altitude = altitude, time = time - time[1] + cal.date) %>% 
-            mutate(profile = rep(profile, each = 290),
+        df <- expand.grid(altitude = altitude, time.tai = time) %>% 
+            mutate(time = time.tai - time.tai[1] + cal.date, ## UTC time
+                   profile = rep(profile, each = 290),
                    lon = rep(lon, each = 290),
                    lat = rep(lat, each = 290),
                    ipoint.40  = rep(ipoint.40 , each = 290),
@@ -132,11 +93,11 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
             group_by(ipoint.40, altitude) %>%
             mutate(lon.40 = lon[ceiling(n() / 2)],
                    lat.40 = lat[ceiling(n() / 2)],
-                   time.40 = time[ceiling(n() / 2)]) %>%
+                   time.40 = time.tai[ceiling(n() / 2)]) %>%
             group_by(ipoint.100, altitude) %>%
             mutate(lon.100 = lon[ceiling(n() / 2)],
                    lat.100 = lat[ceiling(n() / 2)],
-                   time.100 = time[ceiling(n() / 2)]) %>%
+                   time.100 = time.tai[ceiling(n() / 2)]) %>%
             ungroup()
                    
 
@@ -155,19 +116,6 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
             mutate(
                 ## label layers
                 labels = label.vertical.features(Feature_Type)
-                ## ## find surface label
-                ## label.sfc = labels[Feature_Type == "surface"][1],
-                ## ## find label of lowest cloud layer
-                ## label.lowest.cloud = max(labels[Feature_Type == "cloud"]),
-                ## ## find (minimum) QA flag of lowest layer
-                ## feature.qa.lowest.cloud = min(Feature_Type_QA[labels == label.lowest.cloud]),
-                ## ## find level number of lowest level of lowest cloud
-                ## lev.lowest.cloud = max(which(labels == label.lowest.cloud)),
-                ## ## find phase of lowest level of lowest cloud
-                ## phase.lowest.cloud = Ice_Water_Phase[lev.lowest.cloud],
-                ## phase.qa.lowest.cloud = Ice_Water_Phase_QA[lev.lowest.cloud],
-                ## ## find feature type above surface
-                ## feature.above.surface = feature.above.surface(Feature_Type)
             ) %>%
             summarize(
                 ## find surface label
@@ -207,15 +155,16 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                 land.water.mask = Land_Water_Mask[1],
                 len = n()
             ) %>%
+            ## recreate ordered factors that got destroyed by the
+            ## previous statement
             factor.vfm() %>%
             ungroup() %>%
-            select(time, profile, ## len,
+            select(time, profile, 
                    lon, lat,
                    ipoint.40, lon.40, lat.40, time.40,
                    ipoint.100, lon.100, lat.100, time.100,
                    day.night.flag, land.water.mask,
                    feature.qa.lowest.cloud,
-                   ## horizontal.averaging.lowest.cloud.median,
                    horizontal.averaging.lowest.cloud.min,
                    horizontal.averaging.lowest.cloud.max,
                    phase.lowest.cloud, phase.qa.lowest.cloud,
@@ -225,7 +174,6 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                    surface.elevation) -> res
 
         saveRDS(res, file = out.fname)
-        ## res <- readRDS(file = out.fname)
         
         if (combination) {
             ## some preparatory work: add thickness, AGL heights, filter
@@ -274,7 +222,8 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         return(res)
     }, .parallel = TRUE, .id = "ifile")
 
-    res <- dplyr::mutate(res, ifile = factor(ifile, levels = 1 : length(lf), labels = basename(lf)))
+    res <- dplyr::mutate(res, ifile = factor(ifile, levels = 1 : length(lf),
+                                             labels = basename(lf)))
     
     saveRDS(res, out.name)
     return(res)
