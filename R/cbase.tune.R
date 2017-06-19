@@ -199,7 +199,7 @@ cbase.combine.segment <- function(df.cor) {
     }
     ## group by Calipso track segment
     df.cor %>%
-        dplyr::group_by(segment) %>%
+        dplyr::group_by(segment, time, lon, lat) %>%
         cbase.combine()
 }
 

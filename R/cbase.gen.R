@@ -193,7 +193,10 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                 dplyr::mutate(resolution.out = n() * 2.5) %>%
                 dplyr::ungroup() %>%
                 correct.cbase.lm(cor.svm) %>%
-                dplyr::mutate(segment = ipoint.40) %>%
+                dplyr::mutate(segment = ipoint.40,
+                              time = time.40,
+                              lon = lon.40,
+                              lat = lat.40) %>%
                 cbase.combine.segment()
 
             gsub(".hdf", ".rds", basename(fname)) %>%
@@ -210,7 +213,10 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                 dplyr::mutate(resolution.out = n()) %>%
                 dplyr::ungroup() %>%
                 correct.cbase.lm(cor.svm) %>%
-                dplyr::mutate(segment = ipoint.100) %>%
+                dplyr::mutate(segment = ipoint.100,
+                              time = time.100,
+                              lon = lon.100,
+                              lat = lat.100) %>%
                 cbase.combine.segment()
             
             gsub(".hdf", ".rds", basename(fname)) %>%
