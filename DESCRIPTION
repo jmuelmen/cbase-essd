@@ -20,7 +20,8 @@ Imports:
     getopt,
     RSQLite,
     e1071,
-    plotutils
+    plotutils,
+    ncdf4
 RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown
