@@ -1,7 +1,9 @@
 
-cbase.create.nc <- function(df, out.fname) {
-    dim.time <- ncdf4::ncdim_def("time", "seconds since 1993-01-01 00:00:00", df$time, unlim = TRUE,
-                          create_dimvar = TRUE, calendar = "gregorian", longname = "TAI time") 
+cbase.create.nc <- function(df, out.fname,
+                            title = "CBASE cloud base height estimate, 40 km Dmax") {
+    dim.time <- ncdf4::ncdim_def("time", "seconds since 1993-01-01 00:00:00", df$time,
+                                 unlim = TRUE, create_dimvar = TRUE,
+                                 calendar = "gregorian", longname = "TAI time") 
     
     var.cbh <- ncdf4::ncvar_def("cbh", "m",
                            list(dim.time), ## unlimited dim last
@@ -39,9 +41,10 @@ cbase.create.nc <- function(df, out.fname) {
     ncdf4::ncatt_put(nc.out, var.cbh, "description", "Standard error on height of lowest cloud base above mean sea level") 
 
     ncdf4::ncatt_put(nc.out, 0, "Conventions", "CF-1.6")
-    ncdf4::ncatt_put(nc.out, 0, "title", "CBASE cloud base height estimate, 40 km Dmax")
-    ncdf4::ncatt_put(nc.out, 0, "references", "Muelmenstaedt et al., doi:10.5194/acp-13-2045-2013, 2017")
-    ncdf4::ncatt_put(nc.out, 0, "source", "satellite, CALIOP Vertical Feature Mask processed by CBASE algorithm")
+    ncdf4::ncatt_put(nc.out, 0, "title", title)
+    ncdf4::ncatt_put(nc.out, 0, "references", "Muelmenstaedt et al., doi:10.5194/essd-xxxx, 2017")
+    ncdf4::ncatt_put(nc.out, 0, "source",
+                     "satellite, CALIOP Vertical Feature Mask processed by CBASE algorithm")
     ncdf4::ncatt_put(nc.out, 0, "institution", "University of Leipzig")
     ncdf4::ncatt_put(nc.out, 0, "history", sprintf("cbasetools::cbase.create.nc (version %s) run on %s",
                                             packageVersion("cbasetools"), format(Sys.time(),
