@@ -204,6 +204,12 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                 paste("cloud-bases", ., sep = "/") %>%
                 saveRDS(res.40, .)
 
+            gsub(".hdf", ".nc", basename(fname)) %>%
+                gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-40", .) %>%
+                paste("cloud-bases", ., sep = "/") %>%
+                cbase.create.nc(res.40, .,
+                                "CBASE cloud base height estimate, Dmax = 40 km")
+
             ## correct and combine bases for 100 km segments
             res.100 <- res.prep %>%
                 dplyr::group_by(ipoint.100) %>%
@@ -223,6 +229,12 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                 gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-100", .) %>%
                 paste("cloud-bases", ., sep = "/") %>%
                 saveRDS(res.100, .)
+
+            gsub(".hdf", ".nc", basename(fname)) %>%
+                gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-100", .) %>%
+                paste("cloud-bases", ., sep = "/") %>%
+                cbase.create.nc(res.100, .,
+                                "CBASE cloud base height estimate, Dmax = 100 km")
         }
         
         return(res)
