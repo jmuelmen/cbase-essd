@@ -6,7 +6,7 @@
 #SBATCH --nodes=10
 #SBATCH --mem-per-cpu=6G
 #SBATCH --ntasks-per-node=36
-#SBATCH --time=01:00:00
+#SBATCH --time=08:00:00
 #SBATCH --mail-type=FAIL
 
 # limit stacksize ... adjust to your programs need
