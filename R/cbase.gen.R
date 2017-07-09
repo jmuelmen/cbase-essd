@@ -36,14 +36,17 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         list.files(path = path, pattern = pattern, recursive = TRUE, full.names = TRUE)
     sds <- hdf::h4list(lf[1])
 
-    res <- plyr::adply(lf[1:20], 1,
-                       function(fname,
-                                ## pass additional arguments to
-                                ## non-SHM worker processes
-                                sds = sds,
-                                combination = combination,
-                                path = path,
-                                pattern = pattern) {
+    res <- plyr::adply(lf[1:120], 1, function(fname,
+                                             ## pass additional arguments to
+                                             ## non-SHM worker processes
+                                             sds = sds,
+                                             combination = combination,
+                                             path = path,
+                                             pattern = pattern) {
+        return(fname = fname,
+               combination = combination,
+               path = path,
+               pattern = pattern)
         ## can we take the easy way out (results are already cached)?
         out.fname <- paste("cloud-bases", gsub(".hdf", ".rds", basename(fname)), sep = "/")
         if (length(list.files("cloud-bases", gsub(".hdf", ".rds", basename(fname)))) != 0)
