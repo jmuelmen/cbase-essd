@@ -3,13 +3,11 @@
 #SBATCH --account=bb1002
 #SBATCH --partition=compute2
 #SBATCH --job-name=cbase
-#SBATCH --nodes=1
+#SBATCH --nodes=2
+#SBATCH --mem-per-cpu=10G
 #SBATCH --ntasks-per-node=18
-#SBATCH --mem=250G
 #SBATCH --time=01:00:00
 #SBATCH --mail-type=FAIL
-
-
 
 # limit stacksize ... adjust to your programs need
 ulimit -s 102400
@@ -29,6 +27,8 @@ export MXM_RDMA_PORTS=mlx5_0:1
 export MXM_LOG_LEVEL=ERROR
 # Disable GHC algorithm for collective communication
 export OMPI_MCA_coll=^ghc
+
+export PATH=$PATH:/sw/rhel6-x64/hdf4/hdf-4.2.10-gcc48/bin
 
 # Use srun (not mpirun or mpiexec) command to launch
 # programs compiled with any MPI library
