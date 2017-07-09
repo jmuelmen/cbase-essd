@@ -8,10 +8,12 @@ SQLIZE = ./sqlize.sh
 SRUNENV = SLURM_JOB_PARTITION=compute2 SLURM_CPU_FREQ_REQ=High
 SRUNFLAGS = -A bb1002 -p compute2 --time=08:00:00 --exclusive -N 1 --mem=250G
 
-CBASEDIR = /work/bb0839/b380126/CBASE
+CBASE = ./cbase.sh
+CBASEFLAGS = 
 HDFDIR = /work/bb0839/b380126/CALIOP/VFM.v4.10
+CBASEDIR = $(subst CALIOP/VFM.v4.10,CBASE,$(HDFDIR))
 HDF_2007 := $(shell find $(HDFDIR) -name \*.hdf)
-HDF_2007_STRUCTURE := $(shell find $(HDFDIR) -type d)
+HDF_2007_STRUCTURE := $(shell find $(HDFDIR)/2007 -type d)
 CBASE_2007_STRUCTURE := $(subst $(HDFDIR),$(CBASEDIR),$(HDF_2007_STRUCTURE) )
 
 $(HOME)/cloud-bases-2008-local.sqlite: $(HOME)/cloud-bases-2008.rds
@@ -78,7 +80,9 @@ cbm-min_cbh.qual-2007.rds:	cloud-bases-2007.sqlite
 		--eval="get.metar.2007()"
 
 cbase-2007.rds:	$(HDF_2007)
-	echo mkdir -p $(CBASE_2007_STRUCTURE)
+	mkdir -p $(CBASE_2007_STRUCTURE)
+	mkdir -p cloud-bases
+	sbatch $(CBASE) $(CBASEFLAGS) -o $@ -p $(HDFDIR)/2007
 
 .PHONY:	all
-all:	cbase-2007.rds cbase-2008.rds ## cbm-min_cbh.rds cbm-min_cbh.qual.rds cbm-quantile_cbh.qual.rds
+all:	cbase-2007.rds ## cbase-2008.rds ## cbm-min_cbh.rds cbm-min_cbh.qual.rds cbm-quantile_cbh.qual.rds
