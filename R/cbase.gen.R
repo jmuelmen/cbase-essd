@@ -12,22 +12,38 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                         pattern = "CAL_LID_L2_VFM-Standard-V4-10.*hdf",
                         out.name = "cloud-bases.rds",
                         combination = TRUE,
-                        ncores = 72) {
+                        cor.svm.fname = "~/models.svm.rds") {
 
-    ## Combine local bases?  if so, we'll need the SVM models for
-    ## local base correction
+    np <- Rmpi::mpi.universe.size() - 1
+    cluster <- snow::makeMPIcluster(np)
+    on.exit({
+        snow::stopCluster(cluster)
+    })
+    doSNOW::registerDoSNOW(cluster)
+
+    snow::clusterExport(cluster, list(cor.svm.fname))
     if (combination) {
-        library(e1071)
-        cor.svm <- readRDS("~/r-packages/models.svm.rds")
+        snow::clusterEvalQ(cluster, {
+            library(plyr)
+            library(dplyr)
+            library(e1071)
+            library(cbasetools)
+            cor.svm <- readRDS(cor.svm.fname)
+        })
     }
     
     lf <- ## "/tmp/CER-NEWS_CCCM_Aqua-FM3-MODIS-CAL-CS_RelB1_905906.20071226.hdf"
         list.files(path = path, pattern = pattern, recursive = TRUE, full.names = TRUE)
-
     sds <- hdf::h4list(lf[1])
 
-    doParallel::registerDoParallel(cores = ncores)
-    res <- plyr::adply(lf, 1, function(fname) {
+    res <- plyr::adply(lf, 1,
+                       function(fname,
+                                ## pass additional arguments to
+                                ## non-SHM worker processes
+                                sds = sds,
+                                combination = combination,
+                                path = path,
+                                pattern = pattern) {
         ## can we take the easy way out (results are already cached)?
         out.fname <- paste("cloud-bases", gsub(".hdf", ".rds", basename(fname)), sep = "/")
         if (length(list.files("cloud-bases", gsub(".hdf", ".rds", basename(fname)))) != 0)
