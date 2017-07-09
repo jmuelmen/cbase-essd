@@ -187,6 +187,9 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                    cloud.base.altitude,
                    surface.elevation) -> res
 
+        rm(df)
+        gc()
+        
         saveRDS(res, file = out.fname)
         
         if (combination) {
