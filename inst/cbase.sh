@@ -3,10 +3,10 @@
 #SBATCH --account=bb1002
 #SBATCH --partition=compute2
 #SBATCH --job-name=cbase
-#SBATCH --nodes=9
-#SBATCH --ntasks-per-node=36
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=18
 #SBATCH --mem=250G
-#SBATCH --time=08:00:00
+#SBATCH --time=01:00:00
 #SBATCH --mail-type=FAIL
 
 
