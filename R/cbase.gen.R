@@ -18,6 +18,7 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
     cluster <- snow::makeMPIcluster(np)
     on.exit({
         snow::stopCluster(cluster)
+        Rmpi::mpi.exit()
     })
     doSNOW::registerDoSNOW(cluster)
 
