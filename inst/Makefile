@@ -82,7 +82,7 @@ cbm-min_cbh.qual-2007.rds:	cloud-bases-2007.sqlite
 cbase-2007.rds:	## $(HDF_2007)
 ##mkdir -p $(CBASE_2007_STRUCTURE)
 	mkdir -p cloud-bases
-	sbatch $(CBASE) $(CBASEFLAGS) -o $@ -p $(HDFDIR)/2007
+	sbatch $(CBASE) $(CBASEFLAGS) -o $@ -p $(HDFDIR)/2007/2007_01_01
 
 .PHONY:	all
 all:	cbase-2007.rds ## cbase-2008.rds ## cbm-min_cbh.rds cbm-min_cbh.qual.rds cbm-quantile_cbh.qual.rds

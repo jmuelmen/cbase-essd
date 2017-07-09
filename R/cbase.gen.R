@@ -43,10 +43,10 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
                                              combination = combination,
                                              path = path,
                                              pattern = pattern) {
-        return(fname = fname,
-               combination = combination,
-               path = path,
-               pattern = pattern)
+        return(data.frame(fname = fname,
+                          combination = combination,
+                          path = path,
+                          pattern = pattern))
         ## can we take the easy way out (results are already cached)?
         out.fname <- paste("cloud-bases", gsub(".hdf", ".rds", basename(fname)), sep = "/")
         if (length(list.files("cloud-bases", gsub(".hdf", ".rds", basename(fname)))) != 0)
