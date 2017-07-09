@@ -21,7 +21,7 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
     })
     doSNOW::registerDoSNOW(cluster)
 
-    snow::clusterExport(cluster, list(cor.svm.fname))
+    snow::clusterExport(cluster, "cor.svm.fname", environment())
     if (combination) {
         snow::clusterEvalQ(cluster, {
             library(plyr)
