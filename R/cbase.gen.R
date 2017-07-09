@@ -29,6 +29,7 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
             library(e1071)
             library(cbasetools)
             cor.svm <- readRDS(cor.svm.fname)
+            return(NULL)
         })
     }
     
@@ -36,13 +37,13 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         list.files(path = path, pattern = pattern, recursive = TRUE, full.names = TRUE)
     sds <- hdf::h4list(lf[1])
 
-    res <- plyr::adply(lf[1:120], 1, function(fname,
-                                             ## pass additional arguments to
-                                             ## non-SHM worker processes
-                                             sds = sds,
-                                             combination = combination,
-                                             path = path,
-                                             pattern = pattern) {
+    res <- plyr::adply(lf, 1, function(fname,
+                                       ## pass additional arguments to
+                                       ## non-SHM worker processes
+                                       sds = sds,
+                                       combination = combination,
+                                       path = path,
+                                       pattern = pattern) {
         return(data.frame(fname = fname,
                           combination = combination,
                           path = path,
