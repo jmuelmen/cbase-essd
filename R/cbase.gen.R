@@ -40,10 +40,8 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
     res <- plyr::adply(lf, 1, function(fname,
                                        ## pass additional arguments to
                                        ## non-SHM worker processes
-                                       sds = sds,
-                                       combination = combination,
-                                       path = path,
-                                       pattern = pattern) {
+                                       sds, combination, path,
+                                       pattern) {
         return(data.frame(fname = fname,
                           combination = combination,
                           path = path,
@@ -258,7 +256,8 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         }
         
         return(res)
-    }, .parallel = TRUE, .id = "ifile")
+    }, .parallel = TRUE, .id = "ifile",
+    sds, combination, path, pattern)
 
     res <- dplyr::mutate(res, ifile = factor(ifile, levels = 1 : length(lf),
                                              labels = basename(lf)))
