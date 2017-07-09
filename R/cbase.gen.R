@@ -253,7 +253,7 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         
         return(res)
     }, .parallel = TRUE, .id = "ifile",
-    sds, combination, path, pattern)
+    sds = sds, combination = combination, path = path, pattern = pattern)
 
     res <- dplyr::mutate(res, ifile = factor(ifile, levels = 1 : length(lf),
                                              labels = basename(lf)))
