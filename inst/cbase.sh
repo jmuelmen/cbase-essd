@@ -3,9 +3,9 @@
 #SBATCH --account=bb1002
 #SBATCH --partition=compute2
 #SBATCH --job-name=cbase
-#SBATCH --nodes=2
-#SBATCH --mem-per-cpu=10G
-#SBATCH --ntasks-per-node=18
+#SBATCH --nodes=10
+#SBATCH --mem-per-cpu=6G
+#SBATCH --ntasks-per-node=36
 #SBATCH --time=01:00:00
 #SBATCH --mail-type=FAIL
 
