@@ -84,5 +84,10 @@ cbase-2007.rds:	## $(HDF_2007)
 	mkdir -p cloud-bases
 	sbatch $(CBASE) $(CBASEFLAGS) -o $@ -p $(HDFDIR)/2007
 
+cbase-2008.rds:	## $(HDF_2007)
+##mkdir -p $(CBASE_2007_STRUCTURE)
+	mkdir -p cloud-bases
+	sbatch $(CBASE) $(CBASEFLAGS) -o $@ -p $(HDFDIR)/2008
+
 .PHONY:	all
 all:	cbase-2007.rds ## cbase-2008.rds ## cbm-min_cbh.rds cbm-min_cbh.qual.rds cbm-quantile_cbh.qual.rds
