@@ -8,7 +8,7 @@ cbase.create.nc <- function(df, out.fname,
     var.cbh <- ncdf4::ncvar_def("cbh", "m",
                            list(dim.time), ## unlimited dim last
                            longname = "cloud base altitude")
-    var.cbh_err <- ncdf4::ncvar_def("cbh_err", "m",
+    var.cbh_err <- ncdf4::ncvar_def("cbh_error", "m",
                            list(dim.time), 
                            longname = "cloud base altitude standard error")
 
@@ -37,10 +37,10 @@ cbase.create.nc <- function(df, out.fname,
                      "Height of lowest cloud base above mean sea level")
     ncdf4::ncatt_put(nc.out, var.cbh, "ancillary_variables", "cbh_error")
 
-    ncdf4::ncatt_put(nc.out, var.cbh, "source", "CBASE algorithm Version 1.0")
-    ncdf4::ncatt_put(nc.out, var.cbh, "standard_name", "cloud_base_altitude standard_error")
-    ncdf4::ncatt_put(nc.out, var.cbh, "units", "m")
-    ncdf4::ncatt_put(nc.out, var.cbh, "description",
+    ncdf4::ncatt_put(nc.out, var.cbh_err, "source", "CBASE algorithm Version 1.0")
+    ncdf4::ncatt_put(nc.out, var.cbh_err, "standard_name", "cloud_base_altitude standard_error")
+    ncdf4::ncatt_put(nc.out, var.cbh_err, "units", "m")
+    ncdf4::ncatt_put(nc.out, var.cbh_err, "description",
                      "Standard error on height of lowest cloud base above mean sea level") 
 
     ncdf4::ncatt_put(nc.out, 0, "Conventions", "CF-1.6")
