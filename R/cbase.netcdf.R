@@ -43,14 +43,14 @@ cbase.create.nc <- function(df, out.fname,
     ncdf4::ncatt_put(nc.out, var.cbh, "description",
                      "Height of lowest cloud base above mean sea level")
     ncdf4::ncatt_put(nc.out, var.cbh, "ancillary_variables", "cbh_error")
-    ncdf4::ncatt_put(nc.out, var.cbh, "coordinates", "time lon lat")
+    ncdf4::ncatt_put(nc.out, var.cbh, "coordinates", "time longitude latitude")
 
     ncdf4::ncatt_put(nc.out, var.cbh_err, "source", "CBASE algorithm Version 1.0")
     ncdf4::ncatt_put(nc.out, var.cbh_err, "standard_name", "cloud_base_altitude standard_error")
     ncdf4::ncatt_put(nc.out, var.cbh_err, "units", "m")
     ncdf4::ncatt_put(nc.out, var.cbh_err, "description",
                      "Standard error on height of lowest cloud base above mean sea level") 
-    ncdf4::ncatt_put(nc.out, var.cbh_err, "coordinates", "time lon lat")
+    ncdf4::ncatt_put(nc.out, var.cbh_err, "coordinates", "time longitude latitude")
 
     ncdf4::ncatt_put(nc.out, var.trajectory_id, "cf_role", "trajectory_id")
     ncdf4::ncatt_put(nc.out, var.trajectory_id, "description",
