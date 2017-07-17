@@ -16,7 +16,7 @@ cbase.create.nc <- function(df, out.fname,
                            longname = "cloud base altitude standard error")
     var.trajectory_id <- ncdf4::ncvar_def("trajectory_id", "",
                                           list(dim.strlen), prec = "char",
-                                          longname = "cloud base altitude standard error")
+                                          longname = "trajectory id")
 
     var.lon <- ncdf4::ncvar_def("longitude", "degrees_east", list(dim.time))
     var.lat <- ncdf4::ncvar_def("latitude", "degrees_north", list(dim.time))
@@ -53,6 +53,8 @@ cbase.create.nc <- function(df, out.fname,
     ncdf4::ncatt_put(nc.out, var.cbh_err, "coordinates", "time lon lat")
 
     ncdf4::ncatt_put(nc.out, var.trajectory_id, "cf_role", "trajectory_id")
+    ncdf4::ncatt_put(nc.out, var.trajectory_id, "description",
+                     "Trajectory identified by UTC trajectory start date and (D)ay/(N)ight flag") 
     
     ncdf4::ncatt_put(nc.out, 0, "Conventions", "CF-1.6")
     ncdf4::ncatt_put(nc.out, 0, "title", title)
