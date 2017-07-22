@@ -25,7 +25,8 @@ get.cbase.bitsies <- function() {
 
     cbase <- dplyr::bind_rows(dplyr::mutate(df.day, daynight = "day"),
                               dplyr::mutate(df.night, daynight = "night")) %>%
-        dplyr::select(segment, X1 : n, pred.ceilo, pred.rmse, daynight)
+        dplyr::select(segment, time : n, pred.ceilo, pred.rmse, daynight) %>%
+        dplyr::mutate(daynight = factor(daynight))
     
     save(cbase, file = "~/r-packages/cbasetools/data/cbase.rda")
     cbase

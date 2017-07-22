@@ -2,7 +2,21 @@
 % Please edit documentation in R/cbase.R
 \name{CBASE_accessors}
 \alias{CBASE_accessors}
+\alias{get.cbase}
+\alias{get.cbase.bitsies}
 \title{CBASE accessor functions}
+\usage{
+get.cbase()
+
+get.cbase.bitsies()
+}
 \description{
 CBASE accessor functions
 }
+\section{Functions}{
+\itemize{
+\item \code{get.cbase}: Get CBASE cloud heights
+
+\item \code{get.cbase.bitsies}: Get CBASE cloud heights
+}}
+
