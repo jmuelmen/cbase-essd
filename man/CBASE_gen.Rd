@@ -14,7 +14,8 @@
 
 bases.cbase(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
   pattern = "CAL_LID_L2_VFM-Standard-V4-10.*hdf",
-  out.name = "cloud-bases.rds", combination = TRUE, ncores = 72)
+  out.name = "cloud-bases.rds", combination = TRUE,
+  cor.svm.fname = "~/models.svm.rds")
 
 
   bases.cbase.dardar(path = "/projekt3/climate/DATA/SATELLITE/MULTI_SENSOR/DARDAR/DARDAR_MASK/2007",
