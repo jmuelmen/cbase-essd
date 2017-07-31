@@ -177,7 +177,7 @@ regression_table <- function(df.stats) {
 
     ## add hlines between levels of the first grouping variable
     group.diffs <- df.stats %>%
-        select(group1 = eval(parse(text = groups(df.stats)[[1]]))) %>%
+        select(group1 = dplyr::matches(as.character(groups(df.stats)[[1]]))) %>%
         as.data.frame() %>% ## needed for ordered factor comparison
         mutate(group.diff = group1 != group1[2:(n() + 1)])
     hlines <- which(group.diffs$group.diff)
