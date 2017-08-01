@@ -50,7 +50,7 @@ vis.geo <- function(df) {
 #' @param df data.frame.  Result of \code{bases.cbase()}
 #' @return NULL
 #' @export
-vis.quantiles <- function(df) {
+vis.quantiles <- function(df, base_size) {
     df %>%
         plotutils::discretize(lon, seq(-180, 180, 2)) %>%
         plotutils::discretize(lat, seq(-90, 90, 2)) %>%
@@ -64,8 +64,8 @@ vis.quantiles <- function(df) {
         plotutils::scale_x_geo(facet = TRUE) +
         plotutils::scale_y_geo() +
         ggplot2::scale_fill_distiller(palette = "Spectral") +
-        ggplot2::facet_grid(daynight ~ quantile) +
-        ggplot2::theme_bw(18) 
+        ggplot2::facet_grid(quantile ~ daynight) +
+        ggplot2::theme_bw(base_size) + ggplot2::theme(legend.position = "bottom")
     
 }
 
@@ -75,7 +75,7 @@ vis.quantiles <- function(df) {
 #' @param df data.frame.  Result of \code{bases.cbase()}
 #' @return NULL
 #' @export
-vis.cdf <- function(df) {
+vis.cdf <- function(df, base_size) {
     doParallel::registerDoParallel(4)
     df %>%
         plotutils::discretize(lon, seq(-180, 180, 2)) %>%
@@ -96,7 +96,7 @@ vis.cdf <- function(df) {
         plotutils::scale_y_geo() +
         ggplot2::scale_fill_brewer(palette = "Spectral", direction = -1) +
         ggplot2::facet_grid(daynight ~ rmse) +
-        ggplot2::theme_bw(18) 
+        ggplot2::theme_bw(base_size) + ggplot2::theme(legend.position = "bottom")
 }
 
 #' Visualization of geographical distribution of cloud-base

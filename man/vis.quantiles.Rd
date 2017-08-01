@@ -5,7 +5,7 @@
 \title{Visualization of geographical distribution of cloud-base
 uncertainties (quantiles)}
 \usage{
-vis.quantiles(df)
+vis.quantiles(df, base_size)
 }
 \arguments{
 \item{df}{data.frame.  Result of \code{bases.cbase()}}

@@ -5,7 +5,7 @@
 \title{Visualization of geographical distribution of cloud-base
 uncertainties (CDF)}
 \usage{
-vis.cdf(df)
+vis.cdf(df, base_size)
 }
 \arguments{
 \item{df}{data.frame.  Result of \code{bases.cbase()}}
