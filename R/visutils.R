@@ -52,8 +52,8 @@ vis.geo <- function(df) {
 #' @export
 vis.quantiles <- function(df, base_size) {
     df %>%
-        plotutils::discretize(lon, seq(-180, 180, 2)) %>%
-        plotutils::discretize(lat, seq(-90, 90, 2)) %>%
+        plotutils::discretize(lon, seq(-180, 180, 5)) %>%
+        plotutils::discretize(lat, seq(-90, 90, 5)) %>%
         plyr::ddply(~ lon + lat + daynight, function(df) {
             quantile(df$pred.rmse, c(0.1, 0.25, 0.5, 0.75, 0.9))
         }) %>%
@@ -78,8 +78,8 @@ vis.quantiles <- function(df, base_size) {
 vis.cdf <- function(df, base_size) {
     doParallel::registerDoParallel(4)
     df %>%
-        plotutils::discretize(lon, seq(-180, 180, 2)) %>%
-        plotutils::discretize(lat, seq(-90, 90, 2)) %>%
+        plotutils::discretize(lon, seq(-180, 180, 5)) %>%
+        plotutils::discretize(lat, seq(-90, 90, 5)) %>%
         plyr::ddply(~ lon + lat + daynight, function(df) {
             cdf <- ecdf(df$pred.rmse)
             data.frame(rmse = seq(300,480, by = 60)) %>%
