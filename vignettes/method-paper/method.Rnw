@@ -709,21 +709,21 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   @
 \end{table*}
 
-\begin{figure*}
-  \centering
-  %% <<vis-cbase,cache=TRUE,echo=FALSE,results='hide'>>=
-  %% @
-  %% <<vis-cbase2,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
-  %% @
-  \caption{Geographic distribution of median cloud bases and median cloud
-    thicknesses \commentjm{Make the figure less complex.  One panel with overall
-    CBH.}}
-  \label{fig:geo}
-\end{figure*}
-
 <<cbase-uncert-setup,cache=FALSE,echo=FALSE,results='hide'>>=
 data(cbase)
 @
+
+\begin{figure*}
+  \centering
+  <<cbase-base,dev='tikz',fig.width=7,fig.height=3,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  vis.mean(cbase, 14)
+  @
+  \caption{Geographic distribution of mean cloud base heights above ground
+    level.  Statistics are calculated within each $5\degree\times 5\degree$
+    latitude--longitude box, and separately for CALIOP daytime and nighttime
+    overpasses.}
+  \label{fig:geo}
+\end{figure*}
 
 \begin{figure}
   \centering
