@@ -721,6 +721,47 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \label{fig:geo}
 \end{figure*}
 
+<<cbase-uncert-setup,cache=FALSE,echo=FALSE,results='hide'>>=
+data(cbase)
+@
+
+\begin{figure}
+  \centering
+  <<cbase-rmse,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  cbase %>% 
+  ggplot(aes(x = pred.rmse, y = ..density.., fill = daynight, color = daynight)) + 
+  geom_density(alpha = 0.8, adjust = 5) + 
+  scale_fill_grey("") + 
+  scale_color_grey("") + 
+  labs(x = "$\\sigma$ (m)",
+       y = "Density (m$^{-1}$)") +
+  theme_bw()
+  @
+  \caption{Distribution of predicted cloud base height uncertainty.}
+  \label{fig:uncertainty}
+\end{figure}
+
+\begin{figure*}
+  \centering
+  <<cbase-uncert-quantiles,dev='tikz',fig.width=7,fig.height=9.5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  vis.quantiles(cbase, 14)
+  @
+  \caption{Cloud base uncertainty quantiles.  Statistics are calculated within
+    each $5\degree\times 5\degree$ latitude--longitude box.  The left (right)
+    column shows statistics of daytime (nighttime) retrievals; daytime and
+    nighttime are defined by the CALIOP VFM product.}
+  \label{fig:geo}
+\end{figure*}
+
+% \begin{figure*}
+%   \centering
+%   <<cbase-uncert-cdf,dev='tikz',fig.width=7,fig.height=9.5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%   vis.n(cbase, 14)
+%   @
+%   \caption{Cumulative distribution of cloud base uncertainty.  Statistics are
+%     calculated within each $2\degree\times 2\degree$ latitude--longitude box.}
+%   \label{fig:geo}
+% \end{figure*}
 
 <<glorious-victory,cache=FALSE,echo=FALSE>>=
 @ 
