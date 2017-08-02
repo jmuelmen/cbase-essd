@@ -82,11 +82,11 @@ vis.mean <- function(df, base_size) {
         ggplot2::coord_fixed(1) +
         ## ggplot2::scale_fill_distiller(palette = "Spectral") +
         # ggplot2::scale_fill_brewer(palette = "Spectral") +
-        ggplot2::scale_fill_brewer("Mean cloud base height (m)",
+        ggplot2::scale_fill_brewer("Mean cloud base height (m AGL)",
                                    palette = "Spectral",
                                    guide = ggplot2::guide_legend(direction = "horizontal",
                                                                  nrow = 1,
-                                                                 keywidth = 3,
+                                                                 keywidth = 2,
                                                                  label.hjust = 0.5,
                                                                  label.position = "bottom")) +
         ggplot2::facet_grid(# season
@@ -163,11 +163,11 @@ vis.quantiles <- function(df, base_size) {
         plotutils::scale_x_geo(facet = TRUE) +
         plotutils::scale_y_geo() +
         ggplot2::coord_fixed(1) +
-        ggplot2::scale_fill_brewer("RMSE (m)",
+        ggplot2::scale_fill_brewer("Cloud base height RMSE (m)",
                                    palette = "Spectral",
                                    guide = ggplot2::guide_legend(direction = "horizontal",
                                                                  nrow = 1,
-                                                                 keywidth = 3,
+                                                                 keywidth = 2,
                                                                  label.hjust = 0.5,
                                                                  label.position = "bottom")) +
         ggplot2::facet_grid(quantile ~ daynight) +

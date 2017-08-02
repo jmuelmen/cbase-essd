@@ -380,6 +380,7 @@ res <- combo %>%
     ungroup() %>%
     mutate(dummy = "", dummy2 = "") %>%
     ## select(-caliop) %>%
+    filter(pred.ceilo > 0, pred.ceilo < 3e3) %>%
     mutate(caliop = pred.ceilo * 1e-3, caliop.local = caliop) %>%
     group_by(dummy, dummy2) %>%
     regression_plot(title = NULL, xlab = "CBASE cloud base height (km)", base_size = 14)

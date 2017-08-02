@@ -715,7 +715,7 @@ data(cbase)
 
 \begin{figure*}
   \centering
-  <<cbase-base,dev='tikz',fig.width=7,fig.height=3,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  <<cbase-base,dev='tikz',fig.width=7,fig.height=7.2,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   vis.mean(cbase, 14)
   @
   \caption{Geographic distribution of mean cloud base heights above ground
@@ -727,15 +727,15 @@ data(cbase)
 
 \begin{figure}
   \centering
-  <<cbase-rmse,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  <<cbase-rmse,dev='tikz',fig.width=3,fig.height=2.5,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
   cbase %>% 
   ggplot(aes(x = pred.rmse, y = ..density.., fill = daynight, color = daynight)) + 
-  geom_density(alpha = 0.8, adjust = 5) + 
-  scale_fill_grey("") + 
-  scale_color_grey("") + 
+  geom_density(alpha = 0.6, adjust = 5) + 
+  scale_fill_grey("", start = 0.7, end = 0.2) + 
+  scale_color_grey("", start = 0.7, end = 0.2) + 
   labs(x = "$\\sigma$ (m)",
        y = "Density (m$^{-1}$)") +
-  theme_bw()
+  theme_bw() + theme(legend.position = "bottom")
   @
   \caption{Distribution of predicted cloud base height uncertainty.}
   \label{fig:uncertainty}
@@ -743,7 +743,7 @@ data(cbase)
 
 \begin{figure*}
   \centering
-  <<cbase-uncert-quantiles,dev='tikz',fig.width=7,fig.height=9.5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  <<cbase-uncert-quantiles,dev='tikz',fig.width=7,fig.height=9,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   vis.quantiles(cbase, 14)
   @
   \caption{Cloud base uncertainty quantiles.  Statistics are calculated within

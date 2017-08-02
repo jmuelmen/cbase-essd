@@ -90,7 +90,7 @@ regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)",
         (if (max(stats.n$n) < 1e3)
              ggplot2::geom_point(pch = ".")
          else
-             ggplot2::stat_bin2d(geom = "raster")) +
+             ggplot2::stat_bin2d(geom = "raster", binwidth = c(0.1, 100))) +
         ggplot2::stat_density2d(geom = "density2d", col = "black") +
         ggplot2::stat_smooth(method = "lm", col = "red", fill = "red", formula = y ~ x) +
         ggplot2::stat_smooth(method = "auto", col = "blue", fill = "blue", formula = y ~ x) +
@@ -108,11 +108,19 @@ regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)",
                                                                  n, cor, slope, icpt, rmse.fit, rmse, bias))),
                                size = 4, vjust = 0, hjust = 1, parse = FALSE)
         }) +
-        ggplot2::scale_fill_distiller(palette = "GnBu") + ## , trans = "log10") +
+        ggplot2::scale_fill_distiller("Count",
+                                      palette = "GnBu"## ,
+                                      ## guide = ggplot2::guide_legend(direction = "horizontal",
+                                      ##                               nrow = 1,
+                                      ##                               keywidth = 2,
+                                      ##                               label.hjust = 0.5,
+                                      ##                               label.position = "bottom")
+                                      ) +
+        ## ggplot2::scale_fill_distiller(palette = "GnBu") + ## , trans = "log10") +
         ## ggplot2::geom_pointrange(ggplot2::aes(x = caliop, y = mean,
         ##                                      ymin = mean - sd, ymax = mean + sd),
         ##                          df.prof) +
-        ggplot2::theme_bw(base_size)
+        ggplot2::theme_bw(base_size) ## + ggplot2::theme(legend.position = "bottom")
     ## print(gg)
     return(list(stats = stats, ggplot = gg))
 }
