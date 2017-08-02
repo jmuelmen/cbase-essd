@@ -44,6 +44,57 @@ vis.geo <- function(df) {
     NULL
 }
 
+#' Visualization of geographical distribution of cloud base heights
+#' 
+#' @param df data.frame.  Result of \code{bases.cbase()}
+#' @return NULL
+#' @export
+vis.mean <- function(df, base_size) {
+    base.bins <- c(seq(250, 1050, 100), seq(1350, 2250, 300))
+    df %>%
+        ## dplyr::mutate(date = as.POSIXct("1993-01-01 00:00:00") + time,
+        ##               season = plyr::laply(months(date), function(x)
+        ##                   switch(x,
+        ##                          "December" =, "January" = , "February" = "DJF",
+        ##                          "March" =, "April" = , "May" = "MAM",
+        ##                          "June" =, "July" = , "August" = "JJA",
+        ##                          "September" =, "October" = , "November" = "SON")) %>%
+        ##               factor(levels = c("DJF", "MAM", "JJA", "SON"), ordered = TRUE)) %>%
+        plotutils::discretize(lon, seq(-180, 180, 5)) %>%
+        plotutils::discretize(lat, seq(-90, 90, 5)) %>%
+        dplyr::group_by(lon, lat, daynight #, season
+                        ) %>%
+        dplyr::summarize(n = n(),
+                         error = sqrt(1 / sum(1 / pred.rmse ^ 2)),
+                         base = sum(pred.ceilo / pred.rmse ^ 2) * error ^ 2) %>%
+        plotutils::discretize(error, c(seq(5, 55, 10), 85, 105, 600)) %>%
+        dplyr::mutate(error = factor(error, levels = stats::filter(c(seq(5, 55, 10), 85, 105, 600), c(0.5, 0.5)), ordered = TRUE)) %>%
+        dplyr::mutate(base = pmax(400, pmin(1900, base))) %>%
+        plotutils::discretize(base, base.bins) %>%
+        dplyr::mutate(base = factor(base, levels = stats::filter(base.bins, rep(0.5, 2)), ordered = TRUE)) %>%
+        ## ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = error)) +
+        ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = base)) +
+        ## ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = log10(n))) +
+        ggplot2::geom_raster() +
+        plotutils::geom_world_polygon() +
+        plotutils::scale_x_geo(facet = TRUE) +
+        plotutils::scale_y_geo() +
+        ggplot2::coord_fixed(1) +
+        ## ggplot2::scale_fill_distiller(palette = "Spectral") +
+        # ggplot2::scale_fill_brewer(palette = "Spectral") +
+        ggplot2::scale_fill_brewer("Mean cloud base height (m)",
+                                   palette = "Spectral",
+                                   guide = ggplot2::guide_legend(direction = "horizontal",
+                                                                 nrow = 1,
+                                                                 keywidth = 3,
+                                                                 label.hjust = 0.5,
+                                                                 label.position = "bottom")) +
+        ggplot2::facet_grid(# season
+                     . ~ daynight) +
+        ggplot2::theme_bw(base_size) + ggplot2::theme(legend.position = "bottom")
+    
+}
+
 #' Visualization of geographical distribution of cloud-base
 #' uncertainties (quantiles)
 #' 
