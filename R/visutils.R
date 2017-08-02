@@ -95,6 +95,50 @@ vis.mean <- function(df, base_size) {
     
 }
 
+#' Visualization of geographical distribution of cloud base heights
+#' (day-night differences)
+#' 
+#' @param df data.frame.  Result of \code{bases.cbase()}
+#' @return NULL
+#' @export
+vis.diff <- function(df, base_size) {
+    df %>%
+        plotutils::discretize(lon, seq(-180, 180, 2)) %>%
+        plotutils::discretize(lat, seq(-90, 90, 2)) %>%
+        dplyr::group_by(lon, lat, daynight) %>%
+        dplyr::summarize(n = n(),
+                         error = sqrt(1 / sum(1 / pred.rmse ^ 2)),
+                         base = sum(pred.ceilo / pred.rmse ^ 2) * error ^ 2) %>%
+        dplyr::group_by(lon, lat) %>%
+        dplyr::filter(n() == 2) %>%
+        ## dplyr::summarize(diff = ifelse(n() == 2,
+        ##                                base[daynight == "day"] - base[daynight == "night"],
+        ##                                NA)) %>%
+        dplyr::summarize(diff = base[daynight == "day"] - base[daynight == "night"]) %>%
+        dplyr::mutate(diff = pmax(-1000, pmin(1000, diff))) %>%
+        plotutils::discretize(diff, c(seq(-1100, 1100, 200))) %>%
+        dplyr::mutate(diff = factor(diff, stats::filter(c(seq(-1100, 1100, 200)), rep(0.5, 2)), ordered = TRUE)) %>%
+        ## ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = error)) +
+        ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = diff)) +
+        ## ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = log10(n))) +
+        ggplot2::geom_raster() +
+        plotutils::geom_world_polygon() +
+        plotutils::scale_x_geo(facet = TRUE) +
+        plotutils::scale_y_geo() +
+        ggplot2::coord_fixed(1) +
+        ## ggplot2::scale_fill_distiller(palette = "RdYlBu") +
+        ggplot2::scale_fill_brewer(palette = "RdBu", direction = -1) +
+        ## ggplot2::scale_fill_distiller("Mean cloud base height (m)",
+        ##                            palette = "Spectral",
+        ##                            guide = ggplot2::guide_legend(direction = "horizontal",
+        ##                                                          nrow = 1,
+        ##                                                          keywidth = 3,
+        ##                                                          label.hjust = 0.5,
+        ##                                                          label.position = "bottom")) +
+        ggplot2::theme_bw(base_size) ## + ggplot2::theme(legend.position = "bottom")
+    
+}
+
 #' Visualization of geographical distribution of cloud-base
 #' uncertainties (quantiles)
 #' 
