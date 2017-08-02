@@ -58,12 +58,23 @@ vis.quantiles <- function(df, base_size) {
             quantile(df$pred.rmse, c(0.1, 0.25, 0.5, 0.75, 0.9))
         }) %>%
         tidyr::gather(quantile, rmse, dplyr::matches("%")) %>%
+        dplyr::mutate(quantile = gsub("%", "\\\\%", quantile)) %>%
+##        dplyr::mutate(quantile = gsub("%", "th", quantile)) %>%
+        plotutils::discretize(rmse, seq(175, 675, 50)) %>%
+        dplyr::mutate(rmse = factor(rmse)) %>%
         ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = rmse)) +
         ggplot2::geom_raster() +
         plotutils::geom_world_polygon() +
         plotutils::scale_x_geo(facet = TRUE) +
         plotutils::scale_y_geo() +
-        ggplot2::scale_fill_distiller(palette = "Spectral") +
+        ggplot2::coord_fixed(1) +
+        ggplot2::scale_fill_brewer("RMSE (m)",
+                                   palette = "Spectral",
+                                   guide = ggplot2::guide_legend(direction = "horizontal",
+                                                                 nrow = 1,
+                                                                 keywidth = 3,
+                                                                 label.hjust = 0.5,
+                                                                 label.position = "bottom")) +
         ggplot2::facet_grid(quantile ~ daynight) +
         ggplot2::theme_bw(base_size) + ggplot2::theme(legend.position = "bottom")
     
@@ -82,20 +93,29 @@ vis.cdf <- function(df, base_size) {
         plotutils::discretize(lat, seq(-90, 90, 5)) %>%
         plyr::ddply(~ lon + lat + daynight, function(df) {
             cdf <- ecdf(df$pred.rmse)
-            data.frame(rmse = seq(300,480, by = 60)) %>%
-                dplyr::mutate(cdf = cdf(rmse))
-        }, .parallel = TRUE) -> tmp
-
-    tmp %>%
-        plotutils::discretize(cdf, c(0,0.05,0.1,0.15,0.2,0.4,0.6,0.8,1)) %>%
-        dplyr::mutate(cdf = factor(cdf)) %>%
+            data.frame(rmse = seq(320,480, by = 40)) %>%
+                dplyr::mutate(cdf = cdf(rmse),
+                              ncdf = nrow(df) * cdf)
+        }, .parallel = TRUE) %>%
+        plotutils::discretize(cdf, c(0,0.1,0.2,0.4,0.6,0.8,1)) %>%
+        plotutils::discretize(ncdf, c(0,10,50,100,200,500,1000)) %>%
+        dplyr::mutate(cdf = factor(cdf),
+                      ncdf = factor(ncdf)) %>%
         ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = cdf)) +
         ggplot2::geom_raster() +
         plotutils::geom_world_polygon() +
         plotutils::scale_x_geo(facet = TRUE) +
         plotutils::scale_y_geo() +
-        ggplot2::scale_fill_brewer(palette = "Spectral", direction = -1) +
-        ggplot2::facet_grid(daynight ~ rmse) +
+        ggplot2::coord_fixed(1) +
+        ggplot2::scale_fill_brewer("CDF",
+                                   direction = +1,
+                                   palette = "Spectral",
+                                   guide = ggplot2::guide_legend(direction = "horizontal",
+                                                                 nrow = 1,
+                                                                 keywidth = 3,
+                                                                 label.hjust = 0.5,
+                                                                 label.position = "bottom")) +
+        ggplot2::facet_grid(rmse ~ daynight) +
         ggplot2::theme_bw(base_size) + ggplot2::theme(legend.position = "bottom")
 }
 
@@ -108,20 +128,6 @@ vis.cdf <- function(df, base_size) {
 vis.n <- function(df, base_size) {
     doParallel::registerDoParallel(4)
     df %>%
-        plotutils::discretize(lon, seq(-180, 180, 2)) %>%
-        plotutils::discretize(lat, seq(-90, 90, 2)) %>%
-        dplyr::group_by(lon, lat, daynight) %>%
-        dplyr::summarize(n = n()) %>%
-        ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = n)) +
-        ggplot2::geom_raster() +
-        plotutils::geom_world_polygon() +
-        plotutils::scale_x_geo(facet = TRUE) +
-        plotutils::scale_y_geo() +
-        ggplot2::scale_fill_distiller(palette = "Spectral", direction = -1) +
-        ggplot2::facet_grid(. ~ daynight) +
-        ggplot2::theme_bw(18) 
-
-    df %>%
         plotutils::discretize(lon, seq(-180, 180, 5)) %>%
         plotutils::discretize(lat, seq(-90, 90, 5)) %>%
         plyr::ddply(~ lon + lat + daynight, function(df) {
@@ -129,9 +135,7 @@ vis.n <- function(df, base_size) {
             data.frame(rmse = seq(320,480, by = 40)) %>%
                 dplyr::mutate(cdf = cdf(rmse),
                               ncdf = nrow(df) * cdf)
-        }, .parallel = TRUE) -> tmp
-
-    tmp %>%
+        }, .parallel = TRUE) %>%
         plotutils::discretize(cdf, c(0,0.05,0.1,0.15,0.2,0.4,0.6,0.8,1)) %>%
         plotutils::discretize(ncdf, c(0,10,50,100,200,500,1000)) %>%
         dplyr::mutate(cdf = factor(cdf),
