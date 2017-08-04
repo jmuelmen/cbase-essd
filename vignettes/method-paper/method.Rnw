@@ -651,13 +651,13 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \label{fig:pull}
 \end{figure}
 
-\begin{figure}
-  \centering
-  <<combo-eval-rmse,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
-  @
-  \caption{Distribution of predicted cloud base height uncertainty.}
-  \label{fig:uncertainty}
-\end{figure}
+% \begin{figure}
+%   \centering
+%   <<combo-eval-rmse,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+%   @
+%   \caption{Distribution of predicted cloud base height uncertainty.}
+%   \label{fig:uncertainty}
+% \end{figure}
 
 %% \begin{figure*}
 %%   \centering
