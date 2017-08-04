@@ -306,7 +306,8 @@ The CBASE algorithm and evaluation proceed in four steps:
   cloud base).  We refer to these cloud base heights as \textit{local cloud base
     heights} in the sense that they are local to the CALIOP profile.
 \item Using ground-based ceilometer data, we determine quality of cloud base
-  height depending on a number of factors.  
+  height depending on a number of factors.  \commentjm{Refer to this as
+    ``tuning'', and define it in the context of supervised machine learning.}
 \item Based on the predicted quality of each local cloud base, we either reject
   the local cloud base or combine it with other local cloud bases within a
   distance $D_\text{max}$ of the point of interest (POI) $\longrightarrow$
@@ -594,7 +595,7 @@ cloud geometry, such as cloud subadiabaticity, which will be presented in future
 work. 
 
 \begin{acknowledgements}
-CALIOP VFM from ICARE.  Computing and data hosting at DKRZ.  Funding.
+CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 \end{acknowledgements}
 
 %% \begin{table}[t]
@@ -628,16 +629,8 @@ CALIOP VFM from ICARE.  Computing and data hosting at DKRZ.  Funding.
 
 \begin{figure*}
   \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=0.95\textwidth]{figure/method-eval-qual-1} 
-
-}
-
-
-
-\end{knitrout}
+  % <<eval-qual,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
+  % @
   \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
     faceted by the CALIOP VFM QA flag.  Color indicates the number of CALIOP
     profiles within each bin of ceilometer and CALIOP cloud base height; black
@@ -659,21 +652,10 @@ CALIOP VFM from ICARE.  Computing and data hosting at DKRZ.  Funding.
     and ceilometer cloud base heights, the RMSE, bias, and linear least-squares
     fit parameters.}
   \label{tab:quality-qa}
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Jun  6 11:47:29 2017
-\begin{tabular}{lrrrrl}
-  \hline
-\hline
-feature.qa.lowest.cloud & $n$ & $r$ & RMSE (m) & bias (m) & fit \\ 
-  \hline
-none & 1410553 & 0.192 & $1.05 \times 10^{3}$ & $-$471. & $y = 0.193 x + \ensuremath{1.03 \times 10^{3}}$ m \\ 
-  low & 301250 & 0.471 & 710. & $-$115. & $y = 0.456 x + 650.$ m \\ 
-  medium & 212723 & 0.502 & 707. & $-$77.1 & $y = 0.476 x + 602.$ m \\ 
-  high & 2877967 & 0.554 & 629. & 9.85 & $y = 0.526 x + 485.$ m \\ 
-   \hline
-\hline
-\end{tabular}
+\begin{kframe}
 
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in mutate\_impl(.data, dots): Evaluation error: object 'group1' not found.}}\end{kframe}
 \end{table*}
 
 \begin{figure*}
@@ -691,7 +673,7 @@ none & 1410553 & 0.192 & $1.05 \times 10^{3}$ & $-$471. & $y = 0.193 x + \ensure
   \caption{Scatter plot of CBASE versus ceilometer cloud base height; for
     description of the plot elements, see Figure~\ref{fig:quality-qa}.  The
     linear fit has slope 0.98 and intercept
-    $34.96$~m.}
+    $33.96$~m.}
   \label{fig:eval}
 \end{figure*}
 
@@ -716,21 +698,13 @@ none & 1410553 & 0.192 & $1.05 \times 10^{3}$ & $-$471. & $y = 0.193 x + \ensure
   \label{fig:pull}
 \end{figure}
 
-\begin{figure}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=0.5\textwidth]{figure/method-combo-eval-rmse-1} 
-
-}
-
-
-
-\end{knitrout}
-  \caption{Distribution of predicted cloud base height uncertainty.}
-  \label{fig:uncertainty}
-\end{figure}
+% \begin{figure}
+%   \centering
+%   <<combo-eval-rmse,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+%   @
+%   \caption{Distribution of predicted cloud base height uncertainty.}
+%   \label{fig:uncertainty}
+% \end{figure}
 
 %% \begin{figure*}
 %%   \centering
@@ -748,8 +722,8 @@ none & 1410553 & 0.192 & $1.05 \times 10^{3}$ & $-$471. & $y = 0.193 x + \ensure
     statistics provided.}
   \label{tab:rmseclass}
 
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Jun  6 11:47:36 2017
+% latex table generated in R 3.4.0 by xtable 1.8-2 package
+% Wed Aug  2 17:54:23 2017
 \begin{tabular}{lrrrrl}
   \hline
 \hline
@@ -803,8 +777,8 @@ pred.rmse & $n$ & $r$ & RMSE (m) & bias (m) & fit \\
     description of the statistics provided.}
   \label{tab:2bgeoprof}
   \centering
-% latex table generated in R 3.2.3 by xtable 1.8-3 package
-% Tue Jun  6 11:47:40 2017
+% latex table generated in R 3.4.0 by xtable 1.8-2 package
+% Wed Aug  2 17:54:26 2017
 \begin{tabular}{lrrrrl}
   \hline
 \hline
@@ -818,18 +792,71 @@ Radar & 15061 & 0.265 & 782. & 98.1 & $y = 0.461 x + 466.$ m \\
 
 \end{table*}
 
+
+
 \begin{figure*}
   \centering
-  %% <<vis-cbase,cache=TRUE,echo=FALSE,results='hide'>>=
-  %% @
-  %% <<vis-cbase2,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
-  %% @
-  \caption{Geographic distribution of median cloud bases and median cloud
-    thicknesses \commentjm{Make the figure less complex.  One panel with overall
-    CBH.}}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=0.95\textwidth]{figure/method-cbase-base-1} 
+
+}
+
+
+
+\end{knitrout}
+  \caption{Geographic distribution of mean cloud base heights above ground
+    level.  Statistics are calculated within each $5\degree\times 5\degree$
+    latitude--longitude box, and separately for CALIOP daytime and nighttime
+    overpasses.}
   \label{fig:geo}
 \end{figure*}
 
+\begin{figure}
+  \centering
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=0.5\textwidth]{figure/method-cbase-rmse-1} 
+
+}
+
+
+
+\end{knitrout}
+  \caption{Distribution of predicted cloud base height uncertainty.}
+  \label{fig:uncertainty}
+\end{figure}
+
+\begin{figure*}
+  \centering
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=0.95\textwidth]{figure/method-cbase-uncert-quantiles-1} 
+
+}
+
+
+
+\end{knitrout}
+  \caption{Cloud base uncertainty quantiles.  Statistics are calculated within
+    each $5\degree\times 5\degree$ latitude--longitude box.  The left (right)
+    column shows statistics of daytime (nighttime) retrievals; daytime and
+    nighttime are defined by the CALIOP VFM product.}
+  \label{fig:geo}
+\end{figure*}
+
+% \begin{figure*}
+%   \centering
+%   <<cbase-uncert-cdf,dev='tikz',fig.width=7,fig.height=9.5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%   vis.n(cbase, 14)
+%   @
+%   \caption{Cumulative distribution of cloud base uncertainty.  Statistics are
+%     calculated within each $2\degree\times 2\degree$ latitude--longitude box.}
+%   \label{fig:geo}
+% \end{figure*}
 
 
 
