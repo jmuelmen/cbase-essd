@@ -769,4 +769,7 @@ data(cbase)
 <<glorious-victory,cache=FALSE,echo=FALSE>>=
 @ 
 
+\bibliographystyle{copernicus}
+\bibliography{method.bib}
+
 \end{document}
