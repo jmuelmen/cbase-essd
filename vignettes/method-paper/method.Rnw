@@ -106,12 +106,14 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
 
 \Author[1]{Johannes}{M\"ulmenst\"adt}
 \Author[1]{Odran}{Sourdeval}
-\Author[2]{Christoph}{B\"ohm}
+\Author[2]{Tristan}{L'Ecuyer}
+\Author[3]{Christoph}{B\"ohm}
 %%\Author[1]{Edward}{Gryspeerdt}
 \Author[1]{Johannes}{Quaas}
 
 \affil[1]{Institute of Meteorology, Universit\"at Leipzig, Leipzig, Germany}
-\affil[2]{Institute of Meteorology, Universit\"at K\"oln, K\"oln, Germany}
+\affil[2]{University of Wisconsin, Madison, USA}
+\affil[3]{Institute of Meteorology, Universit\"at K\"oln, K\"oln, Germany}
 
 %% The [] brackets identify the author with the corresponding affiliation. 1, 2, 3, etc. should be inserted.
 
