@@ -209,7 +209,7 @@ outlook on the longstanding questions that the CBASE data set can address.
 Two classes of data are used in this work.  The first class satellite data,
 which we use with the intent of deriving a global data set of cloud base height.
 The second class is ground-based observations of ``true'' cloud base height used
-to tune and evaluate the algorithm by which cloud base height is determined from
+to train and evaluate the algorithm by which cloud base height is determined from
 the satellite data.
 
 \subsection{CALIOP VFM}
@@ -234,16 +234,16 @@ In the present analysis, we use VFM version 4.10 \citep{Caliop}, the current
 
 \subsection{Airport ceilometers}
 
-For optimizing several tunable parameters of the algorithm, and for evaluation
-of the tuned algorithm,``true'' cloud base heights need to be known.  The source
-of these ``true'' cloud base heights in this work are ground-based cloud
-observations in aviation routine and special weather reports (METARs and SPECIs,
-collectively referred to as METARs henceforth;
-\verb+https://library.wmo.int/pmb_ged/wmo_49-v2_2013_en.pdf+).  In METARs, cloud
-base heights are measured by ceilometer over a period of time (tens of minutes)
-and objectively grouped into cloud layers and their respective fractional
-coverages, using the temporal variation at a fixed point under an advected cloud
-field as a proxy for spatial variability of the cloud field.
+For optimizing several parameters of the algorithm, for determining the expected
+cloud base uncertainty, and for evaluation of the trained algorithm,``true''
+cloud base heights need to be known.  The source of these ``true'' cloud base
+heights in this work are ground-based cloud observations in aviation routine and
+special weather reports (METARs and SPECIs, collectively referred to as METARs
+henceforth; \verb+https://library.wmo.int/pmb_ged/wmo_49-v2_2013_en.pdf+).  In
+METARs, cloud base heights are measured by ceilometer over a period of time
+(tens of minutes) and objectively grouped into cloud layers and their respective
+fractional coverages, using the temporal variation at a fixed point under an
+advected cloud field as a proxy for spatial variability of the cloud field.
 
 To ensure that the ceilometer cloud base heights are of high and spatially
 uniform quality, we restrict ourselves to METARs from the contiguous continental
@@ -254,8 +254,8 @@ the world, the cloud bases may be estimated by human observers or may be omitted
 under certain conditions when the lowest cloud base is higher than 5000~feet.
 
 To obtain an unbiased estimate of the algorithm performance, it is necessary to
-use an evaluation data set that is statistically independent of the tuning data
-set.  We use METARs from the year 2008 for tuning.  Once the tuning is complete,
+use an evaluation data set that is statistically independent of the training data
+set.  We use METARs from the year 2008 for training.  Once the training is complete,
 we then use METARs from the year 2007 for evaluation.  
 
 \commentjm{The ASOS data is used, among other purposes, for assimilation in NWP
@@ -273,7 +273,8 @@ The CBASE algorithm and evaluation proceed in four steps:
   cloud base).  We refer to these cloud base heights as \textit{local cloud base
     heights} in the sense that they are local to the CALIOP profile.
 \item Using ground-based ceilometer data, we determine quality of cloud base
-  height depending on a number of factors.  
+  height depending on a number of factors.  \commentjm{Refer to this as
+    ``training'', and define it in the context of supervised machine learning.}
 \item Based on the predicted quality of each local cloud base, we either reject
   the local cloud base or combine it with other local cloud bases within a
   distance $D_\text{max}$ of the point of interest (POI) $\longrightarrow$
@@ -395,7 +396,7 @@ correct for this bias.  The options are no correction, a linear correction
 introduces a counterbias at low CALIOP base heights), and a nonlinear correction
 that does not suffer from the counterbias at low CALIOP base heights.  Our
 choice for nonlinear correction is a support vector machine.  The final choice
-of correction is based on the performance of the three options on the tuning
+of correction is based on the performance of the three options on the training
 sample after combination has been performed according to the next step of the
 algorithm (Section~\ref{sec:algorithm:combination}).
 
@@ -460,7 +461,7 @@ to combination step of the CBASE algorithm.
 <<eval-tune-setup,cache=TRUE,results='hide',echo=FALSE>>=
 @ 
 
-Having tuned the algorithm on data from the year 2008, we evaluate it using a
+Having trained the algorithm on data from the year 2008, we evaluate it using a
 statistically independent data set from the year 2007.  In the evaluation data
 set, the ``true'' (i.e., measured by the ceilometer) cloud base height $\hat{z}$
 is known in addition to the estimated cloud base height $z$ and the estimated
@@ -468,7 +469,7 @@ cloud base height uncertainty $\sigma$, determined according to the procedure
 described in the previous section.  Figure~\ref{fig:eval} shows the joint
 distribution of CBASE and ceilometer-observed cloud base heights.  (The
 difference between this figure and Figure~S3 is that the underlying data is the
-validation, rather than the tuning, data set.)
+validation, rather than the training, data set.)
 
 For satellite-derived measurements of the cloud base height $z$ that are
 unbiased with respect to the ceilometer-observed cloud base heights $\hat{z}$
@@ -548,7 +549,7 @@ The CBASE data is available for the years 2007 and 2008 at \commentjm{insert DOI
 
 CBASE cloud base height and its uncertainty have been evaluated using
 ground-based airport ceilometer data over the contiguous United States, using a
-data sample unbiased by the tuning of the algorithm.  The evaluation showed that
+data sample unbiased by the training of the algorithm.  The evaluation showed that
 cloud base height and cloud base height uncertainty is unbiased at the better
 than 10\% level: the bias on the cloud base height is %
 \Sexpr{round(100 * with(combo, mean((ceilo - pred.ceilo) / pred.rmse)))}\%,
