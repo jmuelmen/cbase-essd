@@ -175,13 +175,13 @@ satellites, these methods share the disadvantage that the required instruments
 are not part of the A-Train.  Methods that are applicable to A-Train satellites
 are based on MODIS cloud properties retrieved near cloud top and integrated
 along moist adiabats to determine the cloud thickness \citep{meerkoetter07} or
-on active remote sensing by CloudSat \citep[][2B-GEOPROF]{marchand08} or a
-combination of CloudSat and CALIOP \citep[][2B-GEOPROF-LIDAR]{mace14}.  The
+on active remote sensing by CloudSat \citep[2B-GEOPROF][]{marchand08} or a
+combination of CloudSat and CALIOP \citep[2B-GEOPROF-LIDAR][]{mace14}.  The
 MODIS-derived cloud thickness assumes adiabatic cloud profiles and therefore
 cannot be used to constrain subadiabaticity.  CloudSat misses the small droplets
 at the base of nonprecipitating clouds, and retrievals are further degraded in
 the ground clutter region.  CALIOP detects the bases of only the thinnest clouds
-\citep[][$\tau < 5$]{mace14}; frequently, it is desirable to know the base
+\citep[$\tau < 5$][]{mace14}; frequently, it is desirable to know the base
 height of thick clouds as well.
 
 In this paper, we revisit the CALIOP cloud base determination.  Because the
@@ -237,9 +237,9 @@ For optimizing several parameters of the algorithm, for determining the expected
 cloud base uncertainty, and for evaluation of the trained algorithm, the
 ``true'' CBH needs to be known.  The source of the ``true'' CBH in this work is
 ground-based cloud observations in aviation routine and special weather reports
-\citep[][METARs and SPECIs, collectively referred to as METARs
-henceforth]{metar}.  METAR data is used, among other purposes, for assimilation
-in NWP \citep[][e.g.,]{HRRR, IFS}.  In many locations, CBH reported in METARs
+\citep[METARs and SPECIs, collectively referred to as METARs
+henceforth][]{metar}.  METAR data is used, among other purposes, for assimilation
+in NWP \citep[e.g.,][]{HRRR, IFS}.  In many locations, CBH reported in METARs
 are measured by ceilometer over a period of time (tens of minutes) and then
 objectively grouped into cloud layers and their respective fractional coverages,
 using the temporal variation at a fixed point under an advected cloud field as a
@@ -251,7 +251,7 @@ To ensure that the ceilometer CBH are of high and spatially
 uniform quality, we restrict ourselves to METARs from the contiguous continental
 United States, where the CBH is mostly derived automatically by
 laser ceilometers that form part of Automated Surface Observing Stations
-\citep[][ASOS]{asos} system.  In other parts of the world, the cloud bases may
+\citep[ASOS][]{asos} system.  In other parts of the world, the cloud bases may
 be estimated by human observers or may be omitted under certain conditions when
 the lowest cloud base is higher than 5000~feet.  The ASOS data is used, among
 other purposes, for assimilation in NWP (HRRR and IFS citation).  In METAR
@@ -393,10 +393,11 @@ correct for this bias.  The options are no correction, a linear correction
 (which partially corrects for the high bias of high CALIOP base heights but
 introduces a counterbias at low CALIOP base heights), and a nonlinear correction
 that does not suffer from the counterbias at low CALIOP base heights.  Our
-choice for nonlinear correction is a support vector machine.  The final choice
-of correction is based on the performance of the three options on the training
-sample after combination has been performed according to the next step of the
-algorithm (Section~\ref{sec:algorithm:combination}).
+choice for nonlinear correction is support-vector machine regression
+\citep[SVM][]{svm}.  The final choice of correction is based on the performance
+of the three options on the training sample after combination has been performed
+according to the next step of the algorithm
+(Section~\ref{sec:algorithm:combination}).
 
 Following bias correction, the sample RMSE is calculated for each combination of
 $D$, $n$, and $\Delta z$.  The sample RMSE is taken as an estimate of the
