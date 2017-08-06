@@ -225,12 +225,12 @@ phase QA flag''); the horizontal distance over which the algorithm had to
 average to identify a feature above noise and molecular atmospheric scattering
 (``horizontal averaging distance'').  
 
-In the present analysis, we use VFM version 4.10 \citep{Caliop}, the current
-``standard'' release.  The VFM files are obtained from ICARE.
-\commentjm{Citation: CALIPSO Science Team (2016), CALIPSO/CALIOP Level 2,
-  Vertical Feature Mask Data, version 4.10, Hampton, VA, USA: NASA Atmospheric
-  Science Data Center (ASDC), Accessed <author citing data inserts date here> at
-  doi: 10.5067/CALIOP/CALIPSO/LID_L2_VFM-Standard-V4-10}
+In the present analysis, we use VFM version 4.10 \citep{vfm}, the current
+``standard'' release.  The VFM files are obtained from ICARE \citep{icare}.
+% \commentjm{Citation: CALIPSO Science Team (2016), CALIPSO/CALIOP Level 2,
+%   Vertical Feature Mask Data, version 4.10, Hampton, VA, USA: NASA Atmospheric
+%   Science Data Center (ASDC), Accessed <author citing data inserts date here> at
+%   doi: 10.5067/CALIOP/CALIPSO/LID\_L2\_VFM-Standard-V4-10}
 
 \subsection{Airport ceilometers}
 
@@ -238,30 +238,29 @@ For optimizing several parameters of the algorithm, for determining the expected
 cloud base uncertainty, and for evaluation of the trained algorithm,``true''
 cloud base heights need to be known.  The source of these ``true'' cloud base
 heights in this work are ground-based cloud observations in aviation routine and
-special weather reports (METARs and SPECIs, collectively referred to as METARs
-henceforth; \verb+https://library.wmo.int/pmb_ged/wmo_49-v2_2013_en.pdf+).  In
-METARs, cloud base heights are measured by ceilometer over a period of time
-(tens of minutes) and objectively grouped into cloud layers and their respective
-fractional coverages, using the temporal variation at a fixed point under an
-advected cloud field as a proxy for spatial variability of the cloud field.
+special weather reports \citep[][METARs and SPECIs, collectively referred to as
+METARs henceforth]{metar}.  In many locations, cloud base heights reported in
+METARs are measured by ceilometer over a period of time (tens of minutes) and
+then objectively grouped into cloud layers and their respective fractional
+coverages, using the temporal variation at a fixed point under an advected cloud
+field as a proxy for spatial variability of the cloud field.
 
 To ensure that the ceilometer cloud base heights are of high and spatially
 uniform quality, we restrict ourselves to METARs from the contiguous continental
 United States, where the cloud base height is mostly derived automatically by
-laser ceilometers that form part of Automated Surface Observing Stations (ASOS,
-\verb+http://www.nws.noaa.gov/asos/pdfs/aum-toc.pdf+) system.  In other parts of
-the world, the cloud bases may be estimated by human observers or may be omitted
-under certain conditions when the lowest cloud base is higher than 5000~feet.
+laser ceilometers that form part of Automated Surface Observing Stations
+\citep[][ASOS]{asos} system.  In other parts of the world, the cloud bases may
+be estimated by human observers or may be omitted under certain conditions when
+the lowest cloud base is higher than 5000~feet.  The ASOS data is used, among
+other purposes, for assimilation in NWP (HRRR and IFS citation).  In METAR
+format, it is distributed globally by the WMO and widely archived.  The data for
+the present analysis was downloaded from the Weather Underground archive
+\citep{wunderground}.
 
 To obtain an unbiased estimate of the algorithm performance, it is necessary to
 use an evaluation data set that is statistically independent of the training data
 set.  We use METARs from the year 2008 for training.  Once the training is complete,
 we then use METARs from the year 2007 for evaluation.  
-
-\commentjm{The ASOS data is used, among other purposes, for assimilation in NWP
-  (HRRR and IFS citation).  In METAR format, it is distributed globally by the
-  WMO and widely archived.  The data for the present analysis was downloaded
-  from the Weather Underground (citation?). }
 
 \section{CBASE Algorithm and evaluation}
 \label{sec:algorithm}
