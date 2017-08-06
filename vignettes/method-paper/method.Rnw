@@ -153,7 +153,11 @@ Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
   CALIOP lidar profiles.  Evaluation of the predicted cloud base heights and
   their predicted uncertainty using a second, statistically independent,
   ceilometer data set shows that cloud base heights and uncertainties are biased
-  by less than 10\%.
+  by less than 10\%.  Geographic distributions of cloud base height and its
+  uncertainty are presented.  \commentjm{Regionally, the uncertainty is found to be
+  substantially smaller than the 480~m uncertainty assumed in the A-Train
+  downwelling longwave estimate, potentially permitting the most uncertain of
+  the radiative fluxes in the climate system to be much better constrained.}
 \end{abstract}
 
 \introduction  %% \introduction[modified heading if necessary]
