@@ -90,7 +90,7 @@ vis.mean <- function(df, base_size) {
                                                                  label.hjust = 0.5,
                                                                  label.position = "bottom")) +
         ggplot2::facet_grid(# season
-                     . ~ daynight) +
+                     daynight ~ .) +
         ggplot2::theme_bw(base_size) + ggplot2::theme(legend.position = "bottom")
     
 }
