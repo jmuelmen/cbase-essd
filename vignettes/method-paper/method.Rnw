@@ -268,12 +268,15 @@ The CBASE algorithm and evaluation proceed in four steps:
   attenuated by cloud.  We refer to this as the \textit{local
     CBH} in the sense that it is local to the CALIOP profile.
 \item Using ground-based ceilometer data, we determine quality of cloud base
-  height depending on a number of factors.  \commentjm{Refer to this as
-    ``training'', and define it in the context of supervised machine learning.}
+  height depending on a number of properties of the CALIOP profile; assuming
+  those properties suffice to determine the quality of the CBH determination, we
+  can then predict the uncertainty of a cloud base as a function of those
+  factors.  In the language of machine learning, we refer to this step as
+  \textit{training} the algorithm on the ceilometer data.
 \item Based on the predicted quality of each local cloud base, we either reject
   the local cloud base or combine it with other local cloud bases within a
-  distance $D_\text{max}$ of the point of interest (POI) $\longrightarrow$
-  estimate of cloud base height, estimate of cloud base height uncertainty
+  distance $D_\text{max}$ of the point of interest (POI) to arrive at an 
+  estimate of the CBH and its uncertainty at the POI.
 \item Using a statistically independent validation dataset, we verify that the
   predicted CBH and its uncertainty are correct.
 \end{enumerate}
