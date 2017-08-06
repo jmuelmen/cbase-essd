@@ -167,24 +167,22 @@ of the cloud.  However, due to the viewing geometry, it is also one of the most
 difficult parameters to retrieve from satellite.  
 
 Multiple methods have been proposed for satellite determination of the cloud
-base height.  VIIRS cloud-base temperature method: Zhu et al.~(2014, doi
-10.1002/2013GL058970).  Results of evaluating CBH inferred from
-oxygen absorption bands and from MISR stereoscopic images will be reported in
-separate manuscripts.  For analyses wishing to combine cloud base information
-with other cloud properties retrieved by A-Train satellites, these methods share
-the disadvantage that the required instruments are not part of the A-Train.
-Methods that are applicable to A-Train satellites are based on MODIS cloud
-properties retrieved near cloud top and integrated along moist adiabats to
-determine the cloud thickness (Meerk\"otter and Zinner (2007)
-(10.1029/2007GL030347)) or on active remote sensing by CloudSat (2B-GEOPROF,
-Marchand et al) or a combination of CloudSat and CALIOP (2B-GEOPROF-LIDAR, Mace
-and Zhang 2014).  The MODIS-derived cloud thickness assumes adiabatic cloud
-profiles and therefore cannot be used to constrain subadiabaticity.  CloudSat
-misses the small droplets at the base of nonprecipitating clouds, and retrievals
-are further degraded in the ground clutter region.  CALIOP detects the bases of
-only the thinnest clouds ($\tau < 5$, according to Mace and Zhang,
-10.1002/2013JD021374); frequently, it is desirable to know the base height of
-thick clouds as well.
+base height.  VIIRS cloud-base temperature method: \cite{zhu14}.  Results of
+evaluating CBH inferred from oxygen absorption bands and from MISR stereoscopic
+images will be reported in separate manuscripts.  For analyses wishing to
+combine cloud base information with other cloud properties retrieved by A-Train
+satellites, these methods share the disadvantage that the required instruments
+are not part of the A-Train.  Methods that are applicable to A-Train satellites
+are based on MODIS cloud properties retrieved near cloud top and integrated
+along moist adiabats to determine the cloud thickness \citep{meerkoetter07} or
+on active remote sensing by CloudSat \citep[][2B-GEOPROF]{marchand08} or a
+combination of CloudSat and CALIOP \citep[][2B-GEOPROF-LIDAR]{mace14}.  The
+MODIS-derived cloud thickness assumes adiabatic cloud profiles and therefore
+cannot be used to constrain subadiabaticity.  CloudSat misses the small droplets
+at the base of nonprecipitating clouds, and retrievals are further degraded in
+the ground clutter region.  CALIOP detects the bases of only the thinnest clouds
+\citep[][$\tau < 5$]{mace14}; frequently, it is desirable to know the base
+height of thick clouds as well.
 
 In this paper, we revisit the CALIOP cloud base determination.  Because the
 lifting condensation level is approximately homogeneous within an airmass, the
@@ -240,11 +238,14 @@ cloud base uncertainty, and for evaluation of the trained algorithm, the
 ``true'' CBH needs to be known.  The source of the ``true'' CBH in this work is
 ground-based cloud observations in aviation routine and special weather reports
 \citep[][METARs and SPECIs, collectively referred to as METARs
-henceforth]{metar}.  In many locations, CBH reported in METARs are measured by
-ceilometer over a period of time (tens of minutes) and then objectively grouped
-into cloud layers and their respective fractional coverages, using the temporal
-variation at a fixed point under an advected cloud field as a proxy for spatial
-variability of the cloud field.
+henceforth]{metar}.  METAR data is used, among other purposes, for assimilation
+in NWP \citep[][e.g.,]{HRRR, IFS}.  In many locations, CBH reported in METARs
+are measured by ceilometer over a period of time (tens of minutes) and then
+objectively grouped into cloud layers and their respective fractional coverages,
+using the temporal variation at a fixed point under an advected cloud field as a
+proxy for spatial variability of the cloud field.  METAR data is distributed
+globally by the WMO and widely archived.  The data for the present analysis was
+downloaded from the Weather Underground archive \citep{wunderground}.
 
 To ensure that the ceilometer CBH are of high and spatially
 uniform quality, we restrict ourselves to METARs from the contiguous continental
