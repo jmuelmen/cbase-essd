@@ -258,11 +258,6 @@ format, it is distributed globally by the WMO and widely archived.  The data for
 the present analysis was downloaded from the Weather Underground archive
 \citep{wunderground}.
 
-To obtain an unbiased estimate of the algorithm performance, it is necessary to
-use an evaluation data set that is statistically independent of the training data
-set.  We use METARs from the year 2008 for training.  Once the training is complete,
-we then use METARs from the year 2007 for evaluation.  
-
 \section{CBASE Algorithm and evaluation}
 \label{sec:algorithm}
 
@@ -287,8 +282,7 @@ At several points in the algorithm development, it is necessary to know the true
 (ceilometer-observerd) CBH.  We use ceilometer observations from
 the year 2008 at those points.  A statistically independent data set is required
 for an unbiased evaluation of the algorithm performance; we use the year
-2007. \commentjm{Not sure whether this paragraph is better placed here or in the
-previous section.}
+2007 for evaluation.
 
 This section is divided into four subsections, one for each algorithm step
 enumerated above.
