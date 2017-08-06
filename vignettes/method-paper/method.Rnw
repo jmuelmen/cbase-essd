@@ -1,5 +1,3 @@
-%% $Id: method.tex,v 1.1 2015/11/15 10:24:32 jmuelmen Exp $
-
 %% description of the retrieval method and the evaluation using various
 %% ground-based observations
 
@@ -15,7 +13,7 @@
 
 
 %% 2-Column Papers and Discussion Papers
-\documentclass[amt,manuscript]{copernicus}
+\documentclass[essd,manuscript]{copernicus}
 
 
 
@@ -87,6 +85,7 @@ library(cbasetools)
 ## set global chunk options
 opts_chunk$set(fig.path='figure/method-', cache.path='cache/method-', 
                fig.align='center', fig.show='hold', cache = TRUE, warning = FALSE, par=TRUE)
+## $
 ## I use = but I can replace it with <-; set code/output width to be 68
 options(formatR.arrow=TRUE, width=68, digits=2)
 ## evaluation code chunks
@@ -97,9 +96,7 @@ read_chunk("../vis.R")
 
 %% \linenumbers
 
-\title{Using CALIOP to estimate the base height of optically thick clouds\\
-%% \title{Cloud base height retrievals using 2B-GEOPROF-LIDAR and C-BREE$z$}
-Used to be: ``Optimized Detection by Radar/lidAr for base of Nuages (ODR/AN)''}
+\title{Using CALIOP to estimate the base height of optically thick clouds}
 
 
 % \Author[affil]{given_name}{surname}
