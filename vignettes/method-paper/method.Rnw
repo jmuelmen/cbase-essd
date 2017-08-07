@@ -516,9 +516,9 @@ the CALIOP track.
 \section{Results and data product availability}
 \label{sec:results}
 
-Geographic distributions of mean and median cloud base and thickness are shown
-in Figure~\ref{fig:geo} \commentjm{(which will be made from the CBASE data set
-  when it's ready)}.
+Geographic distributions of the mean CBH are shown for daytime and nighttime
+Calipso overpasses in Figure~\ref{fig:geo}.  \commentjm{Discuss.}
+Figures~\ref{fig:uncertainty} and  shows the distribution
 
 Comparison with 2B-GEOPROF-LIDAR cloud bases is shown in
 Figure~\ref{fig:eval-2b}.   2B-GEOPROF-LIDAR distinguishes between radar-only,
