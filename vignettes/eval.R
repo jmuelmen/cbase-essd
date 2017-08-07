@@ -122,16 +122,6 @@ df.best <- filter(df,
              !(feature.above.surface %in% c("invalid", "no signal")),
              horizontal.averaging.lowest.cloud.min < "5 km")
 
-## ---- eval-lays ---------------------
-res <- df.best %>%
-    dplyr::filter(feature.qa.lowest.cloud == "high") %>%
-    dplyr::group_by(dummy, dummy2) %>%
-    regression_plot(title = "lays")
-res$ggplot
-
-## ---- eval-lays-tbl ---------------------
-regression_table(res)
-
 ## ---- eval-cov-thick ---------------------
 res <- df %>%
     dplyr::filter(lays == 1) %>%
@@ -409,6 +399,18 @@ res <- combo %>%
 
 ## ---- combo-tbl-rmseclass --------------------
 regression_table(res)
+
+## ---- combo-lays ---------------------
+res <- combo %>%
+    ungroup() %>%
+    mutate(dummy = "", dummy2 = "") %>%
+    dplyr::group_by(dummy, lays) %>%
+    regression_plot(title = "lays")
+res$ggplot
+
+## ---- combo-lays-tbl ---------------------
+regression_table(res)
+
 
 ## ---- glorious-victory ---------------------
 library(beepr)
