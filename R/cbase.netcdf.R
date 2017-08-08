@@ -23,7 +23,7 @@ cbase.create.nc <- function(df, out.fname,
 
     nc.out <- ncdf4::nc_create(out.fname,
                         list(var.cbh, var.cbh_err, var.trajectory_id, var.lon, var.lat))
-    ncdf4::ncvar_put(nc.out, var.cbh, df$pred.ceilo)
+    ncdf4::ncvar_put(nc.out, var.cbh, df$pred.ceilo.msl)
     ncdf4::ncvar_put(nc.out, var.cbh_err, df$pred.rmse)
     ncdf4::ncvar_put(nc.out, var.trajectory_id, trajectory_id)
     ncdf4::ncvar_put(nc.out, var.lon, df$lon)
