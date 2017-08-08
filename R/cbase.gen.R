@@ -194,67 +194,69 @@ bases.cbase <- function(path = "/home/jmuelmen/CALIOP/VFM.v4.10/2008",
         saveRDS(res, file = out.fname)
         
         if (combination) {
-            ## some preparatory work: add thickness, AGL heights, filter
-            res.prep <- res %>%
-                dplyr::mutate(caliop = cloud.base.altitude - surface.elevation) %>%
-                dplyr::filter(cloud.base.altitude < 3,
-                              caliop > 0) %>%
-                dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude)
+            try({
+                ## some preparatory work: add thickness, AGL heights, filter
+                res.prep <- res %>%
+                    dplyr::mutate(caliop = cloud.base.altitude - surface.elevation) %>%
+                    dplyr::filter(cloud.base.altitude < 3,
+                                  caliop > 0) %>%
+                    dplyr::mutate(thickness = cloud.top.altitude - cloud.base.altitude)
 
-            ## correct and combine bases for 40 km segments
-            res.40 <- res.prep %>%
-                dplyr::group_by(ipoint.40) %>%
-                ## distance from segment midpoint
-                dplyr::mutate(dist = dist.gc(lon, lon.40, lat, lat.40)) %>%
-                ## multiplicity (extrapolated to D_max = 100 km, which
-                ## was used for tuning)
-                dplyr::mutate(resolution.out = n() * 2.5) %>%
-                dplyr::ungroup() %>%
-                correct.cbase.lm(cor.svm) %>%
-                dplyr::mutate(segment = ipoint.40,
-                              time = time.40,
-                              lon = lon.40,
-                              lat = lat.40) %>%
-                cbase.combine.segment()
+                    ## correct and combine bases for 40 km segments
+                    res.40 <- res.prep %>%
+                        dplyr::group_by(ipoint.40) %>%
+                        ## distance from segment midpoint
+                        dplyr::mutate(dist = dist.gc(lon, lon.40, lat, lat.40)) %>%
+                        ## multiplicity (extrapolated to D_max = 100 km, which
+                        ## was used for tuning)
+                        dplyr::mutate(resolution.out = n() * 2.5) %>%
+                        dplyr::ungroup() %>%
+                        correct.cbase.lm(cor.svm) %>%
+                        dplyr::mutate(segment = ipoint.40,
+                                      time = time.40,
+                                      lon = lon.40,
+                                      lat = lat.40) %>%
+                        cbase.combine.segment()
 
-            gsub(".hdf", ".rds", basename(fname)) %>%
-                gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-40", .) %>%
-                paste("cloud-bases", ., sep = "/") %>%
-                saveRDS(res.40, .)
+                        gsub(".hdf", ".rds", basename(fname)) %>%
+                            gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-40", .) %>%
+                            paste("cloud-bases", ., sep = "/") %>%
+                            saveRDS(res.40, .)
 
-            gsub(".hdf", ".nc", basename(fname)) %>%
-                gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-40", .) %>%
-                paste("cloud-bases", ., sep = "/") %>%
-                cbase.create.nc(res.40, .,
-                                "CBASE cloud base height estimate, Dmax = 40 km",
-                                cal.datestring)
+                        gsub(".hdf", ".nc", basename(fname)) %>%
+                            gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-40", .) %>%
+                            paste("cloud-bases", ., sep = "/") %>%
+                            cbase.create.nc(res.40, .,
+                                            "CBASE cloud base height estimate, Dmax = 40 km",
+                                            cal.datestring)
 
-            ## correct and combine bases for 100 km segments
-            res.100 <- res.prep %>%
-                dplyr::group_by(ipoint.100) %>%
-                ## distance from segment midpoint
-                dplyr::mutate(dist = dist.gc(lon, lon.100, lat, lat.100)) %>%
-                ## multiplicity 
-                dplyr::mutate(resolution.out = n()) %>%
-                dplyr::ungroup() %>%
-                correct.cbase.lm(cor.svm) %>%
-                dplyr::mutate(segment = ipoint.100,
-                              time = time.100,
-                              lon = lon.100,
-                              lat = lat.100) %>%
-                cbase.combine.segment()
-            
-            gsub(".hdf", ".rds", basename(fname)) %>%
-                gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-100", .) %>%
-                paste("cloud-bases", ., sep = "/") %>%
-                saveRDS(res.100, .)
+                        ## correct and combine bases for 100 km segments
+                        res.100 <- res.prep %>%
+                            dplyr::group_by(ipoint.100) %>%
+                            ## distance from segment midpoint
+                            dplyr::mutate(dist = dist.gc(lon, lon.100, lat, lat.100)) %>%
+                            ## multiplicity 
+                            dplyr::mutate(resolution.out = n()) %>%
+                            dplyr::ungroup() %>%
+                            correct.cbase.lm(cor.svm) %>%
+                            dplyr::mutate(segment = ipoint.100,
+                                          time = time.100,
+                                          lon = lon.100,
+                                          lat = lat.100) %>%
+                            cbase.combine.segment()
+                            
+                            gsub(".hdf", ".rds", basename(fname)) %>%
+                                gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-100", .) %>%
+                                paste("cloud-bases", ., sep = "/") %>%
+                                saveRDS(res.100, .)
 
-            gsub(".hdf", ".nc", basename(fname)) %>%
-                gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-100", .) %>%
-                paste("cloud-bases", ., sep = "/") %>%
-                cbase.create.nc(res.100, .,
-                                "CBASE cloud base height estimate, Dmax = 100 km",
-                                cal.datestring)
+                            gsub(".hdf", ".nc", basename(fname)) %>%
+                                gsub("CAL_LID_L2_VFM-Standard-V4-10", "CBASE-100", .) %>%
+                                paste("cloud-bases", ., sep = "/") %>%
+                                cbase.create.nc(res.100, .,
+                                                "CBASE cloud base height estimate, Dmax = 100 km",
+                                                cal.datestring)
+            })
         }
         
         return(res)
