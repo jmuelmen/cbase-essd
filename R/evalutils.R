@@ -96,7 +96,7 @@ regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)",
         ggplot2::stat_smooth(method = "auto", col = "blue", fill = "blue", formula = y ~ x) +
         ggplot2::geom_abline(intercept = 0, slope = 1000, lty = "dashed", col = "lightgrey") +
         ## ggplot2::coord_cartesian(ylim = c(-500,5500)) +
-        ## ggplot2::coord_fixed(1) +
+        ggplot2::coord_fixed(1e-3, xlim = c(0,3), ylim = c(0,3000), expand = FALSE) +
         (if (any(grepl("[A-Za-z0-9]", gr))) ggplot2::facet_grid(gr)) +
         ggplot2::labs(title = title, x = xlab, y = "Ceilometer base (m)") +
         (if (0) {
@@ -109,18 +109,18 @@ regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)",
                                size = 4, vjust = 0, hjust = 1, parse = FALSE)
         }) +
         ggplot2::scale_fill_distiller("Count",
-                                      palette = "GnBu"## ,
-                                      ## guide = ggplot2::guide_legend(direction = "horizontal",
-                                      ##                               nrow = 1,
-                                      ##                               keywidth = 2,
-                                      ##                               label.hjust = 0.5,
-                                      ##                               label.position = "bottom")
+                                      palette = "GnBu",
+                                      guide = ggplot2::guide_legend(direction = "horizontal",
+                                                                    nrow = 1,
+                                                                    keywidth = 2,
+                                                                    label.hjust = 0.5,
+                                                                    label.position = "bottom")
                                       ) +
         ## ggplot2::scale_fill_distiller(palette = "GnBu") + ## , trans = "log10") +
         ## ggplot2::geom_pointrange(ggplot2::aes(x = caliop, y = mean,
         ##                                      ymin = mean - sd, ymax = mean + sd),
         ##                          df.prof) +
-        ggplot2::theme_bw(base_size) ## + ggplot2::theme(legend.position = "bottom")
+        ggplot2::theme_bw(base_size) + ggplot2::theme(legend.position = "bottom")
     ## print(gg)
     return(list(stats = stats, ggplot = gg))
 }

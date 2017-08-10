@@ -656,8 +656,7 @@ research was funded by the European Union  under grant agreement 306284 ERC Star
     \citep{Wood2004,Wood2011}, with 95\% confidence interval shaded in light
     blue; the dashed gray line is the one-to-one line.  Statistics of the
     relationship between CALIOP and ceilometer base heights are provided in
-    Table~\ref{tab:quality-qa}. \comment{JQ}{I would prefer square-shaped plots, and a
-  1:1 line in them as well.}}
+    Table~\ref{tab:quality-qa}.}
   \label{fig:quality-qa}
 \end{figure*}
 
@@ -680,8 +679,7 @@ research was funded by the European Union  under grant agreement 306284 ERC Star
   \caption{Scatter plot of CBASE versus ceilometer CBH; for
     description of the plot elements, see Figure~\ref{fig:quality-qa}.  The
     linear fit has slope \Sexpr{res$stats$slope * 1e-3} and intercept
-    $\Sexpr{res$stats$icpt}$~m. \comment{JQ}{why not have the origin at (0,0)? What are
-  the strange datapoints from CBASE with x<0m and x>3 km?}}
+    $\Sexpr{res$stats$icpt}$~m.}
   \label{fig:eval}
 \end{figure*}
 
@@ -741,10 +739,7 @@ research was funded by the European Union  under grant agreement 306284 ERC Star
     their rare occurrence, combined radar--lidar base heights are not shown).
     For description of the plot elements, see Figure~\ref{fig:quality-qa}.  Statistics of the
     relationship between 2B-GEOPROF-LIDAR and ceilometer base heights are provided in
-    Table~\ref{tab:2bgeoprof}.
-    \commentjm{I \textit{think} this uses Claudia's algorithm (minimum cloud
-      base within $D_\text{max}$), but I have to check.} \comment{JQ}{also square
-  plots, if possible?}}
+    Table~\ref{tab:2bgeoprof}.}
   \label{fig:eval-2b}
 \end{figure*}
 
