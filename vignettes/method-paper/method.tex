@@ -144,7 +144,7 @@
 
 \affil[1]{Institute of Meteorology, Universit\"at Leipzig, Leipzig, Germany}
 \affil[2]{University of Wisconsin, Madison, USA}
-\affil[3]{Institute of Meteorology, Universit\"at K\"oln, K\"oln, Germany}
+\affil[3]{Institute for Geophysics and Meteorology, Universit\"at zu K\"oln, K\"oln, Germany}
 
 %% The [] brackets identify the author with the corresponding affiliation. 1, 2, 3, etc. should be inserted.
 
@@ -175,12 +175,14 @@
 
 
 \begin{abstract}
-  A measurement technique is presented that uses CALIOP lidar profiles to
+  A measurement technique is presented that uses attenuated backscatter profiles
+  from the CALIOP satellite lidar to
   estimate cloud base heights.  The technique provides cloud base heights even
   when clouds are thick enough to attenuate the lidar beam (optical thickness
   $\tau \gtrsim 5$) by treating the cloud base height of nearby thinner clouds as
-  representative of the entire cloud field.  Using ground-based ceilometer data,
-  uncertainty estimates are derived as a function of various properties of the
+  representative of the surrounding cloud field.  Using ground-based ceilometer data,
+  uncertainty estimates for the cloud base height product at retrieval
+  resolution are derived as a function of various properties of the
   CALIOP lidar profiles.  Evaluation of the predicted cloud base heights and
   their predicted uncertainty using a second, statistically independent,
   ceilometer data set shows that cloud base heights and uncertainties are biased
@@ -195,39 +197,51 @@
 \label{sec:intro}
 Cloud base height (CBH) is an important geometric parameter of a cloud.  It controls
 how much downwelling longwave radiation the cloud emits.  Aerosol concentration
-and updraft speed at that level control the microphysics of the cloud.  It is
+and updraft speed at that level determine the microphysical characteristics of the cloud.  It is
 one of the parameters that is required in the calculation of the subadiabaticity
 of the cloud.  However, due to the viewing geometry, it is also one of the most
-difficult parameters to retrieve from satellite.  
+difficult cloud parameters to retrieve from satellite.  
 
 Multiple methods have been proposed for satellite determination of the cloud
-base height.  VIIRS cloud-base temperature method: \cite{zhu14}.  Results of
+base height.  \commentjm{VIIRS cloud-base temperature method: \cite{zhu14}}.  Results of
 evaluating CBH inferred from oxygen absorption bands and from MISR stereoscopic
-images will be reported in separate manuscripts.  For analyses wishing to
+images will be reported in separate manuscripts \comment{JQ}{but still it would be good to sketch the idea
+here and provide a reference?}.  For analyses wishing to
 combine cloud base information with other cloud properties retrieved by A-Train
 satellites, these methods share the disadvantage that the required instruments
 are not part of the A-Train.  Methods that are applicable to A-Train satellites
 are based on MODIS cloud properties retrieved near cloud top and integrated
 along moist adiabats to determine the cloud thickness \citep{meerkoetter07} or
-on active remote sensing by CloudSat \citep[][2B-GEOPROF]{marchand08} or a
-combination of CloudSat and CALIOP \citep[][2B-GEOPROF-LIDAR]{mace14}.  The
+on active remote sensing by CloudSat \citep[2B-GEOPROF][]{marchand08} or a
+combination of CloudSat and CALIOP \citep[2B-GEOPROF-LIDAR][]{mace14}.  The
 MODIS-derived cloud thickness assumes adiabatic cloud profiles and therefore
-cannot be used to constrain subadiabaticity.  CloudSat misses the small droplets
+cannot be used to constrain subadiabaticity; the use of ancillary temperature profile
+estimates may also be
+problematic in many cases.  CloudSat misses the small droplets
 at the base of nonprecipitating clouds, and retrievals are further degraded in
 the ground clutter region.  CALIOP detects the bases of only the thinnest clouds
-\citep[][$\tau < 5$]{mace14}; frequently, it is desirable to know the base
+\citep[$\tau < 5$][]{mace14}; frequently, it is desirable to know the base
 height of thick clouds as well.
 
-In this paper, we revisit the CALIOP cloud base determination.  Because the
+In this paper, we revisit the CALIOP cloud base determination.  This relies on
+one central assumption, namely that, because the
 lifting condensation level is approximately homogeneous within an airmass, the
 cloud bases retrieved by CALIOP for thin clouds may be a good proxy for the cloud
 base heights of an entire cloud field, including the optically thicker clouds
-within the filed.  We have designed an algorithm that extrapolates the CALIOP
+within the field.  
+We have designed an algorithm that extrapolates the CALIOP
 cloud-base measurements into locations where CALIOP attenuates before reaching
 cloud base.  This algorithm is called CBASE (Cloud Base Altitude Spatial
 Extrapolator).  In this paper we evaluate its performance by comparing CBASE
 CBH against CBH observed by ground-based
 ceilometers.
+
+The cloud base of interest in this analysis is the base of the lowest cloud in
+each column. Even if it CALIOP can also detect the base heights of other layers
+in multilayer situations, it is the base height of the lowest cloud that is of
+largest interest for many applications. Also, the central assumption of
+horizontal homogeneity at mesoscales of the cloud base height is valid only for
+clouds that are rooted in the planetary boundary layer.
 
 Section~\ref{sec:data} describes the data sources used in determining and
 evaluating CBH.  In Section~\ref{sec:algorithm} we describe
@@ -239,24 +253,31 @@ outlook on the longstanding questions that the CBASE data set can address.
 \section{Data}
 \label{sec:data}
 
-Two classes of data are used in this work.  The first class is satellite data,
+Two classes of data are used in this work.  The first class is cloud lidar data,
 which we use with the intent of deriving a global CBH data set.
-The second class is ground-based observations of ``true'' CBH used
+The second class is ground-based observations as reference measurements of CBH used
 to train and evaluate the algorithm by which CBH is determined from
 the satellite data.
 
 \subsection{CALIOP VFM}
 
-The input satellite data to our analysis is the CALIOP vertical feature mask
-(VFM).  For each CALIOP lidar backscatter profile, the VFM identifies features
-such as clear air, cloud, aerosol, or planetary surface; this is termed the
-``feature type''.  In addition to the feature type, the VFM records the degree
-of confidence in the identification (``none'' to ``high'', termed the ``feature
+The input satellite data to our analysis is the Cloud-Aerosol Lidar with
+Orthogoncal Polarization \cite[CALIOP]{winker2007,doi:10.1029/
+2007GL030135} on board the Cloud-Aerosol Lidar and Infrared Pathfinder
+Satellite Observation (CALIPSO) satellite that is part of the A-Train
+satellite constellation \citep{stephens2002,doi:10.1175/BAMS-83-12-1771} on a
+sun-synchronous low-Earth orbit with approximately 1.30\,p.m. equator-crossing
+time. The cloud-base product relies on the retrieved vertical feature mask
+\citep[VFM]{vaughan2002,https://www-calipso.larc.nasa.gov/resources/pdfs/PC-SCI-202_Part2_rev1x01.pdf}.  For each CALIOP lidar backscatter profile, the VFM identifies features
+such as clear air, cloud, aerosol, or planetary surface; this is termed the ``feature
+type''.  (When the lidar beam is completely attenuated, this is reported as a
+feature type.)  In addition to the feature type, the VFM records the degree of
+confidence in the identification (``none'' to ``high'', termed the ``feature
 type QA flag''); the thermodynamic phase of a layer identified as cloud as well
 as the degree of confidence therein (termed ``ice water phase'' and ``ice water
 phase QA flag''); the horizontal distance over which the algorithm had to
 average to identify a feature above noise and molecular atmospheric scattering
-(``horizontal averaging distance'').
+(``horizontal averaging distance'').  
 
 In the present analysis, we use VFM version 4.10 \citep{vfm}, the current
 ``standard'' release.  The VFM files are obtained from ICARE \citep{icare}.
@@ -268,26 +289,32 @@ In the present analysis, we use VFM version 4.10 \citep{vfm}, the current
 \subsection{Airport ceilometers}
 
 For optimizing several parameters of the algorithm, for determining the expected
-cloud base uncertainty, and for evaluation of the trained algorithm, the
-``true'' CBH needs to be known.  The source of the ``true'' CBH in this work is
+cloud base uncertainty, and for evaluation of the trained algorithm, reference
+measurements of CBH are required.  The source of these ``true'' CBH in this work is
 ground-based cloud observations in aviation routine and special weather reports
-\citep[][METARs and SPECIs, collectively referred to as METARs
-henceforth]{metar}.  METAR data is used, among other purposes, for assimilation
-in NWP \citep[][e.g.,]{HRRR, IFS}.  In many locations, CBH reported in METARs
+\citep[METARs and SPECIs, collectively referred to as METARs
+henceforth][]{metar}.  METAR data is used, among other purposes, for assimilation
+in NWP \citep[e.g.,][]{HRRR, IFS}.  In many locations, CBH reported in METARs
 are measured by ceilometer over a period of time (tens of minutes) and then
 objectively grouped into cloud layers and their respective fractional coverages,
 using the temporal variation at a fixed point under an advected cloud field as a
-proxy for spatial variability of the cloud field.  METAR data is distributed
+proxy for spatial variability of the cloud field \citep[e.g.,]{heese2010,doi:10.5194/amt-3-1763-2010}.  METAR data is distributed
 globally by the WMO and widely archived.  The data for the present analysis was
 downloaded from the Weather Underground archive \citep{wunderground}.
 
-To ensure that the ceilometer CBH are of high and spatially
-uniform quality, we restrict ourselves to METARs from the contiguous continental
-United States, where the CBH is mostly derived automatically by
-laser ceilometers that form part of Automated Surface Observing Stations
-\citep[][ASOS]{asos} system.  In other parts of the world, the cloud bases may
-be estimated by human observers or may be omitted under certain conditions when
-the lowest cloud base is higher than 5000~feet.  
+To ensure that the ceilometer CBH are of high and spatially uniform quality, we
+restrict ourselves to METARs from the contiguous continental United States,
+where the CBH is mostly derived automatically by laser ceilometers that form
+part of Automated Surface Observing Stations \citep[ASOS][]{asos} system.  In
+other parts of the world, the cloud bases may be estimated by human observers or
+may be omitted under certain conditions when the lowest cloud base is higher
+than 5000~feet.  \comment{JQ}{It would be good to provide a table or map of the
+  stations, and write a little more on how many there are, and what the temporal
+  resolution is.}
+
+\subsection{Colocation of satellite and ground-based observations}
+\comment{JQ}{A section on the criteria selected for co-locating ceilometer and CALIPSO
+shots?}
 
 \section{CBASE Algorithm and evaluation}
 \label{sec:algorithm}
@@ -313,10 +340,13 @@ The CBASE algorithm and evaluation proceed in four steps:
 \end{enumerate}
 
 At several points in the algorithm development, it is necessary to know the true
-(ceilometer-observerd) CBH.  We use ceilometer observations from
-the year 2008 at those points.  A statistically independent data set is required
-for an unbiased evaluation of the algorithm performance; we use the year
-2007 for evaluation.
+(ceilometer-observed) CBH.  \comment{JQ}{We use ceilometer observations from
+$YYYY$ stations over the continental USA from the year 2008 at
+native temporal resolution, co-located to the CALIPSO overpass (see below), at
+those points.}  A statistically independent data set is required for an unbiased
+evaluation of the algorithm performance; we use ceilometer observations from the
+same \commentjm{$YYYY$} stations over the continental USA from the year 2007 for
+evaluation.
 
 This section is divided into four subsections, one for each algorithm step
 enumerated above.
@@ -324,7 +354,13 @@ enumerated above.
 \subsection{Determination of local CBH}
 \label{sec:algorithm:local}
 Local CBH is determined from the CALIOP VFM for each profile with a surface
-return.  Figure~\ref{fig:method} illustrates the method.
+return.  The rationale is that a surface return indicates that the lidar did not
+attenuate within the cloud, and that the lower limit of the layer identified as
+cloud therefore corresponds to the cloud base; Figure~\ref{fig:method}
+illustrates the idea.  For these profiles, the location, CBH, cloud top height,
+feature type between the cloud base and the surface,
+cloud thermodynamic phase, and associated quality assurance flags from the VFM
+algorithm are recorded.
 
 \subsection{Determination of local cloud base quality}
 \label{sec:algorithm:qual}
@@ -335,16 +371,16 @@ ceilometer-observed CBH $\hat{z}$ using root mean square error
   \label{eq:rmse}
   E = \sqrt{\frac{1}{N}\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right)^2}.
 \end{equation}
-The sum runs over all CALIOP profiles containing a cloud layer and a surface
-return that are within 100~km horizontal distance of the ceilometer, occurred
-within 3600~s of a ceilometer observation, and have their lowest CALIOP cloud
-feature within 3~km of the surface.  Ceilometer observations are only used if
-the observation closest in time to the Calipso overpass contains a cloud within
-3~km of the surface.  A height limit is imposed because a subset of the
-ceilometers has a range limit of 12500~feet, and all ceilometers report ceilings
-above 10000~feet with reduced granularity (500~feet); the 3~km threshold avoids
-those ceilometer limitations and mimics the ISCCP definition of low cloud
-($p > 690\text{ hPa}$).
+The sum runs over all CALIOP profiles containing at least one cloud layer and a
+surface return that are within 100~km horizontal distance of the ceilometer,
+occurred within 3600~s of a ceilometer observation, and have their lowest CALIOP
+cloud feature within 3~km of the surface.  Ceilometer observations are only used
+if the observation closest in time to the Calipso overpass contains a cloud
+within 3~km of the surface.  This height limit is imposed because a subset of
+the ceilometers has a range limit of 12500~feet, and all ceilometers report
+ceilings above 10000~feet with reduced granularity (500~feet); the 3~km
+threshold is safely below these ceilometer limitations and mimics the ISCCP
+definition of low cloud ($p > 690\text{ hPa}$).
 
 The following metrics, which are useful for a qualitative assessment of the
 quality of the satellite cloud base, are also calculated, but play no
@@ -383,8 +419,9 @@ For illustrative purposes, Figure~\ref{fig:quality-qa} shows the joint
 distribution of CALIOP and ceilometer CBH faceted by the CALIOP
 VFM feature quality assurance flag.  
 
-Based on determining the retrieval quality one variable at a time, the following
-classes of CALIOP profiles are discarded:
+Based on determining the retrieval quality as a function of one variable at a
+time (integrating over the sample distribution of the remaining variables), the
+following classes of CALIOP profiles are discarded:
 \begin{itemize}
 \item CALIOP VFM quality assurance worse than ``high'' ,
 \item ``invalid'' or ``no signal'' layers between the surface and the lowest
@@ -392,10 +429,11 @@ classes of CALIOP profiles are discarded:
   return, the lidar is sufficiently attenuated that the cloud base, which
   scatters less strongly than the surface, is unreliable),
 \item minimum CALIOP cloud detection horizontal averaging distance within the
-  lowest cloud layer greater than 1~km,
-\item or phase of the lowest layer determined to be other than liquid by the
-  CALIOP VFM algorithm (the reason for this is that not enough such columns
-  exist to determine the RMSE reliably in each of the categories defined below).
+  lowest cloud layer greater than 1~km, or
+\item thermodynamic phase of the lowest layer determined to be other than liquid
+  by the CALIOP VFM algorithm (the reason for this is that not enough such
+  columns exist to determine the RMSE reliably in each of the categories defined
+  below).
 \end{itemize}
 
 The remaining variables are discretized roughly into quintiles with the
@@ -409,22 +447,24 @@ following boundaries:
 \item geometric thickness $\Delta z$ of the lowest cloud layer, with boundaries
   at 0, 0.25, 0.45, 0.625, and 1~km (thickness greater than 1~km is accepted).
 \end{itemize}
-
+\comment{JQ}{We should write here how these qualitative assessments translate into
+quantitative uncertainties $\sigma_j$ used in the section below}
 We can now consider the joint distribution of CALIOP and ceilometer cloud bases
 for each combination of the above variables.  (Base heights above ground are
 used to remove an intrinsic correlation due to terrain.)  Because of the viewing
-geometry, high CALIOP cloud bases tend to be overestimates where a higher layer
-obscures a lower layer.  \commentjm{Isn't the actual reason a combination of
+geometry, high CALIOP cloud bases tend to be overestimated where a higher layer
+obscures \comment{JQ}{but we excluded that possibility, didn't we?} a lower layer.  \commentjm{Isn't the actual reason a combination of
   regression dilution at the extremes of the distribution and phase space
   truncation at a physical boundary for low cloud bases?}  It is desirable to
 correct for this bias.  The options are no correction, a linear correction
 (which partially corrects for the high bias of high CALIOP base heights but
 introduces a counterbias at low CALIOP base heights), and a nonlinear correction
 that does not suffer from the counterbias at low CALIOP base heights.  Our
-choice for nonlinear correction is a support vector machine.  The final choice
-of correction is based on the performance of the three options on the training
-sample after combination has been performed according to the next step of the
-algorithm (Section~\ref{sec:algorithm:combination}).
+choice for nonlinear correction is support-vector machine regression
+\citep[SVM][]{svm}.  The final choice of correction is based on the performance
+of the three options on the training sample after combination has been performed
+according to the next step of the algorithm
+(Section~\ref{sec:algorithm:combination}).
 
 Following bias correction, the sample RMSE is calculated for each combination of
 $D$, $n$, and $\Delta z$.  The sample RMSE is taken as an estimate of the
@@ -438,7 +478,8 @@ the CBH $z$ at a point of interest (POI) that does not necessarily
 coincide with the location of a thin-cloud CALIOP profile, we proceed as follows.  We first
 select all local CALIOP CBH measurements within a horizontal distance
 $D_\text{max} = 100$~km of the POI that satisfy the additional quality cuts
-described in Section~\ref{sec:algorithm:qual}.
+described in Section~\ref{sec:algorithm:qual}. \comment{JQ}{Could we create a sketch
+explaining this procedure?}
 
 For each remaining local CBH $z_i$, we determine the predicted
 uncertainty $\sigma_i$ based on the categories established in the previous
@@ -467,7 +508,8 @@ yields acceptable results, as would be expected for highly correlated and fairly
 similar $\sigma_i$.  \commentjm{This $i$ could be confused with the $i$ in the
   previous section; rethink notation.}
 
-One choice remains to be made, namely which of the bias correction methods
+\comment{JQ}{I would prefer shifting this correction (the following paragraph) to the local CALIOP base heights
+to the previous section where the data are described}. One choice remains to be made, namely which of the bias correction methods
 described in Section~\ref{sec:algorithm:qual} to apply to the local cloud base
 heights before combination.  Combining the uncorrected local base heights result
 in a high bias (Figure~S1), as would be expected from the high bias on the
@@ -477,9 +519,9 @@ base heights, leads to a low bias in the combined base height (Figure~S2), again
 as would be expected.  Among the correction methods investigated, the SVM-based
 correction results in the behavior closest to the 1-to-1 line (Figure~S3).
 Based on this performance, we use the SVM-corrected local base heights as input
-to combination step of the CBASE algorithm.
+to the combination step of the CBASE algorithm.
 
-\subsection{Evaluation of CBH and CBH errors}
+\subsection{Evaluation of CBASE CBH and CBH errors}
 \label{sec:algorithm:eval}
 
 
@@ -495,26 +537,29 @@ distribution of CBASE and ceilometer-observed CBH.  (The
 difference between this figure and Figure~S3 is that the underlying data is the
 validation, rather than the training, data set.)
 
-For satellite-derived measurements of the CBH $z$ that are
-unbiased with respect to the ceilometer-observed CBH $\hat{z}$
-and have correctly estimated uncertainties $\sigma$, the pdf of the quantity
-$(z - \hat{z})/\sigma$ has zero mean and unit standard deviation. In our
-evaluation data set, we find a mean of 0.04 and a standard deviation of 1.06, shown in Figure~\ref{fig:pull}; this
-corresponds to a CBH bias of %
-4\%
-and uncertainty bias of %
-6\%, both relative to the predicted uncertainty.  Thus, we find that both
-the cloud base estimate and the uncertainty estimate are unbiased at the better
-than 10\%\ level.
+For satellite-derived measurements of the CBH $z$ that are unbiased with respect
+to the ceilometer-observed CBH $\hat{z}$ and have correctly estimated
+uncertainties $\sigma$, the pdf of the quantity $(z - \hat{z})/\sigma$ has zero
+mean and unit standard deviation. In our evaluation data set, we find a mean of
+0.04 and a standard
+deviation of 1.06, shown in
+Figure~\ref{fig:pull}; this corresponds to a CBH bias of %
+4\% and
+uncertainty bias of %
+6\%,
+both relative to the predicted uncertainty.  Thus, we find that both the cloud
+base estimate and the uncertainty estimate are unbiased at better than the 10\%\
+level.
 
 As a further test of the reliability of the expected uncertainty, we divide the
 validation data set into deciles of the expected uncertainty.
 Table~\ref{tab:rmseclass} shows that the actual RMSE within each decile is
-within 10\% of the expected uncertainty and that linear regressions within each
+within 10\% of the expected uncertainty (with the exception of the highest-uncertainty
+decile) and that linear regressions within each
 decile are close to the one-to-one line.
 
 It is possible that CBH estimates outside North America could have
-greater biases or that greater uncertainty than this evaluation leads us to
+greater biases or greater uncertainty than this evaluation leads us to
 believe.  This would be the case if continental clouds over North America are
 not representative of clouds elsewhere in a way that is not accounted for by the
 cloud properties taken into account by the uncertainty estimate.  Since the
@@ -536,9 +581,9 @@ the CALIOP track.
 \section{Results and data product availability}
 \label{sec:results}
 
-Geographic distributions of mean and median cloud base and thickness are shown
-in Figure~\ref{fig:geo} \commentjm{(which will be made from the CBASE data set
-  when it's ready)}.
+Geographic distributions of the mean CBH are shown for daytime and nighttime
+Calipso overpasses in Figure~\ref{fig:geo}.  \commentjm{Discuss.}
+Figures~\ref{fig:uncertainty} and  shows the distribution
 
 Comparison with 2B-GEOPROF-LIDAR cloud bases is shown in
 Figure~\ref{fig:eval-2b}.   2B-GEOPROF-LIDAR distinguishes between radar-only,
@@ -553,6 +598,14 @@ estimate, which allows an analysis to select only
 low-uncertainty cases or to statistically weight CBH according to
 uncertainty, as appropriate for the application.
 
+\commentjm{Include discussion from Tristan about reduction in DLW uncertainty if
+  CBH uncertainty can be reduced from 480~m.  According to
+  Figure~\ref{fig:uncert-quantiles}, by selecting the lowest-uncertainty decile
+  of the cloud population, the CBH uncertainty can be reduced to approximately
+  250~m at night in the extratropics and in the SCu regions, and approximately
+  400~m throughout the tropics during daytime.  How much DLW uncertainty
+  reduction does that buy?}
+
 Data \commentjm{for 2007 and 2008; do the other years later, perhaps with
   funding for the subadiabaticity study from somewhere} is available at DKRZ.
 \commentjm{Obtain DOI, put it here.}
@@ -560,13 +613,13 @@ Data \commentjm{for 2007 and 2008; do the other years later, perhaps with
 \conclusions
 \label{sec:conclusions}
 
-We have presented the CBASE algorithm, which derives CBH from
-CALIOP lidar profiles.  This algorithm produces CBH not only for
-thin clouds but also for clouds thick enough to attenuate the lidar (optical
-thickness $\tau \gtrsim 5$), based on the assumed homogeneity of cloud base
-height within an airmass.  In addition to the CBH estimate, the
-CBASE algorithm supplies an expected uncertainty on the CBH.
-The CBASE data is available for the years 2007 and 2008 at \commentjm{insert DOI}.
+We have presented the CBASE algorithm, which derives CBH from CALIOP lidar
+profiles.  This algorithm produces CBH not only for thin clouds but also for
+clouds thick enough to attenuate the lidar (optical thickness $\tau \gtrsim 5$),
+based on the assumed mesoscale homogeneity of cloud base height within an
+airmass.  In addition to the CBH estimate, the CBASE algorithm supplies an
+expected uncertainty on the CBH.  The CBASE data is available for the years 2007
+and 2008 at \commentjm{insert DOI}.
 
 CBASE CBH and its uncertainty have been evaluated using
 ground-based airport ceilometer data over the contiguous United States, using a
@@ -588,7 +641,8 @@ cloud geometry, such as cloud subadiabaticity, which will be presented in future
 work. 
 
 \begin{acknowledgements}
-CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
+CALIOP VFM from ICARE.  Computing and data hosting at DKRZ.  Funding. This
+research was funded by the European Union  under grant agreement 306284 ERC Starting grant QUAERERE. 
 \end{acknowledgements}
 
 %% \begin{table}[t]
@@ -622,9 +676,17 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
 
 \begin{figure*}
   \centering
-%  <<eval-qual,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
-%  @
-  \caption{Scatter plots of CALIOP versus ceilometer local CBH
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=0.95\textwidth]{figure/method-eval-qual-1} 
+
+}
+
+
+
+\end{knitrout}
+  \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
     faceted by the CALIOP VFM QA flag.  Color indicates the number of CALIOP
     profiles within each bin of ceilometer and CALIOP CBH; black
     lines are contours of the empirical joint probability density; the red line
@@ -633,7 +695,8 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
     \citep{Wood2004,Wood2011}, with 95\% confidence interval shaded in light
     blue; the dashed gray line is the one-to-one line.  Statistics of the
     relationship between CALIOP and ceilometer base heights are provided in
-    Table~\ref{tab:quality-qa}.}
+    Table~\ref{tab:quality-qa}. \comment{JQ}{I would prefer square-shaped plots, and a
+  1:1 line in them as well.}}
   \label{fig:quality-qa}
 \end{figure*}
 
@@ -645,10 +708,21 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
     and ceilometer CBH, the RMSE, bias, and linear least-squares
     fit parameters.}
   \label{tab:quality-qa}
-\begin{kframe}
+% latex table generated in R 3.4.1 by xtable 1.8-2 package
+% Thu Aug 10 12:54:47 2017
+\begin{tabular}{lrrrrl}
+  \hline
+\hline
+feature.qa.lowest.cloud & $n$ & $r$ & RMSE (m) & bias (m) & fit \\ 
+  \hline
+none & 1410553 & 0.192 & $1.05 \times 10^{3}$ & $-$471. & $y = 0.193 x + \ensuremath{1.03 \times 10^{3}}$ m \\ 
+  low & 301250 & 0.471 & 710. & $-$115. & $y = 0.456 x + 650.$ m \\ 
+  medium & 212723 & 0.502 & 707. & $-$77.1 & $y = 0.476 x + 602.$ m \\ 
+  high & 2877967 & 0.554 & 629. & 9.85 & $y = 0.526 x + 485.$ m \\ 
+   \hline
+\hline
+\end{tabular}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in select\_impl(.data, vars): invalid column index : NA for variable: 'group1' = 'group1'}}\end{kframe}
 \end{table*}
 
 \begin{figure*}
@@ -666,7 +740,8 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \caption{Scatter plot of CBASE versus ceilometer CBH; for
     description of the plot elements, see Figure~\ref{fig:quality-qa}.  The
     linear fit has slope 0.98 and intercept
-    $33.96$~m.}
+    $33.96$~m. \comment{JQ}{why not have the origin at (0,0)? What are
+  the strange datapoints from CBASE with x<0m and x>3 km?}}
   \label{fig:eval}
 \end{figure*}
 
@@ -716,7 +791,7 @@ CALIOP VFM from ICARE.  Computing (and data hosting?) at DKRZ.  Funding.
   \label{tab:rmseclass}
 
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Sun Aug  6 17:30:50 2017
+% Thu Aug 10 12:54:52 2017
 \begin{tabular}{lrrrrl}
   \hline
 \hline
@@ -760,7 +835,8 @@ pred.rmse & $n$ & $r$ & RMSE (m) & bias (m) & fit \\
     relationship between 2B-GEOPROF-LIDAR and ceilometer base heights are provided in
     Table~\ref{tab:2bgeoprof}.
     \commentjm{I \textit{think} this uses Claudia's algorithm (minimum cloud
-      base within $D_\text{max}$), but I have to check.}}
+      base within $D_\text{max}$), but I have to check.} \comment{JQ}{also square
+  plots, if possible?}}
   \label{fig:eval-2b}
 \end{figure*}
 
@@ -771,7 +847,7 @@ pred.rmse & $n$ & $r$ & RMSE (m) & bias (m) & fit \\
   \label{tab:2bgeoprof}
   \centering
 % latex table generated in R 3.4.1 by xtable 1.8-2 package
-% Sun Aug  6 17:30:54 2017
+% Thu Aug 10 12:54:55 2017
 \begin{tabular}{lrrrrl}
   \hline
 \hline
@@ -838,7 +914,7 @@ Radar & 15061 & 0.265 & 782. & 98.1 & $y = 0.461 x + 466.$ m \\
     each $5\degree\times 5\degree$ latitude--longitude box.  The left (right)
     column shows statistics of daytime (nighttime) retrievals; daytime and
     nighttime are defined by the CALIOP VFM product.}
-  \label{fig:geo}
+  \label{fig:uncert-quantiles}
 \end{figure*}
 
 % \begin{figure*}
