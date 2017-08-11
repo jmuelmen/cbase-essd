@@ -228,13 +228,12 @@ the satellite data.
 \subsection{CALIOP VFM}
 
 The input satellite data to our analysis is the Cloud-Aerosol Lidar with
-Orthogoncal Polarization \cite[CALIOP]{winker2007,doi:10.1029/
-2007GL030135} on board the Cloud-Aerosol Lidar and Infrared Pathfinder
+Orthogoncal Polarization \cite[CALIOP][]{winker2007} on board the Cloud-Aerosol Lidar and Infrared Pathfinder
 Satellite Observation (CALIPSO) satellite that is part of the A-Train
-satellite constellation \citep{stephens2002,doi:10.1175/BAMS-83-12-1771} on a
-sun-synchronous low-Earth orbit with approximately 1.30\,p.m. equator-crossing
+satellite constellation \citep{stephens2002} on a
+sun-synchronous low-Earth orbit with equator crossings at approximately 1330 hours local
 time. The cloud-base product relies on the retrieved vertical feature mask
-\citep[VFM]{vaughan2002,https://www-calipso.larc.nasa.gov/resources/pdfs/PC-SCI-202_Part2_rev1x01.pdf}.  For each CALIOP lidar backscatter profile, the VFM identifies features
+\citep[VFM][]{vaughan2002}.  For each CALIOP lidar backscatter profile, the VFM identifies features
 such as clear air, cloud, aerosol, or planetary surface; this is termed the ``feature
 type''.  (When the lidar beam is completely attenuated, this is reported as a
 feature type.)  In addition to the feature type, the VFM records the degree of
@@ -256,27 +255,32 @@ In the present analysis, we use VFM version 4.10 \citep{vfm}, the current
 
 For optimizing several parameters of the algorithm, for determining the expected
 cloud base uncertainty, and for evaluation of the trained algorithm, reference
-measurements of CBH are required.  The source of these ``true'' CBH in this work is
-ground-based cloud observations in aviation routine and special weather reports
-\citep[METARs and SPECIs, collectively referred to as METARs
-henceforth][]{metar}.  METAR data is used, among other purposes, for assimilation
-in NWP \citep[e.g.,][]{HRRR, IFS}.  In many locations, CBH reported in METARs
-are measured by ceilometer over a period of time (tens of minutes) and then
-objectively grouped into cloud layers and their respective fractional coverages,
-using the temporal variation at a fixed point under an advected cloud field as a
-proxy for spatial variability of the cloud field \citep[e.g.,]{heese2010,doi:10.5194/amt-3-1763-2010}.  METAR data is distributed
-globally by the WMO and widely archived.  The data for the present analysis was
-downloaded from the Weather Underground archive \citep{wunderground}.
+measurements of CBH are required.  The source of these ``true'' CBH in this work
+is ground-based cloud observations at airports.  Weather observations at
+airports are disseminated worldwide in aviation routine and special weather
+reports \citep[METARs and SPECIs, collectively referred to as METARs
+henceforth][]{metar}.  Apart from providing airport weather information for
+aviation, METAR data is used for assimilation into
+numerical weather prediction (NWP) models \citep[e.g.,][]{HRRR, IFS}.  In many
+locations, CBH reported in METARs is measured by a ceilometer over a period of
+time (tens of minutes) and then objectively grouped into cloud layers and their
+respective fractional coverages, using the temporal variation at a fixed point
+under an advected cloud field as a proxy for spatial variability of the cloud
+field \citep[e.g.,][]{heese2010}.  METAR data is widely distributed and
+archived; the data for the present analysis was downloaded from the Weather
+Underground archive \citep{wunderground}.
 
 To ensure that the ceilometer CBH are of high and spatially uniform quality, we
 restrict ourselves to METARs from the contiguous continental United States,
 where the CBH is mostly derived automatically by laser ceilometers that form
-part of Automated Surface Observing Stations \citep[ASOS][]{asos} system.  In
-other parts of the world, the cloud bases may be estimated by human observers or
-may be omitted under certain conditions when the lowest cloud base is higher
-than 5000~feet.  \comment{JQ}{It would be good to provide a table or map of the
-  stations, and write a little more on how many there are, and what the temporal
-  resolution is.}
+part of Automated Surface Observing Stations \citep[ASOS][]{asos} system; see
+\citep[e.g.,][]{an2017,ikeda2017} for recent examples of ASOS application to
+deriving cloud climatologies or NWP model evaluation.  In other parts of the
+world, the cloud bases may be estimated by human observers or may be omitted
+under certain conditions when the lowest cloud base is higher than 5000~feet.
+\comment{JQ}{It would be good to provide a table or map of the stations, and
+  write a little more on how many there are, and what the temporal resolution
+  is.}
 
 \subsection{Colocation of satellite and ground-based observations}
 \comment{JQ}{A section on the criteria selected for co-locating ceilometer and CALIPSO
