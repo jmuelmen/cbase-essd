@@ -125,7 +125,7 @@ correct.cbase.lm <- function(df, correction) {
             }
             dplyr::mutate(x,
                           pred.ceilo = pred.ceilo,
-                          pred.ceilo.msl = pred.ceilo + surface.elevation)
+                          pred.ceilo.msl = pred.ceilo + surface.elevation * 1e3)
         }, .parallel = FALSE)
 }
 
