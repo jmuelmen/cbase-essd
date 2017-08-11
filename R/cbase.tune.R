@@ -123,7 +123,9 @@ correct.cbase.lm <- function(df, correction) {
             } else {
                 pred.ceilo <- predict(model, newdata = select(x, caliop))
             }
-            dplyr::mutate(x, pred.ceilo = pred.ceilo)
+            dplyr::mutate(x,
+                          pred.ceilo = pred.ceilo,
+                          pred.ceilo.msl = pred.ceilo + surface.elevation * 1e3)
         }, .parallel = FALSE)
 }
 
@@ -216,6 +218,8 @@ cbase.combine <- function(df.cor) {
                      sd.pred.rmse = sd(pred.rmse),
                      best.ceilo = pred.ceilo[which.min(pred.rmse)],
                      pred.ceilo = sum(pred.ceilo / pred.rmse^2, na.rm = TRUE) /
+                         sum(pred.rmse^-2, na.rm = TRUE),
+                     pred.ceilo.msl = sum(pred.ceilo.msl / pred.rmse^2, na.rm = TRUE) /
                          sum(pred.rmse^-2, na.rm = TRUE),
                      pred.rmse.uncor = sqrt(1 / sum(pred.rmse^-2, na.rm = TRUE)),
                      pred.rmse = sqrt(mean(pred.rmse^2, na.rm = TRUE)))
