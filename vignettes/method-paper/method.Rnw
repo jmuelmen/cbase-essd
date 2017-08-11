@@ -169,7 +169,7 @@ of the cloud.  However, due to the viewing geometry, it is also one of the most
 difficult cloud parameters to retrieve from satellite.  
 
 Multiple methods have been proposed for satellite determination of the cloud
-base height.  \commentjm{VIIRS cloud-base temperature method: \cite{zhu14}}.  Results of
+base height.  \commentjm{VIIRS cloud-base temperature method: \cite{Zhu2014}}.  Results of
 evaluating CBH inferred from oxygen absorption bands and from MISR stereoscopic
 images will be reported in separate manuscripts \comment{JQ}{but still it would be good to sketch the idea
 here and provide a reference?}.  For analyses wishing to
@@ -177,16 +177,16 @@ combine cloud base information with other cloud properties retrieved by A-Train
 satellites, these methods share the disadvantage that the required instruments
 are not part of the A-Train.  Methods that are applicable to A-Train satellites
 are based on MODIS cloud properties retrieved near cloud top and integrated
-along moist adiabats to determine the cloud thickness \citep{meerkoetter07} or
-on active remote sensing by CloudSat \citep[2B-GEOPROF][]{marchand08} or a
-combination of CloudSat and CALIOP \citep[2B-GEOPROF-LIDAR][]{mace14}.  The
+along moist adiabats to determine the cloud thickness \citep{Meerkoetter2007} or
+on active remote sensing by CloudSat \citep[2B-GEOPROF][]{Marchand2008} or a
+combination of CloudSat and CALIOP \citep[2B-GEOPROF-LIDAR][]{Mace2014}.  The
 MODIS-derived cloud thickness assumes adiabatic cloud profiles and therefore
 cannot be used to constrain subadiabaticity; the use of ancillary temperature profile
 estimates may also be
 problematic in many cases.  CloudSat misses the small droplets
 at the base of nonprecipitating clouds, and retrievals are further degraded in
 the ground clutter region.  CALIOP detects the bases of only the thinnest clouds
-\citep[$\tau < 5$][]{mace14}; frequently, it is desirable to know the base
+\citep[$\tau < 5$][]{Mace2014}; frequently, it is desirable to know the base
 height of thick clouds as well.
 
 In this paper, we revisit the CALIOP cloud base determination.  This relies on
@@ -228,9 +228,9 @@ the satellite data.
 \subsection{CALIOP VFM}
 
 The input satellite data to our analysis is the Cloud-Aerosol Lidar with
-Orthogoncal Polarization \cite[CALIOP][]{winker2007} on board the Cloud-Aerosol Lidar and Infrared Pathfinder
+Orthogoncal Polarization \cite[CALIOP][]{Winker2007} on board the Cloud-Aerosol Lidar and Infrared Pathfinder
 Satellite Observation (CALIPSO) satellite that is part of the A-Train
-satellite constellation \citep{stephens2002} on a
+satellite constellation \citep{Stephens2002} on a
 sun-synchronous low-Earth orbit with equator crossings at approximately 1330 hours local
 time. The cloud-base product relies on the retrieved vertical feature mask
 \citep[VFM][]{vaughan2002}.  For each CALIOP lidar backscatter profile, the VFM identifies features
@@ -261,12 +261,12 @@ airports are disseminated worldwide in aviation routine and special weather
 reports \citep[METARs and SPECIs, collectively referred to as METARs
 henceforth][]{metar}.  Apart from providing airport weather information for
 aviation, METAR data is used for assimilation into
-numerical weather prediction (NWP) models \citep[e.g.,][]{HRRR, IFS}.  In many
+numerical weather prediction (NWP) models \citep[e.g.,][]{Benjamin2016, Dee2011}.  In many
 locations, CBH reported in METARs is measured by a ceilometer over a period of
 time (tens of minutes) and then objectively grouped into cloud layers and their
 respective fractional coverages, using the temporal variation at a fixed point
 under an advected cloud field as a proxy for spatial variability of the cloud
-field \citep[e.g.,][]{heese2010}.  METAR data is widely distributed and
+field \citep[e.g.,][]{Heese2010}.  METAR data is widely distributed and
 archived; the data for the present analysis was downloaded from the Weather
 Underground archive \citep{wunderground}.
 
@@ -274,7 +274,7 @@ To ensure that the ceilometer CBH are of high and spatially uniform quality, we
 restrict ourselves to METARs from the contiguous continental United States,
 where the CBH is mostly derived automatically by laser ceilometers that form
 part of Automated Surface Observing Stations \citep[ASOS][]{asos} system; see
-\citep[e.g.,][]{an2017,ikeda2017} for recent examples of ASOS application to
+\citep[e.g.,][]{An2017,Ikeda2017} for recent examples of ASOS application to
 deriving cloud climatologies or NWP model evaluation.  In other parts of the
 world, the cloud bases may be estimated by human observers or may be omitted
 under certain conditions when the lowest cloud base is higher than 5000~feet.
