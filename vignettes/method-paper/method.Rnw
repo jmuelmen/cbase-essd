@@ -774,6 +774,16 @@ data(cbase)
   \label{fig:geo}
 \end{figure*}
 
+\begin{figure*}
+  \centering
+  <<cbase-base-msl,dev='tikz',fig.width=7,fig.height=7.2,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  vis.mean(mutate(cbase, pred.ceilo = pred.ceilo.msl), 14)
+  @
+  \caption{Geographic distribution of mean CBH above sea level as a check that
+    the variable is correctly calculated}
+  \label{fig:geomsl}
+\end{figure*}
+
 \begin{figure}
   \centering
   <<cbase-rmse,dev='tikz',fig.width=3,fig.height=2.5,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
