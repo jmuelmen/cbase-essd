@@ -151,7 +151,7 @@ read_chunk("../vis.R")
   resolution are derived as a function of various properties of the
   CALIOP lidar profiles.  Evaluation of the predicted cloud base heights and
   their predicted uncertainty using a second, statistically independent,
-  ceilometer data set shows that cloud base heights and uncertainties are biased
+  ceilometer dataset shows that cloud base heights and uncertainties are biased
   by less than 10\%.  Geographic distributions of cloud base height and its
   uncertainty are presented.  \commentjm{Regionally, the uncertainty is found to be
   substantially smaller than the 480~m uncertainty assumed in the A-Train
@@ -216,13 +216,13 @@ evaluating CBH.  In Section~\ref{sec:algorithm} we describe
 the algorithm and evaluate its performance, including error statistics.  The
 publicly available processed CBASE output is described in
 Section~\ref{sec:results}.  We conclude in Section~\ref{sec:conclusions} with an
-outlook on the longstanding questions that the CBASE data set can address.
+outlook on the longstanding questions that the CBASE dataset can address.
 
 \section{Data}
 \label{sec:data}
 
 Two classes of data are used in this work: cloud lidar data, from which we
-intent to derive a global CBH data set; and ground-based observations used as
+intent to derive a global CBH dataset; and ground-based observations used as
 reference measurements of CBH to train and evaluate the algorithm by which
 CBH is determined from the satellite data.
 
@@ -313,7 +313,7 @@ At several points in the algorithm development, it is necessary to know the true
 (ceilometer-observed) CBH.  \comment{JQ}{We use ceilometer observations from
 $YYYY$ stations over the continental USA from the year 2008 at
 native temporal resolution, co-located to the CALIPSO  \commentjm{expand?} overpass (see below), at
-those points.}  A statistically independent data set is required for an unbiased
+those points.}  A statistically independent dataset is required for an unbiased
 evaluation of the algorithm performance; we use ceilometer observations from the
 same \commentjm{$YYYY$} stations over the continental USA from the year 2007 for
 evaluation.
@@ -407,7 +407,7 @@ following classes of CALIOP profiles are discarded:
 \end{itemize}
 
 The remaining variables are discretized roughly into quintiles of their
-distribution within the VFM data set with the
+distribution within the VFM dataset with the
 following boundaries:
 \begin{itemize}
 \item horizontal distance $D$ from the ceilometer, with boundaries 0, 40, 60,
@@ -501,19 +501,18 @@ to the combination step of the CBASE algorithm.
 @ 
 
 Having trained the algorithm on data from the year 2008, we evaluate it using a
-statistically independent data set from the year 2007.  In the evaluation data
-set, the ``true'' (i.e., ceilometer-measured) CBH $\hat{z}$
-is known in addition to the estimated CBH $z$ and the estimated
-CBH uncertainty $\sigma$, determined according to the procedure
-described in the previous section.  Figure~\ref{fig:eval} shows the joint
-distribution of CBASE and ceilometer-observed CBH.  (The
-difference between this figure and Figure~S3 is that the underlying data is the
-validation, rather than the training, data set.)
+statistically independent dataset from the year 2007.  In the evaluation
+dataset, the ``true'' (i.e., ceilometer-measured) CBH $\hat{z}$ is known in
+addition to the estimated CBH $z$ and the estimated CBH uncertainty $\sigma$,
+determined according to the procedure described in the previous section.
+Figure~\ref{fig:eval} shows the joint distribution of CBASE and
+ceilometer-observed CBH.  (The difference between this figure and Figure~S3 is
+that the underlying data is the validation, rather than the training, dataset.)
 
 For satellite-derived measurements of the CBH $z$ that are unbiased with respect
 to the ceilometer-observed CBH $\hat{z}$ and have correctly estimated
 uncertainties $\sigma$, the pdf of the quantity $(z - \hat{z})/\sigma$ has zero
-mean and unit standard deviation. In our evaluation data set, we find a mean of
+mean and unit standard deviation. In our evaluation dataset, we find a mean of
 \Sexpr{with(combo, mean((ceilo - pred.ceilo) / pred.rmse))} and a standard
 deviation of \Sexpr{with(combo, sd((ceilo - pred.ceilo) / pred.rmse))}, shown in
 Figure~\ref{fig:pull}; this corresponds to a CBH bias of %
@@ -525,7 +524,7 @@ base estimate and the uncertainty estimate are unbiased at better than the 10\%\
 level.
 
 As a further test of the reliability of the expected uncertainty, we divide the
-validation data set into deciles of the expected uncertainty.
+validation dataset into deciles of the expected uncertainty.
 Table~\ref{tab:rmseclass} shows that the actual RMSE within each decile is
 within 10\% of the expected uncertainty (with the exception of the highest-uncertainty
 decile) and that linear regressions within each
@@ -542,8 +541,8 @@ occur predominantly over ocean present a particular challenge to the method,
 namely marine stratocumulus with horizontally extensive but vertically thin
 liquid-phase anvils.  Due to the typical CBH uncertainty of
 several hundred m, the method is unlikely to be applied to stratocumulus cloud;
-nevertheless, a marine-cloud validation data set would be desirable.  For the
-present work, no suitable marine-cloud evaluation data set was available;
+nevertheless, a marine-cloud validation dataset would be desirable.  For the
+present work, no suitable marine-cloud evaluation dataset was available;
 ship-based CBH observations were either based on human observers
 (unknown quality) or available only over a limited duration at limited
 locations, resulting in a severely statistics-limited set of coincidences with
