@@ -280,16 +280,30 @@ part of Automated Surface Observing Stations \citep[ASOS][]{asos} system; see
 deriving cloud climatologies or NWP model evaluation.  In other parts of the
 world, the cloud bases may be estimated by human observers or may be omitted
 under certain conditions when the lowest cloud base is higher than 5000~feet,
-complicating objective comparison to satellite CBH.  \comment{JQ}{It would be
-  good to provide a table or map of the stations, and write a little more on how
-  many there are, and what the temporal resolution is.}
+complicating objective comparison to satellite CBH.  
 
-\subsection{Colocation of satellite and ground-based observations}
-\comment{JQ}{A section on the criteria selected for co-locating ceilometer and CALIPSO
-shots?}
+The ceilometer dataset consists of CBH information from \Sexpr{nrow(df.asos)} %
+stations throughout the continental USA that lie within 100~km of a CALIPSO
+\commentjm{expand?}  overpass.  In normal operation, the time resolution is 1~h,
+but during rapidly changing conditions, more frequent updates may be provided;
+for comparison to satellite CBH, the ceilometer observation closest in time to
+the satellite overpass is used, provided that the time difference is less than
+1~h.  For training the algorithm, we use ceilometer observations from the year
+2008.  For unbiased evaluation of the algorithm performance, a statistically
+independent dataset is required; we use ceilometer observations from the same
+stations from the year 2007.  Figure~\ref{fig:asos} shows the locations of these
+stations along with the number of satellite--ceilometer CBH coincidences and the
+closest co-location distance during the year 2007.
 
 \section{CBASE Algorithm and evaluation}
 \label{sec:algorithm}
+
+<<eval-setup,cache=TRUE,results='hide',echo=FALSE>>=
+@ 
+<<eval-tune-setup,cache=TRUE,results='hide',echo=FALSE>>=
+@ 
+<<eval-asos-setup,cache=TRUE,results='hide',echo=FALSE>>=
+@ 
 
 The CBASE algorithm and evaluation proceed in four steps:
 \begin{enumerate}
@@ -310,15 +324,6 @@ The CBASE algorithm and evaluation proceed in four steps:
 \item Using a statistically independent validation dataset, we verify that the
   predicted CBH and its uncertainty are correct.
 \end{enumerate}
-
-At several points in the algorithm development, it is necessary to know the true
-(ceilometer-observed) CBH.  \comment{JQ}{We use ceilometer observations from
-$YYYY$ stations over the continental USA from the year 2008 at
-native temporal resolution, co-located to the CALIPSO  \commentjm{expand?} overpass (see below), at
-those points.}  A statistically independent dataset is required for an unbiased
-evaluation of the algorithm performance; we use ceilometer observations from the
-same \commentjm{$YYYY$} stations over the continental USA from the year 2007 for
-evaluation.
 
 This section is divided into four subsections, one for each algorithm step
 enumerated above.
@@ -497,11 +502,6 @@ to the combination step of the CBASE algorithm.
 \subsection{Evaluation of CBASE CBH and CBH errors}
 \label{sec:algorithm:eval}
 
-<<eval-setup,cache=TRUE,results='hide',echo=FALSE>>=
-@ 
-<<eval-tune-setup,cache=TRUE,results='hide',echo=FALSE>>=
-@ 
-
 Having trained the algorithm on data from the year 2008, we evaluate it using a
 statistically independent dataset from the year 2007.  In the evaluation
 dataset, the ``true'' (i.e., ceilometer-measured) CBH $\hat{z}$ is known in
@@ -638,6 +638,17 @@ research was funded by the European Union  under grant agreement 306284 ERC Star
 %% \hline\hline
 %% \end{tabular}
 %% \end{table}
+
+\begin{figure}
+  \centering
+  <<eval-asos,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
+  @
+  \caption{ASOS ceilometers used for CBASE CBH evaluation.  The size of the
+    marker indicates the number of satellite--ceilometer CBH coincidences during
+    the year 2007.  Color indicates the closest co-location distance achieved in
+    2007.}
+  \label{fig:asos}
+\end{figure}
 
 \begin{figure}
   \centering

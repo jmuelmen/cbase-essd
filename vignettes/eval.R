@@ -314,6 +314,27 @@ dddf <- correct.cbase.lm(df.val, ddf)
 combo <- cbase.combine(dddf)
 gc()
 
+## ---- eval-asos-setup --------------------
+df.asos <- df.val %>%
+    filter(substr(station.icao, 1, 1) == "K") %>%
+    group_by(station.icao, date, episode) %>%
+    summarize(min.dist = min(dist)) %>%
+    group_by(station.icao) %>%
+    summarize(n = n(), min.dist = min(min.dist)) %>%
+    left_join(stations.metar(), by = "station.icao") 
+
+## ---- eval-asos --------------------
+ggplot(df.asos, aes(x = lon, y = lat, col = min.dist, size = n)) +
+    geom_point() +
+    borders("state") +
+    scale_size("$N$", trans = "identity", range = c(0.05, 2),
+               guide = ggplot2::guide_legend(title.vjust = 0.5)) +
+    scale_color_distiller("$\\min(D)$ (km)", palette = "Blues",
+                          guide = ggplot2::guide_colorbar(title.vjust = 0.5)) +
+    labs(x = NULL, y = NULL) +
+    scale_x_continuous(breaks = NULL) + scale_y_continuous(breaks = NULL) +
+    theme_void(14) +
+    theme(legend.position = "bottom")
 ## ---- tune-test --------------------
 test.cbase.lm(dddf) %>% mutate(ratio = rmse / pred.rmse) %>% ggplot(aes(x = ratio)) + geom_histogram()
 
