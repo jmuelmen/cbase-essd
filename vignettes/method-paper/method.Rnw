@@ -312,11 +312,14 @@ The CBASE algorithm and evaluation proceed in four steps:
   attenuated by cloud.  We refer to this as the \textit{local
     CBH} in the sense that it is local to the CALIOP profile.
 \item Using ground-based ceilometer data, we determine quality of cloud base
-  height depending on a number of properties of the CALIOP profile; assuming
+  height depending on a number of properties of the CALIOP profile.  Assuming
   those properties suffice to determine the quality of the CBH determination, we
-  can then predict the uncertainty of a cloud base as a function of those
-  factors.  In the language of machine learning, we refer to this step as
-  \textit{training} the algorithm on the ceilometer data.
+  can then predict the quality of a cloud base as a function of those factors.
+  The quality metric we use is the root mean square error (RMSE); the category
+  RMSE determined from comparison to ceilometer CBH then serves as the predicted
+  CBH uncertainty.  In the language of machine learning, we refer to this step
+  as \textit{training} the algorithm on the ceilometer data to predict CBH and
+  CBH uncertainty.
 \item Based on the predicted quality of each local cloud base, we either reject
   the local cloud base or combine it with other local cloud bases within a
   distance $D_\text{max}$ of the point of interest (POI) to arrive at an 
@@ -341,7 +344,7 @@ algorithm are recorded.
 
 \subsection{Determination of local cloud base quality}
 \label{sec:algorithm:qual}
-We assess the quality of the CALIOP CBH $z$ from the
+We assess the quality of the CALIOP CBH $z$ based on the
 ceilometer-observed CBH $\hat{z}$ using root mean square error
 (RMSE), defined as
 \begin{equation}
@@ -425,8 +428,6 @@ following boundaries:
 \item geometric thickness $\Delta z$ of the lowest cloud layer, with boundaries
   at 0, 0.25, 0.45, 0.625, and 1~km (thickness greater than 1~km is accepted).
 \end{itemize}
-\comment{JQ}{We should write here how these qualitative assessments translate into
-quantitative uncertainties $\sigma_j$ used in the section below}
 We can now consider the joint distribution of CALIOP and ceilometer cloud bases
 for each combination of the above variables.  (Base heights above ground are
 used to remove an intrinsic correlation due to terrain.)  Because of the viewing
@@ -486,18 +487,19 @@ yields acceptable results, as would be expected for highly correlated and fairly
 similar $\sigma_i$.  \commentjm{This $i$ could be confused with the $i$ in the
   previous section; rethink notation.}
 
-\comment{JQ}{I would prefer shifting this correction (the following paragraph) to the local CALIOP base heights
-to the previous section where the data are described}. One choice remains to be made, namely which of the bias correction methods
-described in Section~\ref{sec:algorithm:qual} to apply to the local cloud base
-heights before combination.  Combining the uncorrected local base heights result
-in a high bias (Figure~S1), as would be expected from the high bias on the
-constituent local CBH.  The linear correction, which reduces the
-high bias for high CBH but introduces a counterbias for low cloud
-base heights, leads to a low bias in the combined base height (Figure~S2), again
-as would be expected.  Among the correction methods investigated, the SVM-based
-correction results in the behavior closest to the 1-to-1 line (Figure~S3).
-Based on this performance, we use the SVM-corrected local base heights as input
-to the combination step of the CBASE algorithm.
+\comment{JQ}{I would prefer shifting this correction (the following paragraph)
+  to the local CALIOP base heights to the previous section where the data are
+  described}. One choice remains to be made, namely which of the bias correction
+methods described in Section~\ref{sec:algorithm:qual} to apply to the local
+cloud base heights before combination.  Combining the uncorrected local base
+heights result in a high bias (Figure~S1), as would be expected from the high
+bias on the constituent local CBH.  The linear correction, which reduces the
+high bias for high CBH but introduces a counterbias for low cloud base heights,
+leads to a low bias in the combined base height (Figure~S2), again as would be
+expected.  Among the correction methods investigated, the SVM-based correction
+results in the behavior closest to the 1-to-1 line (Figure~S3).  Based on this
+performance, we use the SVM-corrected local base heights as input to the
+combination step of the CBASE algorithm.
 
 \subsection{Evaluation of CBASE CBH and CBH errors}
 \label{sec:algorithm:eval}
