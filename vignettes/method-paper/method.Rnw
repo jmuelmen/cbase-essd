@@ -489,17 +489,19 @@ similar $\sigma_i$.  \commentjm{This $i$ could be confused with the $i$ in the
 
 \comment{JQ}{I would prefer shifting this correction (the following paragraph)
   to the local CALIOP base heights to the previous section where the data are
-  described}. One choice remains to be made, namely which of the bias correction
-methods described in Section~\ref{sec:algorithm:qual} to apply to the local
-cloud base heights before combination.  Combining the uncorrected local base
-heights result in a high bias (Figure~S1), as would be expected from the high
-bias on the constituent local CBH.  The linear correction, which reduces the
-high bias for high CBH but introduces a counterbias for low cloud base heights,
-leads to a low bias in the combined base height (Figure~S2), again as would be
-expected.  Among the correction methods investigated, the SVM-based correction
-results in the behavior closest to the 1-to-1 line (Figure~S3).  Based on this
-performance, we use the SVM-corrected local base heights as input to the
-combination step of the CBASE algorithm.
+  described}.  \commentjm{I'm not sure where best to put this; it's definitely
+  the most confusing part of the analysis.} One choice remains to be made,
+namely which of the bias correction methods described in
+Section~\ref{sec:algorithm:qual} to apply to the local cloud base heights before
+combination.  Combining the uncorrected local base heights result in a high bias
+(Figure~S1), as would be expected from the high bias on the constituent local
+CBH.  The linear correction, which reduces the high bias for high CBH but
+introduces a counterbias for low cloud base heights, leads to a low bias in the
+combined base height (Figure~S2), again as would be expected.  Among the
+correction methods investigated, the SVM-based correction results in the
+behavior closest to the 1-to-1 line (Figure~S3).  Based on this performance, we
+use the SVM-corrected local base heights as input to the combination step of the
+CBASE algorithm.
 
 \subsection{Evaluation of CBASE CBH and CBH errors}
 \label{sec:algorithm:eval}
