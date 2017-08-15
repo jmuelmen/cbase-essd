@@ -268,6 +268,13 @@ from ICARE \citep{icare}.
 
 \subsection{Airport ceilometers}
 
+<<eval-setup,cache=TRUE,results='hide',echo=FALSE>>=
+@ 
+<<eval-tune-setup,cache=TRUE,results='hide',echo=FALSE>>=
+@ 
+<<eval-asos-setup,cache=TRUE,results='hide',echo=FALSE>>=
+@ 
+
 For optimizing several parameters of the algorithm, for determining the expected
 cloud base uncertainty, and for evaluation of the trained algorithm, reference
 measurements of CBH are required.  The source of these ``true'' CBH in this work
@@ -275,34 +282,34 @@ is ground-based cloud observations at airports.  Weather observations at
 airports are disseminated worldwide in aviation routine and special weather
 reports \citep[METARs and SPECIs, collectively referred to as METARs
 henceforth][]{metar}.  Apart from providing airport weather information for
-aviation, METAR data is used for assimilation into
-numerical weather prediction (NWP) models \citep[e.g.,][]{Benjamin2016, Dee2011}.  In many
-locations, CBH reported in METARs is measured by a ceilometer over a period of
-time (tens of minutes) and then objectively grouped into cloud layers and their
-respective fractional coverages, using the temporal variation at a fixed point
-under an advected cloud field as a proxy for spatial variability of the cloud
-field \citep[e.g.,][]{Heese2010}.  METAR data is widely distributed and
-archived; the data for the present analysis was downloaded from the Weather
-Underground archive \citep{wunderground}.
+aviation, METAR data is used for assimilation into numerical weather prediction
+(NWP) models \citep[e.g.,][]{Benjamin2016, Dee2011}.  In many locations, CBH
+reported in METARs is measured by a ceilometer over a period of time (tens of
+minutes) and then objectively grouped into cloud layers and their respective
+fractional coverages, using the temporal variation at a fixed point under an
+advected cloud field as a proxy for spatial variability of the cloud field
+\citep[e.g.,][]{Heese2010}.  METAR data is widely distributed and archived; the
+data for the present analysis was downloaded from the Weather Underground
+archive \citep{wunderground}.
 
-To ensure that the ceilometer CBH are of high and spatially uniform quality, we
-restrict ourselves to METARs from the contiguous continental United States,
-where the CBH is mostly derived automatically by laser ceilometers that form
-part of Automated Surface Observing Stations \citep[ASOS][]{asos} system; see
-\citep[e.g.,][]{An2017,Ikeda2017} for recent examples of ASOS application to
-deriving cloud climatologies or NWP model evaluation.  In other parts of the
-world, the cloud bases may be estimated by human observers or may be omitted
-under certain conditions when the lowest cloud base is higher than 5000~feet,
-complicating objective comparison to satellite CBH.  
+In the United States, CBH is mostly derived automatically by laser ceilometers
+that form part of Automated Surface Observing Stations \citep[ASOS][]{asos}
+system; see, e.g., \cite{An2017,Ikeda2017} for recent examples of ASOS
+application to deriving cloud climatologies or NWP model evaluation.  In other
+parts of the world, the cloud bases may be estimated by human observers or may
+be omitted under certain conditions when the lowest cloud base is higher than
+5000~feet, complicating objective comparison to satellite CBH.  To ensure that
+the ceilometer CBH are of high and spatially uniform quality, we restrict
+ourselves to METARs from the contiguous continental United States.
 
-The ceilometer dataset consists of CBH information from \Sexpr{nrow(df.asos)} %
-stations throughout the continental USA that lie within 100~km of a CALIPSO
-\commentjm{expand?}  overpass.  In normal operation, the time resolution is 1~h,
-but during rapidly changing conditions, more frequent updates may be provided;
-for comparison to satellite CBH, the ceilometer observation closest in time to
-the satellite overpass is used, provided that the time difference is less than
-1~h.  For training the algorithm, we use ceilometer observations from the year
-2008.  For unbiased evaluation of the algorithm performance, a statistically
+There are \Sexpr{nrow(df.asos)} %
+stations throughout the continental USA that lie within 100~km of a CALIOP
+footprint.  In normal operation, the time resolution of CBH reports is 1~h, but
+during rapidly changing conditions, more frequent updates may be provided; for
+comparison to satellite CBH, the ceilometer observation closest in time to the
+satellite overpass is used, provided that the time difference is less than 1~h.
+For training the algorithm, we use ceilometer observations from the year 2008.
+For unbiased evaluation of the algorithm performance, a statistically
 independent dataset is required; we use ceilometer observations from the same
 stations from the year 2007.  Figure~\ref{fig:asos} shows the locations of these
 stations along with the number of satellite--ceilometer CBH coincidences and the
@@ -310,13 +317,6 @@ closest co-location distance during the year 2007.
 
 \section{CBASE Algorithm and evaluation}
 \label{sec:algorithm}
-
-<<eval-setup,cache=TRUE,results='hide',echo=FALSE>>=
-@ 
-<<eval-tune-setup,cache=TRUE,results='hide',echo=FALSE>>=
-@ 
-<<eval-asos-setup,cache=TRUE,results='hide',echo=FALSE>>=
-@ 
 
 The CBASE algorithm and evaluation proceed in four steps:
 \begin{enumerate}
