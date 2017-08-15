@@ -150,11 +150,12 @@ vis.quantiles <- function(df, base_size) {
         plotutils::discretize(lon, seq(-180, 180, 5)) %>%
         plotutils::discretize(lat, seq(-90, 90, 5)) %>%
         plyr::ddply(~ lon + lat + daynight, function(df) {
-            quantile(df$pred.rmse, c(0.1, 0.25, 0.5, 0.75, 0.9))
+            quantile(df$pred.rmse, c(0.01, 0.1, 0.25, 0.5, 0.9))
         }) %>%
         tidyr::gather(quantile, rmse, dplyr::matches("%")) %>%
         dplyr::mutate(quantile = gsub("%", "\\\\%", quantile)) %>%
 ##        dplyr::mutate(quantile = gsub("%", "th", quantile)) %>%
+        dplyr::mutate(rmse = pmax(176, pmin(674, rmse))) %>%
         plotutils::discretize(rmse, seq(175, 675, 50)) %>%
         dplyr::mutate(rmse = factor(rmse)) %>%
         ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = rmse)) +
@@ -164,7 +165,7 @@ vis.quantiles <- function(df, base_size) {
         plotutils::scale_y_geo() +
         ggplot2::coord_fixed(1) +
         ggplot2::scale_fill_brewer("Cloud base height RMSE (m)",
-                                   palette = "Spectral",
+                                   palette = "RdYlGn",
                                    guide = ggplot2::guide_legend(direction = "horizontal",
                                                                  nrow = 1,
                                                                  keywidth = 2,
