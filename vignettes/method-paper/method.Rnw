@@ -790,33 +790,6 @@ work.
   @
 \end{table*}
 
-\begin{figure*}
-  \centering
-  <<eval-2bgeoprof-setup,cache=TRUE,echo=FALSE,results='hide'>>=
-  @ 
-  <<eval-2bgeoprof,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  @
-  %%<<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
-  %%@
-  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer CBH
-    faceted by the source of the cloud base (radar-only or lidar-only; due to
-    their rare occurrence, combined radar--lidar base heights are not shown).
-    For description of the plot elements, see Figure~\ref{fig:quality-qa}.  Statistics of the
-    relationship between 2B-GEOPROF-LIDAR and ceilometer base heights are provided in
-    Table~\ref{tab:2bgeoprof}.}
-  \label{fig:eval-2b}
-\end{figure*}
-
-\begin{table*}
-  \caption{Statistics of the relationship between ceilometer and
-    2B-GEOPROF-LIDAR CBH; see Table~\ref{tab:quality-qa} for a
-    description of the statistics provided.}
-  \label{tab:2bgeoprof}
-  \centering
-  <<eval-2bgeoprof-tbl,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
-  @
-\end{table*}
-
 <<cbase-uncert-setup,cache=FALSE,echo=FALSE,results='hide'>>=
 data(cbase)
 @
@@ -880,6 +853,33 @@ data(cbase)
 %     calculated within each $2\degree\times 2\degree$ latitude--longitude box.}
 %   \label{fig:geo}
 % \end{figure*}
+
+\begin{figure*}
+  \centering
+  <<eval-2bgeoprof-setup,cache=TRUE,echo=FALSE,results='hide'>>=
+  @ 
+  <<eval-2bgeoprof,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+  %%<<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
+  %%@
+  \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer CBH
+    faceted by the source of the cloud base (radar-only or lidar-only; due to
+    their rare occurrence, combined radar--lidar base heights are not shown).
+    For description of the plot elements, see Figure~\ref{fig:quality-qa}.  Statistics of the
+    relationship between 2B-GEOPROF-LIDAR and ceilometer base heights are provided in
+    Table~\ref{tab:2bgeoprof}.}
+  \label{fig:eval-2b}
+\end{figure*}
+
+\begin{table*}
+  \caption{Statistics of the relationship between ceilometer and
+    2B-GEOPROF-LIDAR CBH; see Table~\ref{tab:quality-qa} for a
+    description of the statistics provided.}
+  \label{tab:2bgeoprof}
+  \centering
+  <<eval-2bgeoprof-tbl,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  @
+\end{table*}
 
 <<glorious-victory,cache=FALSE,echo=FALSE>>=
 @ 
