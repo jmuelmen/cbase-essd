@@ -444,22 +444,26 @@ following boundaries:
 \item geometric thickness $\Delta z$ of the lowest cloud layer, with boundaries
   at 0, 0.25, 0.45, 0.625, and 1~km (thickness greater than 1~km is accepted).
 \end{itemize}
+
 We can now consider the joint distribution of CALIOP and ceilometer cloud bases
-for each combination of the above variables.  (Base heights above ground are
-used to remove an intrinsic correlation due to terrain.)  Because of the viewing
-geometry, high CALIOP cloud bases tend to be overestimated where a higher layer
-obscures \comment{JQ}{but we excluded that possibility, didn't we?} a lower layer.  \commentjm{Isn't the actual reason a combination of
-  regression dilution at the extremes of the distribution and phase space
-  truncation at a physical boundary for low cloud bases?}  It is desirable to
-correct for this bias.  The options are no correction, a linear correction
-(which partially corrects for the high bias of high CALIOP base heights but
-introduces a counterbias at low CALIOP base heights), and a nonlinear correction
-that does not suffer from the counterbias at low CALIOP base heights.  Our
-choice for nonlinear correction is support-vector machine regression
-\citep[SVM][]{svm}.  The final choice of correction is based on the performance
-of the three options on the training sample after combination has been performed
-according to the next step of the algorithm
-(Section~\ref{sec:algorithm:combination}).
+for each combination of the above variables to derive the RMSE of each
+combination.  For this comparison, we use CBH above ground level (AGL); using
+CBH above mean sea level (MSL) would introduce an intrinsic correlation between
+satellite and ceilometer CBH due to the varying terrain height, which would lead
+to an unrealistically positive assessment.
+
+When calculating aggregate statistics such as the RMSE, a further consideration
+comes into play.  CBH above ground is positive-definite, which imposes a
+physical phase-space boundary.  Due to this boundary, the satellite CBH estimate
+is intrinsically biased high (negative excursions may be removed by the
+phase-space boundary, but positive excursions are not), and the bias decreases
+with increasing satellite CBH estimate (when true CBH is high, it is less likely
+that measurement error would lead to a negative AGL CBH).  Since this effect
+constitutes a bias rather than a random error, it cannot be eliminated by
+averaging over large sample sizes, but instead needs to be corrected for.  Since
+the effect is nonlinear in CBH, a nonlinear correction method is required; our
+choice of nonlinear bias correction is an $\epsilon$-regression support vector
+machine \citep[SVM][]{svm}.
 
 Following bias correction, the sample RMSE is calculated for each combination of
 $D$, $n$, and $\Delta z$.  The sample RMSE is taken as an estimate of the
@@ -503,21 +507,21 @@ correlations.  The expression
 yields acceptable results, as would be expected for highly correlated and fairly
 similar $\sigma_i$.  
 
-\comment{JQ}{I would prefer shifting this correction (the following paragraph)
-  to the local CALIOP base heights to the previous section where the data are
-  described}.  \commentjm{I'm not sure where best to put this; it's definitely
-  the most confusing part of the analysis.} One choice remains to be made,
-namely which of the bias correction methods described in
-Section~\ref{sec:algorithm:qual} to apply to the local cloud base heights before
-combination.  Combining the uncorrected local base heights result in a high bias
-(Figure~S1), as would be expected from the high bias on the constituent local
-CBH.  The linear correction, which reduces the high bias for high CBH but
-introduces a counterbias for low cloud base heights, leads to a low bias in the
-combined base height (Figure~S2), again as would be expected.  Among the
-correction methods investigated, the SVM-based correction results in the
-behavior closest to the 1-to-1 line (Figure~S3).  Based on this performance, we
-use the SVM-corrected local base heights as input to the combination step of the
-CBASE algorithm.
+% \comment{JQ}{I would prefer shifting this correction (the following paragraph)
+%   to the local CALIOP base heights to the previous section where the data are
+%   described}.  \commentjm{I'm not sure where best to put this; it's definitely
+%   the most confusing part of the analysis.} One choice remains to be made,
+% namely which of the bias correction methods described in
+% Section~\ref{sec:algorithm:qual} to apply to the local cloud base heights before
+% combination.  Combining the uncorrected local base heights result in a high bias
+% (Figure~S1), as would be expected from the high bias on the constituent local
+% CBH.  The linear correction, which reduces the high bias for high CBH but
+% introduces a counterbias for low cloud base heights, leads to a low bias in the
+% combined base height (Figure~S2), again as would be expected.  Among the
+% correction methods investigated, the SVM-based correction results in the
+% behavior closest to the 1-to-1 line (Figure~S3).  Based on this performance, we
+% use the SVM-corrected local base heights as input to the combination step of the
+% CBASE algorithm.
 
 \subsection{Evaluation of CBASE CBH and CBH errors}
 \label{sec:algorithm:eval}
