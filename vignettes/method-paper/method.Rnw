@@ -171,19 +171,31 @@ viewing geometry, it is also one of the most difficult cloud parameters to
 retrieve from satellite.
 
 Multiple methods have been proposed for satellite determination of the cloud
-base height.  \commentjm{VIIRS \commentjm{expand?} cloud-base temperature method: \cite{Zhu2014}}.  Results of
-evaluating CBH inferred from oxygen absorption bands and from MISR
-\commentjm{expand?} stereoscopic
-images will be reported in separate manuscripts \comment{JQ}{but still it would be good to sketch the idea
-here and provide a reference?}.  For analyses wishing to
-combine cloud base information with other cloud properties retrieved by A-Train
-satellites, these methods share the disadvantage that the required instruments
-are not part of the A-Train \commentjm{expand?}.  Methods that are applicable to A-Train satellites
-are based on MODIS \commentjm{expand?} cloud properties retrieved near cloud top and integrated
-along moist adiabats to determine the cloud thickness \citep{Meerkoetter2007} or
-on active remote sensing by CloudSat \citep[2B-GEOPROF][]{Marchand2008} or a
-combination of CloudSat and CALIOP \citep[2B-GEOPROF-LIDAR][]{Mace2014}.  Each of
-these has drawbacks.  The
+base height.  \cite{Zhu2014} have used Visible Infrared Imaging Radiometer Suite
+aboard the Suomi National Polar-orbiting Partnership satellite
+\citep[VIIRS][]{Cao2014} to estimate cloud base temperature (CBT) from the
+lowest cloud-top temperature within a cloud cluster; a reanalysis temperature
+profile can be used to convert CBT to CBH.  Using an empirical relationship
+between geometric and optical thickness, \cite{Fitch2016} have obtained CBH from
+VIIRS.  Cloud geometric thickness (and therefore CBH if the cloud top height is
+known) can be inferred from increased spectral absorption by O$_2$ within cloud
+due to multiple scattering \citep{Kokhanovsky2005} \commentjm{Odran, any POLDER
+  references we should cite?}.  Stereoscopic determination of
+the height of the most reflective layer \cite{Naud2005,Naud2007} in Multiangle
+Imaging Spectroradiometer data \citep[MISR][]{Diner1998} yields information on
+CBH, as the lowest layer heights within a cloud cluster may correspond to the
+base of a cloud seen from its side.  \commentjm{An evaluation of these CBH
+  techniques is in progress \citep{Boehm2017}.}
+
+For analyses wishing to combine cloud base information with other cloud
+properties retrieved by A-Train satellites, these methods share the disadvantage
+that the required instruments are not part of the A-Train.  Methods that are
+applicable to A-Train satellites are based on Moderate Resolution Imaging
+Spectroradiometer \citep[MODIS][]{Platnick2017} cloud properties retrieved near
+cloud top and integrated along moist adiabats to determine the cloud thickness
+\citep{Meerkoetter2007} or on active remote sensing by CloudSat
+\citep[2B-GEOPROF][]{Marchand2008} or a combination of CloudSat and CALIOP
+\citep[2B-GEOPROF-LIDAR][]{Mace2014}.  Each of these has drawbacks.  The
 MODIS-derived cloud thickness assumes adiabatic cloud profiles and therefore
 cannot be used to constrain subadiabaticity; the use of ancillary temperature
 profile estimates may also be problematic in many cases.  CloudSat misses the
