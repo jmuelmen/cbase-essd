@@ -77,7 +77,7 @@ vis.mean <- function(df, base_size) {
         ## ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = log10(n))) +
         ggplot2::geom_raster() +
         plotutils::geom_world_polygon() +
-        plotutils::scale_x_geo(facet = TRUE) +
+        plotutils::scale_x_geo(facet = FALSE) +
         plotutils::scale_y_geo() +
         ggplot2::coord_fixed(1) +
         ## ggplot2::scale_fill_distiller(palette = "Spectral") +
