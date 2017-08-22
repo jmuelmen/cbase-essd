@@ -96,7 +96,7 @@ read_chunk("../vis.R")
 
 %% \linenumbers
 
-\title{Using CALIOP to estimate the base height of optically thick clouds}
+\title{Using CALIOP to estimate cloud-field base height and its uncertainty}
 
 
 % \Author[affil]{given_name}{surname}
@@ -141,7 +141,7 @@ read_chunk("../vis.R")
 
 
 \begin{abstract}
-  A measurement technique is presented that uses attenuated backscatter profiles
+  A technique is presented that uses attenuated backscatter profiles
   from the CALIOP satellite lidar to estimate cloud base heights.  Even when
   clouds are thick enough to attenuate the lidar beam (optical thickness
   $\tau \gtrsim 5$), the technique provides cloud base heights by treating the
@@ -171,7 +171,7 @@ viewing geometry, it is also one of the most difficult cloud parameters to
 retrieve from satellite.
 
 Multiple methods have been proposed for satellite determination of the cloud
-base height.  \cite{Zhu2014} have used Visible Infrared Imaging Radiometer Suite
+base height.  \cite{Zhu2014} have used the Visible Infrared Imaging Radiometer Suite
 aboard the Suomi National Polar-orbiting Partnership satellite
 \citep[VIIRS][]{Cao2014} to estimate cloud base temperature (CBT) from the
 lowest cloud-top temperature within a cloud cluster; a reanalysis temperature
@@ -181,7 +181,7 @@ VIIRS.  Cloud geometric thickness (and therefore CBH if the cloud top height is
 known) can be inferred from increased spectral absorption by O$_2$ within cloud
 due to multiple scattering \citep{Kokhanovsky2005} \commentjm{Odran, any POLDER
   references we should cite?}.  Stereoscopic determination of
-the height of the most reflective layer \cite{Naud2005,Naud2007} in Multiangle
+the height of the most reflective layer \citep{Naud2005,Naud2007} in Multiangle
 Imaging Spectroradiometer data \citep[MISR][]{Diner1998} yields information on
 CBH, as the lowest layer heights within a cloud cluster may correspond to the
 base of a cloud seen from its side.  \commentjm{An evaluation of these CBH
@@ -220,7 +220,9 @@ ceilometers.
 The cloud base of interest in this analysis is the base of the lowest cloud in
 each column. Even if it CALIOP can also detect the base heights of other layers
 in multilayer situations, it is the base height of the lowest cloud that is of
-largest interest for many applications. Also, the central assumption of
+largest interest for many applications (e.g., surface radiation
+estimates). {\bf I don't think the following is true, since also for frontal
+clouds the base is well-defined}: Also, the central assumption of
 horizontal homogeneity at mesoscales of the cloud base height is valid only for
 clouds that are rooted in the planetary boundary layer.
 
@@ -241,7 +243,7 @@ CBH is determined from the satellite data.
 
 \subsection{CALIOP VFM}
 
-The input satellite data to our analysis is the Cloud-Aerosol Lidar with
+The input satellite data to our analysis are from the Cloud-Aerosol Lidar with
 Orthogoncal Polarization \cite[CALIOP][]{Winker2007} on board the Cloud-Aerosol Lidar and Infrared Pathfinder
 Satellite Observation (CALIPSO) satellite that is part of the A-Train
 satellite constellation \citep{Stephens2002} on a
@@ -304,7 +306,7 @@ ourselves to METARs from the contiguous continental United States.
 
 There are \Sexpr{nrow(df.asos)} %
 stations throughout the continental USA that lie within 100~km of a CALIOP
-footprint.  In normal operation, the time resolution of CBH reports is 1~h, but
+footprint{\bf for the repetitive ground-track of the CALIPSO orbit (?)}.  In normal operation, the time resolution of CBH reports is 1~h, but
 during rapidly changing conditions, more frequent updates may be provided; for
 comparison to satellite CBH, the ceilometer observation closest in time to the
 satellite overpass is used, provided that the time difference is less than 1~h.
@@ -326,7 +328,7 @@ The CBASE algorithm and evaluation proceed in four steps:
     CBH} in the sense that it is local to the CALIOP profile.
 \item Using ground-based ceilometer data, we determine quality of cloud base
   height depending on a number of properties of the CALIOP profile.  Assuming
-  those properties suffice to determine the quality of the CBH determination, we
+  those properties suffice to determine the quality of the CBH estimate, we
   can then predict the quality of a cloud base as a function of those factors.
   The quality metric we use is the root mean square error (RMSE); the category
   RMSE determined from comparison to ceilometer CBH then serves as the predicted
@@ -398,7 +400,7 @@ Therefore, we expect that the CBH quality will vary between
 different cloud profiles.  Measuring the quality as a function of various
 properties of the CALIOP column may allow us to predict the quality of other
 columns with the same combination of properties.  The properties that are easily
-accessible in a single column and have the greatest effect on quality are:
+accessible in a single column and may have the substantial effects on quality are:
 \begin{itemize}
 \item horizontal distance $D$ from the ceilometer,
 \item number of column cloud bases within horizontal distance $D_\text{max}$,
@@ -422,14 +424,15 @@ following classes of CALIOP profiles are discarded:
   cloud layer (indicating that although the surface may generate a detectable
   return, the lidar is sufficiently attenuated that the cloud base, which
   scatters less strongly than the surface, is unreliable),
-\item minimum CALIOP cloud detection horizontal averaging distance within the
+\item {\bf this condition sounds odd given that in general we assume that CBH
+is homogeneous. Is it necessary?: }minimum CALIOP cloud detection horizontal averaging distance within the
   lowest cloud layer greater than 1~km (indicating that, although average cloud
   properties are known at the averaging length scale, those properties may not
   be representative of the particular CALIOP footprint under consideration), or
 \item thermodynamic phase of the lowest layer determined to be other than liquid
   by the CALIOP VFM algorithm (the reason for this is that not enough such
   columns exist to determine the RMSE reliably in each of the categories defined
-  below).
+  below) {\bf könnte man die Bedingung denn auch weglassen?}.
 \end{itemize}
 
 The remaining variables are discretized roughly into quintiles of their
@@ -440,9 +443,11 @@ following boundaries:
   75, 88, and 100~km (distance greater than 100~km is discarded),
 \item number of CALIOP columns $n$ with a cloud layer and a surface return
   within 100~km horizontal distance from the ceilometer, with boundaries at 0,
-  175, 250, 325, 400 (multiplicities greater than 400 are accepted),
+  175, 250, 325, 400 (multiplicities greater than 400 are accepted {\bf oder
+  stattdessen "325, 400, $\infty$"?}),
 \item geometric thickness $\Delta z$ of the lowest cloud layer, with boundaries
-  at 0, 0.25, 0.45, 0.625, and 1~km (thickness greater than 1~km is accepted).
+  at 0, 0.25, 0.45, 0.625, and 1~km (thickness greater than 1~km is accepted
+  {\bf dito?}).
 \end{itemize}
 
 We can now consider the joint distribution of CALIOP and ceilometer cloud bases
@@ -533,7 +538,7 @@ addition to the estimated CBH $z$ and the estimated CBH uncertainty $\sigma$,
 determined according to the procedure described in the previous section.
 Figure~\ref{fig:eval} shows the joint distribution of CBASE and
 ceilometer-observed CBH.  (The difference between this figure and Figure~S3 is
-that the underlying data is the validation, rather than the training, dataset.)
+that the underlying data is the validation (2007), rather than the training (2008), dataset.)
 
 For satellite-derived measurements of the CBH $z$ that are unbiased with respect
 to the ceilometer-observed CBH $\hat{z}$ and have correctly estimated
@@ -570,7 +575,8 @@ typical CBH uncertainty of several hundred m, the method is unlikely to be
 applied to stratocumulus cloud; nevertheless, a marine-cloud validation dataset
 would be desirable.  For the present work, no suitable marine-cloud evaluation
 dataset was available; ship-based CBH observations were either based on human
-observers (unknown quality) or available only over a limited duration at limited
+observers with coarse vertical resolution and a precision that is difficult to
+characterize; or available only over a limited duration at limited
 locations, resulting in a severely statistics-limited set of coincidences with
 the CALIOP track.
 
@@ -740,10 +746,13 @@ work.
   \centering
   <<combo-plot,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
-  \caption{Scatter plot of CBASE versus ceilometer CBH; for
+  \caption{Scatter plot of CBASE versus ceilometer CBH {\bf for all data over
+  the CONUS available for 2007 (?)}; for
     description of the plot elements, see Figure~\ref{fig:quality-qa}.  The
     linear fit has slope \Sexpr{res$stats$slope * 1e-3} and intercept
-    $\Sexpr{res$stats$icpt}$~m.}
+    $\Sexpr{res$stats$icpt}$~m {\bf kann man den auf 1\,m runden?}. {\bf was
+  ist mit Dunkelblau in der Farbskala, und auch hier: warum nicht beide Achsen
+  in m bzw. km?}}
   \label{fig:eval}
 \end{figure*}
 
@@ -753,8 +762,8 @@ work.
   @
   \caption{Distribution function of cloud base error divided by predicted
     uncertainty; for the ideal case of unbiased CBH and unbiased
-    uncertainty, the distribution would be gaussian with zero mean and unit
-    standard deviation.  The superimposed least-squares gaussian fit (blue line)
+    uncertainty, the distribution would be Gaussian with zero mean and unit
+    standard deviation.  The superimposed least-squares Gaussian fit (blue line)
     has mean \Sexpr{with(combo, mean((ceilo - pred.ceilo) / pred.rmse))} and
     standard deviation \Sexpr{with(combo, sd((ceilo - pred.ceilo) /
       pred.rmse))}.}
@@ -801,7 +810,8 @@ data(cbase)
   @
   \caption{Geographic distribution of mean CBH above ground
     level.  Statistics are calculated within each $5\degree\times 5\degree$
-    latitude--longitude box, and separately for CALIOP daytime and nighttime
+    latitude--longitude box, and separately for CALIOP daytime (top) and
+  nighttime (bottom)
     overpasses.}
   \label{fig:geo}
 \end{figure*}
