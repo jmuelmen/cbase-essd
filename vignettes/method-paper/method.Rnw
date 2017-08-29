@@ -709,8 +709,8 @@ work.
 
 \begin{figure*}
   \centering
-  <<eval-qual,dev='tikz',fig.width=7,fig.height=3.2,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
-  @
+%  <<eval-qual,dev='tikz',fig.width=7,fig.height=3.2,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
+%  @
   \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
     faceted by the CALIOP VFM QA flag.  Color indicates the number of CALIOP
     profiles within each bin of ceilometer and CALIOP CBH; black
@@ -797,12 +797,24 @@ data(cbase)
 \begin{figure*}
   \centering
   <<cbase-base,dev='tikz',fig.width=7,fig.height=7.2,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  vis.mean(cbase, 14)
+  vis.mean(cbase %>% filter(dist == 40), 14)
   @
   \caption{Geographic distribution of mean CBH above ground
     level.  Statistics are calculated within each $5\degree\times 5\degree$
     latitude--longitude box, and separately for CALIOP daytime and nighttime
-    overpasses.}
+    overpasses ($D_\text{max} = 40$ km).}
+  \label{fig:geo}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  <<cbase-base-100,dev='tikz',fig.width=7,fig.height=7.2,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  vis.mean(cbase %>% filter(dist == 100), 14)
+  @
+  \caption{Geographic distribution of mean CBH above ground
+    level.  Statistics are calculated within each $5\degree\times 5\degree$
+    latitude--longitude box, and separately for CALIOP daytime and nighttime
+    overpasses ($D_\text{max} = 100$ km).}
   \label{fig:geo}
 \end{figure*}
 
@@ -820,6 +832,7 @@ data(cbase)
   \centering
   <<cbase-rmse,dev='tikz',fig.width=3,fig.height=2.5,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
   cbase %>% 
+  filter(dist == 40) %>%
   ggplot(aes(x = pred.rmse, y = ..density.., fill = daynight, color = daynight)) + 
   geom_density(alpha = 0.6, adjust = 5) + 
   scale_fill_grey("", start = 0.7, end = 0.2) + 
@@ -828,19 +841,48 @@ data(cbase)
        y = "Density (m$^{-1}$)") +
   theme_bw() + theme(legend.position = "bottom")
   @
-  \caption{Distribution of predicted CBH uncertainty.}
+  \caption{Distribution of predicted CBH uncertainty ($D_\text{max} = 40$ km).}
+  \label{fig:uncertainty}
+\end{figure}
+
+\begin{figure}
+  \centering
+  <<cbase-rmse-100,dev='tikz',fig.width=3,fig.height=2.5,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  cbase %>% 
+  filter(dist == 100) %>%
+  ggplot(aes(x = pred.rmse, y = ..density.., fill = daynight, color = daynight)) + 
+  geom_density(alpha = 0.6, adjust = 5) + 
+  scale_fill_grey("", start = 0.7, end = 0.2) + 
+  scale_color_grey("", start = 0.7, end = 0.2) + 
+  labs(x = "$\\sigma$ (m)",
+       y = "Density (m$^{-1}$)") +
+  theme_bw() + theme(legend.position = "bottom")
+  @
+  \caption{Distribution of predicted CBH uncertainty ($D_\text{max} = 100$ km).}
   \label{fig:uncertainty}
 \end{figure}
 
 \begin{figure*}
   \centering
   <<cbase-uncert-quantiles,dev='tikz',fig.width=7,fig.height=9,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  vis.quantiles(cbase, 14)
+  vis.quantiles(cbase %>% filter(dist == 40), 14)
   @
   \caption{Cloud base uncertainty quantiles.  Statistics are calculated within
     each $5\degree\times 5\degree$ latitude--longitude box.  The left (right)
     column shows statistics of daytime (nighttime) retrievals; daytime and
-    nighttime are defined by the CALIOP VFM product.}
+    nighttime are defined by the CALIOP VFM product ($D_\text{max} = 40$ km).}
+  \label{fig:uncert-quantiles}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  <<cbase-uncert-quantiles-100,dev='tikz',fig.width=7,fig.height=9,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  vis.quantiles(cbase %>% filter(dist == 100), 14)
+  @
+  \caption{Cloud base uncertainty quantiles.  Statistics are calculated within
+    each $5\degree\times 5\degree$ latitude--longitude box.  The left (right)
+    column shows statistics of daytime (nighttime) retrievals; daytime and
+    nighttime are defined by the CALIOP VFM product ($D_\text{max} = 100$ km).}
   \label{fig:uncert-quantiles}
 \end{figure*}
 
