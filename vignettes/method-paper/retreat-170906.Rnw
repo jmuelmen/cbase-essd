@@ -1,0 +1,239 @@
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[10pt,notes=all,aspectratio=1610]{beamer}
+\mode<presentation>
+\usepackage{alltt}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xifthen}
+%%\usepackage{calc}
+\usepackage[percent]{overpic}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{pgfpages}
+\usepackage{adjustbox}
+
+\newcommand{\omegaf}{\ensuremath{\omega_{500}}}
+\renewcommand\d[2]{\ensuremath{\frac{d#1}{d#2}}}
+\newcommand\D[2]{\ensuremath{\frac{D#1}{D#2}}}
+\newcommand\dd[2]{\ensuremath{\frac{\partial#1}{\partial#2}}}
+\newcommand\ddp[2]{\ensuremath{\partial#1/\partial#2}}
+\newcommand\DDP[2]{\ensuremath{D#1/D#2}}
+\newcommand\erfaci{ERF$_\text{aci}$}
+\newcommand\erfaer{ERF$_\text{aer}$}
+\newcommand\cor{\ensuremath{\text{cor}}}
+
+%%\setbeameroption{second mode text on second screen=right}
+%%\setbeameroption{show notes on second screen}
+
+\renewcommand{\sfdefault}{pfu}
+\newcommand{\degree}{\ensuremath{^\circ}}
+
+\title{Using CALIOP to estimate the base height of cloud fields}
+\author{Johannes M\"ulmenst\"adt, Odran Sourdeval, Tristan L'Ecuyer,
+  Christoph B\"ohm, Johannes Quaas}
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+library(plyr)
+library(dplyr)
+library(ggplot2)
+library(cbasetools)
+## set global chunk options
+opts_chunk$set(fig.path='figure/retreat-170906-', cache.path='cache/retreat-170906-', 
+               fig.align='center', fig.show='hold', cache = TRUE, warning = FALSE, par=TRUE)
+## $
+## I use = but I can replace it with <-; set code/output width to be 68
+options(formatR.arrow=TRUE, width=68, digits=2)
+## evaluation code chunks
+read_chunk("../eval.R")
+## visualization code chunks
+read_chunk("../vis.R")
+@
+
+<<eval-setup,cache=TRUE,results='hide',echo=FALSE>>=
+@ 
+<<eval-tune-setup,cache=TRUE,results='hide',echo=FALSE>>=
+@ 
+<<eval-asos-setup,cache=TRUE,results='hide',echo=FALSE>>=
+@ 
+
+\maketitle
+
+\begin{frame}{Cloud field base height from CALIOP}
+  \centering
+  \includegraphics[width=0.5\linewidth,keepaspectratio=true]{CloudFieldCALIOP.pdf}
+\end{frame}
+
+\begin{frame}{Algorithm}
+  \begin{enumerate}
+  \item We determine the CBH from all CALIOP profiles where the
+    surface generates a return, indicating that the lidar is not completely
+    attenuated by cloud.  We refer to this as the \textit{local
+      CBH} in the sense that it is local to the CALIOP profile.
+  \item Using ground-based ceilometer data, we determine quality of cloud base
+    height depending on a number of properties of the CALIOP profile.  Assuming
+    those properties suffice to determine the quality of the CBH determination, we
+    can then predict the quality of a cloud base as a function of those factors.
+    The quality metric we use is the root mean square error (RMSE); the category
+    RMSE determined from comparison to ceilometer CBH then serves as the predicted
+    CBH uncertainty.  In the language of machine learning, we refer to this step
+    as \textit{training} the algorithm on the ceilometer data to predict CBH and
+    CBH uncertainty.
+  \item Based on the predicted quality of each local cloud base, we either reject
+    the local cloud base or combine it with other local cloud bases within a
+    distance $D_\text{max}$ of the point of interest (POI) to arrive at an 
+    estimate of the CBH and its uncertainty at the POI.
+  \item Using a statistically independent validation dataset, we verify that the
+    predicted CBH and its uncertainty are correct.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{ASOS ceilometers}
+  \centering
+  <<eval-asos,dev='tikz',fig.width=7,fig.height=5,out.width='0.9\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
+  @
+\end{frame}
+
+\begin{frame}[fragile]{Example of a predictive variable: QA flag}
+  \centering
+  <<eval-qual,dev='tikz',fig.width=7,fig.height=3.2,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
+  @
+\end{frame}
+
+% \begin{table}{Example of a predictive variable: QA flag}
+%   \centering
+%   {Statistics of the relationship between ceilometer and CALIOP cloud
+%     base height faceted by CALIOP VFM QA flag.  Shown are the number of CALIOP
+%     profiles $n$, the product-moment correlation coefficient $r$ between CALIOP
+%     and ceilometer CBH, the RMSE, bias, and linear least-squares
+%     fit parameters.}
+%   \label{tab:quality-qa}
+%   <<combo-tbl-rmseclass,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%   @
+% \end{table}
+
+\begin{frame}[fragile]{Scatter plot of CBASE versus ceilometer CBH}
+  \centering
+  <<combo-plot,dev='tikz',fig.width=7,fig.height=5,out.width='0.9\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+  Linear fit has slope \Sexpr{res$stats$slope * 1e-3} and intercept
+    $\Sexpr{res$stats$icpt}$~m.
+\end{frame}
+
+\begin{frame}[fragile]{Cloud base error ``pull''}
+  \centering
+  <<combo-eval-pull,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  @
+  {Distribution function of cloud base error divided by predicted
+    uncertainty; for the ideal case of unbiased CBH and unbiased
+    uncertainty, the distribution would be gaussian with zero mean and unit
+    standard deviation.  The superimposed least-squares gaussian fit (blue line)
+    has mean \Sexpr{with(combo, mean((ceilo - pred.ceilo) / pred.rmse))} and
+    standard deviation \Sexpr{with(combo, sd((ceilo - pred.ceilo) /
+      pred.rmse))}.}
+  \label{fig:pull}
+\end{frame}
+
+% \begin{frame}[fragile]{}
+%   \centering
+%   <<combo-eval-rmse,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+%   @
+%   {Distribution of predicted CBH uncertainty.}
+%   \label{fig:uncertainty}
+% \end{figure}
+
+%% \begin{figure*}
+%%   \centering
+%%   <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,results='hide',echo=FALSE>>=
+%%   @
+%%   {Scatter plot of CBASE versus ceilometer CBH for
+%%     different classes of predicted uncertainty}
+%%   \label{fig:rmseclass}
+%% \end{figure*}
+
+% \begin{table}[t]
+%   \centering
+%   {CBASE cloud base statistics by decile of predicted uncertainty; see
+%     Table~\ref{tab:quality-qa} for a description of the 
+%     statistics provided.}
+%   \label{tab:rmseclass}
+%   <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,results='hide',echo=FALSE>>=
+%   @
+%   <<combo-tbl-rmseclass,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+%   @
+% \end{table}
+
+<<cbase-uncert-setup,cache=FALSE,echo=FALSE,results='hide'>>=
+data(cbase)
+@
+
+\begin{frame}[fragile]{CBH above ground level}
+  \centering
+  <<cbase-base,dev='tikz',fig.width=7,fig.height=7.2,out.width='0.6\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  vis.mean(cbase %>% filter(dist == 40), 18)
+  @
+\end{frame}
+
+% \begin{figure*}
+%   \centering
+%   <<cbase-base-msl,dev='tikz',fig.width=7,fig.height=7.2,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%   vis.mean(mutate(cbase, pred.ceilo = pred.ceilo.msl), 14)
+%   @
+%   {Geographic distribution of mean CBH above sea level as a check that
+%     the variable is correctly calculated}
+%   \label{fig:geomsl}
+% \end{figure*}
+
+\begin{frame}[fragile]{Predicted CBH uncertainty}
+  \centering
+  <<cbase-rmse,dev='tikz',fig.width=3,fig.height=2.5,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  cbase %>% 
+  filter(dist == 40) %>%
+  ggplot(aes(x = pred.rmse, y = ..density.., fill = daynight, color = daynight)) + 
+  geom_density(alpha = 0.6, adjust = 5) + 
+  scale_fill_grey("", start = 0.7, end = 0.2) + 
+  scale_color_grey("", start = 0.7, end = 0.2) + 
+  labs(x = "$\\sigma$ (m)",
+       y = "Density (m$^{-1}$)") +
+  theme_bw() + theme(legend.position = "bottom")
+  @
+\end{frame}
+
+\begin{frame}[fragile]{Predicted CBH uncertainty quantiles}
+  \centering
+  <<cbase-uncert-quantiles,dev='tikz',fig.width=7,fig.height=5,out.width='0.7\\textheight',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  vis.quantiles(cbase %>% filter(dist == 40), 14)
+  @
+\end{frame}
+
+% \begin{figure*}
+%   \centering
+%   <<cbase-uncert-cdf,dev='tikz',fig.width=7,fig.height=9.5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+%   vis.n(cbase, 14)
+%   @
+%   {Cumulative distribution of cloud base uncertainty.  Statistics are
+%     calculated within each $2\degree\times 2\degree$ latitude--longitude box.}
+%   \label{fig:geo}
+% \end{figure*}
+
+\begin{frame}[fragile]{2B-GEOPROF-LIDAR versus ceilometer CBH}
+  \centering
+  <<eval-2bgeoprof-setup,cache=TRUE,echo=FALSE,results='hide'>>=
+  @ 
+  <<eval-2bgeoprof,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  @
+  %%<<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
+  %%@
+  \centering
+  <<eval-2bgeoprof-tbl,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  @
+\end{frame}
+
+<<glorious-victory,cache=FALSE,echo=FALSE>>=
+@ 
+
+\end{document}
