@@ -311,7 +311,7 @@ if (val.svm) {
     ddf <- tune.cbase.lm(df)
 }
 dddf <- correct.cbase.lm(df.val, ddf)
-combo <- cbase.combine(dddf)
+combo <- cbase.combine.station(dddf)
 gc()
 
 ## ---- eval-asos-setup --------------------
