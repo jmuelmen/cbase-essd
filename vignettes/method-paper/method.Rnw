@@ -173,7 +173,7 @@ retrieve from satellite.
 Multiple methods have been proposed for satellite determination of the cloud
 base height.  \cite{Zhu2014} have used Visible Infrared Imaging Radiometer Suite
 aboard the Suomi National Polar-orbiting Partnership satellite
-\citep[VIIRS][]{Cao2014} to estimate cloud base temperature (CBT) from the
+\citep[VIIRS,][]{Cao2014} to estimate cloud base temperature (CBT) from the
 lowest cloud-top temperature within a cloud cluster; a reanalysis temperature
 profile can be used to convert CBT to CBH.  Using an empirical relationship
 between geometric and optical thickness, \cite{Fitch2016} have obtained CBH from
@@ -182,7 +182,7 @@ known) can be inferred from increased spectral absorption by O$_2$ within cloud
 due to multiple scattering \citep{Kokhanovsky2005} \commentjm{Odran, any POLDER
   references we should cite?}.  Stereoscopic determination of
 the height of the most reflective layer \cite{Naud2005,Naud2007} in Multiangle
-Imaging Spectroradiometer data \citep[MISR][]{Diner1998} yields information on
+Imaging Spectroradiometer data \citep[MISR,][]{Diner1998} yields information on
 CBH, as the lowest layer heights within a cloud cluster may correspond to the
 base of a cloud seen from its side.  \commentjm{An evaluation of these CBH
   techniques is in progress \citep{Boehm2017}.}
@@ -191,17 +191,17 @@ For analyses wishing to combine cloud base information with other cloud
 properties retrieved by A-Train satellites, these methods share the disadvantage
 that the required instruments are not part of the A-Train.  Methods that are
 applicable to A-Train satellites are based on Moderate Resolution Imaging
-Spectroradiometer \citep[MODIS][]{Platnick2017} cloud properties retrieved near
+Spectroradiometer \citep[MODIS,][]{Platnick2017} cloud properties retrieved near
 cloud top and integrated along moist adiabats to determine the cloud thickness
 \citep{Meerkoetter2007} or on active remote sensing by CloudSat
-\citep[2B-GEOPROF][]{Marchand2008} or a combination of CloudSat and CALIOP
-\citep[2B-GEOPROF-LIDAR][]{Mace2014}.  Each of these has drawbacks.  The
+\citep[2B-GEOPROF,][]{Marchand2008} or a combination of CloudSat and CALIOP
+\citep[2B-GEOPROF-LIDAR,][]{Mace2014}.  Each of these has drawbacks.  The
 MODIS-derived cloud thickness assumes adiabatic cloud profiles and therefore
 cannot be used to constrain subadiabaticity; the use of ancillary temperature
 profile estimates may also be problematic in many cases.  CloudSat misses the
 small droplets at the base of nonprecipitating clouds, and retrievals are
 further degraded in the ground clutter region.  CALIOP detects the bases of only
-the thinnest clouds \citep[$\tau < 5$][]{Mace2014}; frequently, it is desirable
+the thinnest clouds \citep[$\tau < 5$,][]{Mace2014}; frequently, it is desirable
 to know the base height of thick clouds as well.
 
 In this paper, we revisit the CALIOP cloud base determination.  This relies on
@@ -247,7 +247,7 @@ Satellite Observation (CALIPSO) satellite that is part of the A-Train
 satellite constellation \citep{Stephens2002} on a
 sun-synchronous low-Earth orbit with equator crossings at approximately 1330 hours local
 time. The cloud-base product relies on the retrieved vertical feature mask
-\citep[VFM][]{vaughan2002}.  For each CALIOP lidar backscatter profile, the VFM identifies features
+\citep[VFM,][]{vaughan2002}.  For each CALIOP lidar backscatter profile, the VFM identifies features
 such as clear air, cloud, aerosol, or planetary surface; this is termed the ``feature
 type''.  (When the lidar beam is completely attenuated, this is reported as a
 feature type.)  In addition to the feature type, the VFM records the degree of
@@ -281,7 +281,7 @@ measurements of CBH are required.  The source of these ``true'' CBH in this work
 is ground-based cloud observations at airports.  Weather observations at
 airports are disseminated worldwide in aviation routine and special weather
 reports \citep[METARs and SPECIs, collectively referred to as METARs
-henceforth][]{metar}.  Apart from providing airport weather information for
+henceforth,][]{metar}.  Apart from providing airport weather information for
 aviation, METAR data is used for assimilation into numerical weather prediction
 (NWP) models \citep[e.g.,][]{Benjamin2016, Dee2011}.  In many locations, CBH
 reported in METARs is measured by a ceilometer over a period of time (tens of
@@ -293,7 +293,7 @@ data for the present analysis was downloaded from the Weather Underground
 archive \citep{wunderground}.
 
 In the United States, CBH is mostly derived automatically by laser ceilometers
-that form part of Automated Surface Observing Stations \citep[ASOS][]{asos}
+that form part of Automated Surface Observing Stations \citep[ASOS,][]{asos}
 system; see, e.g., \cite{An2017,Ikeda2017} for recent examples of ASOS
 application to deriving cloud climatologies or NWP model evaluation.  In other
 parts of the world, the cloud bases may be estimated by human observers or may
@@ -373,7 +373,7 @@ within 3~km of the surface.  This height limit is imposed because a subset of
 the ceilometers has a range limit of 12500~feet, and all ceilometers report
 ceilings above 10000~feet with reduced granularity (500~feet); the 3~km
 threshold is safely below these ceilometer limitations and mimics the
-International Satellite Cloud Climatology Project \citep[ISCCP][]{Rossow1999}
+International Satellite Cloud Climatology Project \citep[ISCCP,][]{Rossow1999}
 definition of low cloud ($p > 680\text{ hPa}$).
 
 The following metrics, which are useful for a qualitative assessment of the
@@ -463,7 +463,7 @@ constitutes a bias rather than a random error, it cannot be eliminated by
 averaging over large sample sizes, but instead needs to be corrected for.  Since
 the effect is nonlinear in CBH, a nonlinear correction method is required; our
 choice of nonlinear bias correction is an $\epsilon$-regression support vector
-machine \citep[SVM][]{svm}.
+machine \citep[SVM,][]{svm}.
 
 Following bias correction, the sample RMSE is calculated for each combination of
 $D$, $n$, and $\Delta z$.  The sample RMSE is taken as an estimate of the
@@ -709,8 +709,8 @@ work.
 
 \begin{figure*}
   \centering
-%  <<eval-qual,dev='tikz',fig.width=7,fig.height=3.2,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
-%  @
+  <<eval-qual,dev='tikz',fig.width=7,fig.height=3.2,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
+  @
   \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
     faceted by the CALIOP VFM QA flag.  Color indicates the number of CALIOP
     profiles within each bin of ceilometer and CALIOP CBH; black
@@ -902,8 +902,8 @@ data(cbase)
   @ 
   <<eval-2bgeoprof,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
   @
-  %%<<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
-  %%@
+  <<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
+  @
   \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer CBH
     faceted by the source of the cloud base (radar-only or lidar-only; due to
     their rare occurrence, combined radar--lidar base heights are not shown).
