@@ -143,14 +143,17 @@ vis.diff <- function(df, base_size) {
 #' uncertainties (quantiles)
 #' 
 #' @param df data.frame.  Result of \code{bases.cbase()}
+#' @param base_size Font base size passed to ggplot2::theme_bw()
+#' @param rmse.quantiles Quantiles of the uncertainty to be displayed
 #' @return NULL
 #' @export
-vis.quantiles <- function(df, base_size) {
+vis.quantiles <- function(df, base_size,
+                          rmse.quantiles = c(0.01, 0.1, 0.25, 0.5, 0.9)) {
     df %>%
         plotutils::discretize(lon, seq(-180, 180, 5)) %>%
         plotutils::discretize(lat, seq(-90, 90, 5)) %>%
         plyr::ddply(~ lon + lat + daynight, function(df) {
-            quantile(df$pred.rmse, c(0.01, 0.1, 0.25, 0.5, 0.9))
+            quantile(df$pred.rmse, rmse.quantiles)
         }) %>%
         tidyr::gather(quantile, rmse, dplyr::matches("%")) %>%
         dplyr::mutate(quantile = gsub("%", "\\\\%", quantile)) %>%

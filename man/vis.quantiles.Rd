@@ -5,10 +5,14 @@
 \title{Visualization of geographical distribution of cloud-base
 uncertainties (quantiles)}
 \usage{
-vis.quantiles(df, base_size)
+vis.quantiles(df, base_size, rmse.quantiles = c(0.01, 0.1, 0.25, 0.5, 0.9))
 }
 \arguments{
 \item{df}{data.frame.  Result of \code{bases.cbase()}}
+
+\item{base_size}{Font base size passed to ggplot2::theme_bw()}
+
+\item{rmse.quantiles}{Quantiles of the uncertainty to be displayed}
 }
 \description{
 Visualization of geographical distribution of cloud-base

@@ -206,7 +206,7 @@ data(cbase)
 \begin{frame}[fragile]{Predicted CBH uncertainty quantiles}
   \centering
   <<cbase-uncert-quantiles,dev='tikz',fig.width=7,fig.height=5,out.width='0.7\\textheight',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
-  vis.quantiles(cbase %>% filter(dist == 40), 14)
+  vis.quantiles(cbase %>% filter(dist == 40), 14, c(0.01, 0.1))
   @
 \end{frame}
 
