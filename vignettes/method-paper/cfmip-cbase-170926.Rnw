@@ -1,3 +1,4 @@
+\pdfobjcompresslevel=0
 \PassOptionsToPackage{table}{xcolor}
 \documentclass[final,t,12pt]{beamer}\usepackage[]{graphicx}\usepackage[]{color}
 %% maxwidth is the original width if it is less than linewidth
