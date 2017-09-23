@@ -49,7 +49,7 @@ vis.geo <- function(df) {
 #' @param df data.frame.  Result of \code{bases.cbase()}
 #' @return NULL
 #' @export
-vis.mean <- function(df, base_size) {
+vis.mean <- function(df, base_size, portrait = TRUE) {
     base.bins <- c(seq(250, 1050, 100), seq(1350, 2250, 300))
     df %>%
         ## dplyr::mutate(date = as.POSIXct("1993-01-01 00:00:00") + time,
@@ -77,7 +77,7 @@ vis.mean <- function(df, base_size) {
         ## ggplot2::ggplot(ggplot2::aes(x = lon, y = lat, fill = log10(n))) +
         ggplot2::geom_raster() +
         plotutils::geom_world_polygon() +
-        plotutils::scale_x_geo(facet = FALSE) +
+        plotutils::scale_x_geo(facet = !portrait) +
         plotutils::scale_y_geo() +
         ggplot2::coord_fixed(1) +
         ## ggplot2::scale_fill_distiller(palette = "Spectral") +
@@ -89,8 +89,9 @@ vis.mean <- function(df, base_size) {
                                                                  keywidth = 2,
                                                                  label.hjust = 0.5,
                                                                  label.position = "bottom")) +
-        ggplot2::facet_grid(# season
-                     daynight ~ .) +
+        (if (portrait)
+             ggplot2::facet_grid(daynight ~ .)
+         else ggplot2::facet_grid(. ~ daynight)) +
         ggplot2::theme_bw(base_size) + ggplot2::theme(legend.position = "bottom")
     
 }
