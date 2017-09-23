@@ -329,11 +329,11 @@ ggplot(df.asos, aes(x = lon, y = lat, col = min.dist, size = n)) +
     borders("state") +
     scale_size("$N$", trans = "identity", range = c(0.05, 2),
                guide = ggplot2::guide_legend(title.vjust = 0.5)) +
-    scale_color_distiller("$\\min(D)$ (km)", palette = "Blues",
+    scale_color_distiller("$\\min(D)$ (km)", palette = "Oranges",
                           guide = ggplot2::guide_colorbar(title.vjust = 0.75)) +
     labs(x = NULL, y = NULL) +
     scale_x_continuous(breaks = NULL) + scale_y_continuous(breaks = NULL) +
-    theme_void(14) +
+    theme_void(12) +
     theme(legend.position = "bottom")
 ## ---- tune-test --------------------
 test.cbase.lm(dddf) %>% mutate(ratio = rmse / pred.rmse) %>% ggplot(aes(x = ratio)) + geom_histogram()
