@@ -156,8 +156,7 @@ read_chunk("../vis.R")
   Regionally, the uncertainty is found to be substantially smaller than the
   480~m uncertainty assumed in the A-Train downwelling longwave estimate,
   potentially permitting the most uncertain of the radiative fluxes in the
-  climate system to be much better constrained \commentjm{-- more specific
-    statement from Tristan}.
+  climate system to be better constrained.
 \end{abstract}
 
 \introduction  %% \introduction[modified heading if necessary]
@@ -179,13 +178,12 @@ profile can be used to convert CBT to CBH.  Using an empirical relationship
 between geometric and optical thickness, \cite{Fitch2016} have obtained CBH from
 VIIRS.  Cloud geometric thickness (and therefore CBH if the cloud top height is
 known) can be inferred from increased spectral absorption by O$_2$ within cloud
-due to multiple scattering \citep{Kokhanovsky2005} \commentjm{Odran, any POLDER
-  references we should cite?}.  Stereoscopic determination of
+due to multiple scattering \citep{Kokhanovsky2005}.  Stereoscopic determination of
 the height of the most reflective layer \citep{Naud2005,Naud2007} in Multiangle
 Imaging Spectroradiometer data \citep[MISR,][]{Diner1998} yields information on
 CBH, as the lowest layer heights within a cloud cluster may correspond to the
-base of a cloud seen from its side.  \commentjm{An evaluation of these CBH
-  techniques is in progress \citep{Boehm2017}.}
+base of a cloud seen from its side.  An evaluation of MISR
+  techniques is in progress \citep{Boehm2017}.
 
 For analyses wishing to combine cloud base information with other cloud
 properties retrieved by A-Train satellites, these methods share the disadvantage
@@ -477,8 +475,7 @@ point of interest (POI) that does not necessarily coincide with the location of
 a thin-cloud CALIOP profile, we proceed as follows.  We first select all local
 CALIOP CBH measurements within a horizontal distance $D_\text{max} = 100$~km of
 the POI that satisfy the additional quality cuts described in
-Section~\ref{sec:algorithm:qual}. \comment{JQ}{Could we create a sketch
-  explaining this procedure?}
+Section~\ref{sec:algorithm:qual}. 
 
 For each remaining local CBH $z_i$, we determine the predicted
 uncertainty $\sigma_i$ based on the categories established in the previous
@@ -561,8 +558,9 @@ would be the case if continental clouds over North America are not
 representative of clouds elsewhere in a way that is not accounted for by the
 cloud properties considered by the uncertainty estimate.  Since the validation
 sample spans an entire year on a continental scale, we expect that most cloud
-morphologies are included \commentjm{does anyone have a citation for this
-  assertion?} .  However, cloud types that occur predominantly over ocean
+morphologies are included.
+%\commentjm{does anyone have a citation for this assertion?} 
+However, cloud types that occur predominantly over ocean
 present a particular challenge to the method, namely marine stratocumulus with
 horizontally extensive but vertically thin liquid-phase anvils.  Due to the
 typical CBH uncertainty of several hundred m, the method is unlikely to be
@@ -587,13 +585,13 @@ deepening of the planetary boundary layer.  Figures~\ref{fig:uncertainty} and
 fraction of nighttime cloud bases falls into the lowest uncertainty range (200
 to 350~m), while the the nighttime uncertainty distribution peaks somewhat
 higher than the daytime uncertainty distribution.  CALIOP benefits from higher
-signal to noise ratio during the nighttime \commentjm{citation?}, which may lead
+signal to noise ratio during nighttime, which may lead
 to lower CBH uncertainty, but this effect would be convoluted with potential
 differences between daytime and nighttime clouds that can lead to different CBH
-uncertainties.  \commentjm{Defer closer analysis until reviewers ask for it:
-  ``While the present paper focuses on determining a reliable estimate of the
-  CBH uncertainty, future work will analyze whether the CBH uncertainty can be
-  reduced for specific types of CALIOP profiles.''}
+uncertainties.  % \commentjm{Defer closer analysis until reviewers ask for it:
+  % ``While the present paper focuses on determining a reliable estimate of the
+  % CBH uncertainty, future work will analyze whether the CBH uncertainty can be
+  % reduced for specific types of CALIOP profiles.''}
 
 Comparison with 2B-GEOPROF-LIDAR cloud bases is shown in
 Figure~\ref{fig:eval-2b}.   2B-GEOPROF-LIDAR distinguishes between radar-only,
@@ -608,23 +606,17 @@ estimate, which allows an analysis to select only
 low-uncertainty cases or to statistically weight CBH according to
 uncertainty, as appropriate for the application.
 
-\commentjm{Include discussion from Tristan about reduction in DLW uncertainty
-  \citep{Stephens2012a,Stephens2012b} if CBH uncertainty can be reduced from the
-  2B-GEOPROF-LIDAR assumed value of 480~m.  By selecting the lowest-uncertainty
-  decile of the cloud population, the CBH uncertainty can be reduced to
-  approximately 250~m at night in the extratropics and in the SCu regions, and
-  approximately 400~m throughout the tropics during daytime, according to
-  Figure~\ref{fig:uncert-quantiles}.  This reduces the available statistics by a
-  factor of 10, but the A-Train definitely is not statistics-limited, so I can't
-  imagine this will be a problem.  How much is the DLW uncertainty reduced if
-  the CBH uncertainty goes from 480~m to 400~m?  How much if CBH uncertainty
-  drops to 250~m?}
-
-\commentjm{Add a paragraph about resolution required for a subadiabaticity
-  constraint \cite{Merk2016}?}
+As an example application, \citep{Stephens2012a,Stephens2012b} use an assumed
+2B-GEOPROF-LIDAR CBH uncertainty of 480~m.  By selecting the lowest-uncertainty
+percentile of the cloud population, the CBH uncertainty can be reduced to
+approximately 250~m at night in the extratropics and in the SCu regions, and
+approximately 400~m throughout the tropics during daytime, according to
+Figure~\ref{fig:uncert-quantiles}.  This reduces the available statistics by a
+factor of 100, but the A-Train is not statistics-limited.
 
 The CBASE CBH and CBH uncertainty dataset \citep{cbase} is freely available at
-Deutsches Klimarechenzentrum (DKRZ) under doi:10.123/456789.
+Deutsches Klimarechenzentrum (DKRZ) under doi:10.123/456789.  \commentjm{Add DOI
+once it is available.}
 
 \conclusions
 \label{sec:conclusions}
@@ -658,9 +650,11 @@ cloud geometry, such as cloud subadiabaticity, which will be presented in future
 work. 
 
 \begin{acknowledgements}
-  CALIOP VFM from ICARE.  Computing and data hosting at DKRZ.  This
-  research was funded by the European Union under grant agreement 306284 ERC
-  Starting grant QUAERERE \commentjm{any other funding sources?}.
+  We thank ICARE for hosting the CALIOP VFM dataset, which was originally
+  obtained from the NASA Langley Research Center Atmospheric Science Data
+  Center.  We thank the Deutsches Klimarechenzentrum (DKRZ) for computing and
+  data hosting.  This research was funded by the European Union under grant
+  agreement 306284 ERC Starting grant QUAERERE.
 \end{acknowledgements}
 
 \bibliographystyle{copernicus}
@@ -687,7 +681,7 @@ work.
 
 \begin{figure}
   \centering
-  <<eval-asos,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
+  <<eval-asos,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=TRUE>>=
   @
   \caption{ASOS ceilometers used for CBASE CBH evaluation.  The size of the
     marker indicates the number of satellite--ceilometer CBH coincidences during
@@ -709,7 +703,7 @@ work.
 
 \begin{figure*}
   \centering
-  <<eval-qual,dev='tikz',fig.width=7,fig.height=3.2,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=FALSE>>=
+  <<eval-qual,dev='tikz',fig.width=7,fig.height=3.2,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=TRUE>>=
   @
   \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
     faceted by the CALIOP VFM QA flag.  Color indicates the number of CALIOP
@@ -738,19 +732,18 @@ work.
 
 \begin{figure*}
   \centering
-  <<combo-plot,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  <<combo-plot,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
   @
-  \caption{Scatter plot of CBASE versus ceilometer CBH \comment{JQ}{for all data over
-  the CONUS available for 2007 (?)}; for
-    description of the plot elements, see Figure~\ref{fig:quality-qa}.  The
-    linear fit has slope \Sexpr{res$stats$slope * 1e-3} and intercept
-    $\Sexpr{res$stats$icpt}$~m.}
+  \caption{Scatter plot of CBASE versus ceilometer CBH for all A-Train
+    overpasses over the CONUS available for 2007; for description of the
+  plot elements, see Figure~\ref{fig:quality-qa}.  The linear fit has slope
+  \Sexpr{res$stats$slope * 1e-3} and intercept $\Sexpr{res$stats$icpt}$~m.}
   \label{fig:eval}
 \end{figure*}
 
 \begin{figure}
   \centering
-  <<combo-eval-pull,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  <<combo-eval-pull,dev='tikz',fig.width=3,fig.height=2,out.width='0.5\\textwidth',message=FALSE,cache=TRUE,echo=FALSE>>=
   @
   \caption{Distribution function of cloud base error divided by predicted
     uncertainty; for the ideal case of unbiased CBH and unbiased
@@ -785,19 +778,19 @@ work.
     Table~\ref{tab:quality-qa} for a description of the 
     statistics provided.}
   \label{tab:rmseclass}
-  <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,results='hide',echo=FALSE>>=
+  <<combo-plot-rmseclass,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,results='hide',echo=FALSE>>=
   @
-  <<combo-tbl-rmseclass,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  <<combo-tbl-rmseclass,message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
   @
 \end{table*}
 
-<<cbase-uncert-setup,cache=FALSE,echo=FALSE,results='hide'>>=
+<<cbase-uncert-setup,cache=TRUE,echo=FALSE,results='hide'>>=
 data(cbase)
 @
 
 \begin{figure*}
   \centering
-  <<cbase-base,dev='tikz',fig.width=7,fig.height=7.2,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  <<cbase-base,dev='tikz',fig.width=7,fig.height=7.2,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
   vis.mean(cbase %>% filter(dist == 40), 14)
   @
   \caption{Geographic distribution of mean CBH above ground
@@ -832,7 +825,7 @@ data(cbase)
 
 \begin{figure}
   \centering
-  <<cbase-rmse,dev='tikz',fig.width=3,fig.height=2.5,out.width='0.5\\textwidth',message=FALSE,cache=FALSE,echo=FALSE>>=
+  <<cbase-rmse,dev='tikz',fig.width=3,fig.height=2.5,out.width='0.5\\textwidth',message=FALSE,cache=TRUE,echo=FALSE>>=
   cbase %>% 
   filter(dist == 40) %>%
   ggplot(aes(x = pred.rmse, y = ..density.., fill = daynight, color = daynight)) + 
@@ -866,7 +859,7 @@ data(cbase)
 
 \begin{figure*}
   \centering
-  <<cbase-uncert-quantiles,dev='tikz',fig.width=7,fig.height=9,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  <<cbase-uncert-quantiles,dev='tikz',fig.width=7,fig.height=9,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
   vis.quantiles(cbase %>% filter(dist == 40), 14)
   @
   \caption{Cloud base uncertainty quantiles.  Statistics are calculated within
@@ -902,7 +895,7 @@ data(cbase)
   \centering
   <<eval-2bgeoprof-setup,cache=TRUE,echo=FALSE,results='hide'>>=
   @ 
-  <<eval-2bgeoprof,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=FALSE,echo=FALSE,results='hide'>>=
+  <<eval-2bgeoprof,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
   @
   <<eval-2bgeoprof-tbl,dev='tikz',fig.width=9.1,fig.height=4.5,out.width='\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
   @
@@ -921,7 +914,7 @@ data(cbase)
     description of the statistics provided.}
   \label{tab:2bgeoprof}
   \centering
-  <<eval-2bgeoprof-tbl,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  <<eval-2bgeoprof-tbl,message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
   @
 \end{table*}
 
