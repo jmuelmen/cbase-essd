@@ -141,6 +141,8 @@ sanitize.numbers <- function (str, type, math.style.negative = FALSE, math.style
             for (i in 1:length(str)) {
                 result[i] <- gsub("^\\$?(-?)\\$?([0-9.]+)[eE]\\$?(-?)\\+?\\$?0*(\\d+)$", 
                                   "$\\1\\2 \\\\times 10^{\\3\\4}$", result[i])
+                result[i] <- gsub("^\\$?(-?)\\$?1 \\\\times 10", 
+                                  "$\\110", result[i])
             }
         }
         else if (math.style.exponents == "ensuremath") {
