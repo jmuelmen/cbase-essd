@@ -28,8 +28,9 @@ res <- df %>%
     ## filter(lays == 1) %>%
     dplyr::group_by(dummy, feature.qa.lowest.cloud) %>%
     regression_plot(title = NULL, base_size = 14)
+print(res$ggplot)
+res$ggplot <- NULL
 gc()
-res$ggplot
 
 ## ---- eval-qual-tbl ---------------------
 regression_table(res)
