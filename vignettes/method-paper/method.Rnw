@@ -395,8 +395,6 @@ quantitative role in the algorithm:
     \label{eq:bias}
     \mbox{bias} = \frac{1}{N}\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right),
   \end{equation}(ideally 0)
-\item[Efficiency,] i.e., probability that a retrieval is available at the
-  desired location (ideally 1).
 \end{description}
 
 CALIOP's ability to detect cloud base depends on the properties of the cloud.
