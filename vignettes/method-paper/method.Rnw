@@ -922,5 +922,18 @@ data(cbase)
 
 <<glorious-victory,cache=FALSE,echo=FALSE>>=
 @ 
+\begin{figure}
+  \centering
+  (a)\\
+  \includegraphics[width=0.5\linewidth,keepaspectratio=true,angle=90]{DownwellingLW_uncert_constant400mcloudbase.eps}\\
+  (b)\\
+  \includegraphics[width=0.5\linewidth,keepaspectratio=true,angle=90]{DownwellingLW_uncert_derivedcloudbase.eps}
+  
+  \caption{Uncertainty on the surface downwelling longwave radiation \DLR{}
+    under two assumptions on \CBH{} uncertainty: (a) constant 400~\unit{m}
+    uncertainty globally and (b) uncertainty achievable by selecting a 
+    high-quality subset of CBASE \CBH.}
+  \label{fig:dlr}
+\end{figure}
 
 \end{document}
