@@ -73,7 +73,7 @@
 
 \newcommand\comment[2]{\{\hlnum{ \textit{#1}: #2}\}}
 \newcommand\commentjm[1]{\comment{$j_\mu$}{#1}}
-\newcommand\CBH{\ensuremath{z_b}}
+\newcommand\CBH{\ensuremath{z}}
 \newcommand\DLR{\ensuremath{F_\text{surf}^\downarrow}}
 
 \usepackage[percent]{overpic}
@@ -365,7 +365,7 @@ algorithm are recorded.
 \label{sec:algorithm:qual}
 We assess the quality of the CALIOP \CBH{} using the root mean square error
 (RMSE) with respect to the
-ceilometer-observed $\hat{z}_b$.  The RMSE is defined as
+ceilometer-observed $\hat{z}$.  The RMSE is defined as
 \begin{equation}
   \label{eq:rmse}
   E = \sqrt{\frac{1}{N}\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right)^2}.
@@ -533,16 +533,15 @@ similar $\sigma_i$.
 
 Having trained the algorithm on data from the year 2008, we evaluate it using a
 statistically independent dataset from the year 2007.  In the evaluation
-dataset, the ``true'' (i.e., ceilometer-measured) $\hat{z}_b$ is known in
+dataset, the ``true'' (i.e., ceilometer-measured) $\hat{z}$ is known in
 addition to the estimated \CBH{} and the estimated cloud base uncertainty $\sigma$,
 determined according to the procedure described in the previous section.
 Figure~\ref{fig:eval} shows the joint distribution of CBASE and
-ceilometer-observed CBH.  (The difference between this figure and Figure~S3 is
-that the underlying data is the validation (2007), rather than the training (2008), dataset.)
+ceilometer-observed \CBH{}.  
 
 For satellite-derived measurements of \CBH{} that are unbiased with respect
 to the ceilometer-observed $\hat{\CBH}$ and have correctly estimated
-uncertainties $\sigma$, the pdf of the quantity $(\CBH - \hat{z}_b)/\sigma$ has zero
+uncertainties $\sigma$, the pdf of the quantity $(\CBH - \hat{z})/\sigma$ has zero
 mean and unit standard deviation. In our evaluation dataset, we find a mean of
 \Sexpr{with(combo, mean((ceilo - pred.ceilo) / pred.rmse))} and a standard
 deviation of \Sexpr{with(combo, sd((ceilo - pred.ceilo) / pred.rmse))}, shown in
@@ -681,12 +680,11 @@ and the bias on the uncertainty is %
 \Sexpr{round(100 * (with(combo, sd((ceilo - pred.ceilo) / pred.rmse)) -
   1))}\%, both relative to the expected uncertainty.
 
-The performance of CBASE \CBH{} is similar to that of
-2B-GEOPROF-LIDAR lidar-only \CBH{}, which is based on the same
-underlying physical measurement.  However, the validated \CBH{}
-uncertainty provided by CBASE allows for selection of only accurate cloud base
-heights or for statistically weighting of \CBH{} according to 
-expected uncertainty.  This, in turn, makes the CBASE \CBH{} useful
+The performance of CBASE \CBH{} is similar to that of 2B-GEOPROF-LIDAR
+lidar-only \CBH{}, which is based on the same underlying physical measurement.
+However, the validated \CBH{} uncertainty provided by CBASE allows for selection
+of only accurate cloud base heights or for statistically weighting of \CBH{}
+according to expected uncertainty.  This, in turn, makes the CBASE \CBH{} useful
 for pressing problems in climate research that require accurate knowledge of
 cloud geometry, such as cloud subadiabaticity, which will be presented in future
 work. 
