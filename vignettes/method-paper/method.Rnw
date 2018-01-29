@@ -104,9 +104,12 @@ read_chunk("../vis.R")
 
 \Author[1]{Johannes}{M\"ulmenst\"adt}
 \Author[1]{Odran}{Sourdeval}
+\Author[2]{David S.}{Henderson}
 \Author[2]{Tristan S.}{L'Ecuyer}
-\Author[3]{Christoph}{B\"ohm}
 %%\Author[1]{Edward}{Gryspeerdt}
+\Author[1]{Claudia}{Unglaub}
+\Author[1]{Leonore}{Jungandreas}
+\Author[3]{Christoph}{B\"ohm}
 \Author[1]{Johannes}{Quaas}
 
 \affil[1]{Institute of Meteorology, Universit\"at Leipzig, Leipzig, Germany}
