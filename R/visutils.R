@@ -87,6 +87,7 @@ vis.mean <- function(df, base_size, portrait = TRUE) {
                                    guide = ggplot2::guide_legend(direction = "horizontal",
                                                                  nrow = 1,
                                                                  keywidth = 2,
+                                                                 title.vjust = 0.75,
                                                                  label.hjust = 0.5,
                                                                  label.position = "bottom")) +
         (if (portrait)
@@ -173,6 +174,7 @@ vis.quantiles <- function(df, base_size,
                                    guide = ggplot2::guide_legend(direction = "horizontal",
                                                                  nrow = 1,
                                                                  keywidth = 2,
+                                                                 title.vjust = 0.75,
                                                                  label.hjust = 0.5,
                                                                  label.position = "bottom")) +
         ggplot2::facet_grid(quantile ~ daynight) +
@@ -213,6 +215,7 @@ vis.cdf <- function(df, base_size) {
                                    guide = ggplot2::guide_legend(direction = "horizontal",
                                                                  nrow = 1,
                                                                  keywidth = 3,
+                                                                 title.vjust = 0.75,
                                                                  label.hjust = 0.5,
                                                                  label.position = "bottom")) +
         ggplot2::facet_grid(rmse ~ daynight) +
