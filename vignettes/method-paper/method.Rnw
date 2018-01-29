@@ -266,7 +266,7 @@ average to identify a feature above noise and molecular atmospheric scattering
 
 In the present analysis, we use VFM version 4.10 \citep{vfm}, the current
 ``standard'' release, for the years 2007 and 2008.  The VFM files are obtained
-from ICARE \citep{icare}.
+from ICARE (\url{http://www.icare.univ-lille1.fr/catalogue/}).
 % \commentjm{Citation: CALIPSO Science Team (2016), CALIPSO/CALIOP Level 2,
 %   Vertical Feature Mask Data, version 4.10, Hampton, VA, USA: NASA Atmospheric
 %   Science Data Center (ASDC), Accessed <author citing data inserts date here> at
@@ -296,7 +296,7 @@ fractional coverages, using the temporal variation at a fixed point under an
 advected cloud field as a proxy for spatial variability of the cloud field
 \citep[e.g.,][]{Heese2010}.  METAR data is widely distributed and archived; the
 data for the present analysis was downloaded from the Weather Underground
-archive \citep{wunderground}.
+archive (\url{http://www.wunderground.com/history/airport/}).
 
 In the United States, \CBH{} is mostly derived automatically by laser ceilometers
 that form part of Automated Surface Observing Stations \citep[ASOS,][]{asos}
