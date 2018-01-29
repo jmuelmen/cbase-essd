@@ -170,18 +170,17 @@ read_chunk("../vis.R")
 
 \introduction  %% \introduction[modified heading if necessary]
 \label{sec:intro}
-Cloud base height (CBH) is an important geometric parameter of a cloud.  It
-controls how much downwelling longwave radiation the cloud emits.  Aerosol
-concentration and updraft speed at that level determine the microphysical
-characteristics of the cloud.  It is one of the parameters that is required in
-the calculation of the subadiabaticity of the cloud.  However, due to the
-viewing geometry, it is also one of the most difficult cloud parameters to
-retrieve from satellite.
+The base height \CBH{} is an important geometric parameter of a cloud,
+controlling the cloud's longwave radiative emission, being required in the
+calculation of the cloud's subadiabaticity, and setting level at which aerosol
+concentration and updraft speed determine the cloud's microphysical
+characteristics.  However, due to the viewing geometry, it is also one of the
+most difficult cloud parameters to retrieve from satellite.
 
 Multiple methods have been proposed for satellite determination of the cloud
 base height.  \cite{Zhu2014} have used the Visible Infrared Imaging Radiometer Suite
 aboard the Suomi National Polar-orbiting Partnership satellite
-\citep[VIIRS,][]{Cao2014} to estimate cloud base temperature (CBT) from the
+\citep[VIIRS,][]{Cao2014} to estimate cloud base temperature $T_b$ from the
 lowest cloud-top temperature within a cloud cluster; a reanalysis temperature
 profile can be used to convert $T_b$ to \CBH{}.  Using an empirical relationship
 between geometric and optical thickness, \cite{Fitch2016} have obtained \CBH{} from
