@@ -76,6 +76,8 @@
 \newcommand\CBH{\ensuremath{z_b}}
 \newcommand\DLR{\ensuremath{F_\text{surf}^\downarrow}}
 
+\usepackage[percent]{overpic}
+
 
 \begin{document}
 
@@ -956,14 +958,14 @@ data(cbase)
   @
 \end{table*}
 
-<<glorious-victory,cache=FALSE,echo=FALSE>>=
-@ 
 \begin{figure}
   \centering
-  (a)\\
-  \includegraphics[width=0.5\linewidth,keepaspectratio=true,angle=90]{DownwellingLW_uncert_constant400mcloudbase.eps}\\
-  (b)\\
-  \includegraphics[width=0.5\linewidth,keepaspectratio=true,angle=90]{DownwellingLW_uncert_derivedcloudbase.eps}
+  \begin{overpic}[width=0.5\linewidth,keepaspectratio=true,angle=90]{DownwellingLW_uncert_constant400mcloudbase.eps}
+    \put(1.5,65){\textsf{(a)}}
+  \end{overpic}
+  \begin{overpic}[width=0.5\linewidth,keepaspectratio=true,angle=90]{DownwellingLW_uncert_derivedcloudbase.eps}
+    \put(1.5,65){\textsf{(b)}}
+  \end{overpic}
   
   \caption{Uncertainty on the surface downwelling longwave radiation \DLR{}
     under two assumptions on \CBH{} uncertainty: (a) constant 400~\unit{m}
@@ -971,5 +973,8 @@ data(cbase)
     high-quality subset of CBASE \CBH.}
   \label{fig:dlr}
 \end{figure}
+
+<<glorious-victory,cache=FALSE,echo=FALSE>>=
+@ 
 
 \end{document}
