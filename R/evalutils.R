@@ -110,11 +110,13 @@ regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)",
         }) +
         ggplot2::scale_fill_distiller("Count",
                                       palette = "GnBu",
-                                      guide = ggplot2::guide_legend(direction = "horizontal",
-                                                                    nrow = 1,
-                                                                    keywidth = 2,
-                                                                    label.hjust = 0.5,
-                                                                    label.position = "bottom")
+                                      guide = ggplot2::guide_colorbar(direction = "horizontal",
+                                                                      nrow = 1,
+                                                                      keywidth = 2,
+                                                                      barwidth = 10,
+                                                                      title.vjust = 0.75,
+                                                                      label.hjust = 0.5,
+                                                                      label.position = "bottom")
                                       ) +
         ## ggplot2::scale_fill_distiller(palette = "GnBu") + ## , trans = "log10") +
         ## ggplot2::geom_pointrange(ggplot2::aes(x = caliop, y = mean,
