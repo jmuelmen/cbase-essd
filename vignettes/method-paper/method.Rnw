@@ -74,6 +74,8 @@
 \newcommand\comment[2]{\{\hlnum{ \textit{#1}: #2}\}}
 \newcommand\commentjm[1]{\comment{$j_\mu$}{#1}}
 \newcommand\CBH{\ensuremath{z_b}}
+\newcommand\DLR{\ensuremath{F_\text{surf}^\downarrow}}
+
 
 \begin{document}
 
@@ -601,22 +603,55 @@ Comparison with 2B-GEOPROF-LIDAR cloud bases is shown in
 Figure~\ref{fig:eval-2b}.  2B-GEOPROF-LIDAR distinguishes between radar-only,
 lidar-only, and radar--lidar combined cloud bases; the latter category is rare
 for warm cloud and is not shown.  For radar-only clouds, the mean error is large
-because the radar CBH predominantly clusters around the top of the
-ground clutter region with little dependence on the actual CBH.
-Lidar-only 2B-GEOPROF-LIDAR cloud base performs comparably to the CBASE cloud
-base on average; this is to be expected, as the underlying physical measurement
-is the same.   Unlike 2B-GEOPROF-LIDAR, CBASE provides a validated uncertainty
-estimate, which allows an analysis to select only
-low-uncertainty cases or to statistically weight CBH according to
-uncertainty, as appropriate for the application.
+because the radar \CBH{} predominantly clusters around the top of the ground
+clutter region with little dependence on the actual \CBH{}.  Lidar-only
+2B-GEOPROF-LIDAR cloud base performs comparably to the CBASE cloud base on
+average; this is to be expected, as the underlying physical measurement is the
+same.  Unlike 2B-GEOPROF-LIDAR, CBASE provides a validated uncertainty estimate,
+which allows an analysis to select only low-uncertainty cases or to
+statistically weight \CBH{} according to uncertainty, as appropriate for the
+application.
 
-As an example application, \citep{Stephens2012a,Stephens2012b} use an assumed
-2B-GEOPROF-LIDAR CBH uncertainty of 480~m.  By selecting the lowest-uncertainty
-percentile of the cloud population, the CBH uncertainty can be reduced to
-approximately 250~m at night in the extratropics and in the SCu regions, and
-approximately 400~m throughout the tropics during daytime, according to
-Figure~\ref{fig:uncert-quantiles}.  This reduces the available statistics by a
-factor of 100, but the A-Train is not statistics-limited.
+
+As an example application, we consider the surface downwelling longwave
+radiation \DLR{}, which is strongly affected by cloud base temperature.
+\cite{Henderson2013} derive a global \DLR{} sensitivity to \CBH{} of
+1.5~\unit{W~m^{-2}} for a \CBH{} perturbation of one CloudSat height bin (240
+m); as Table~\ref{tab:2bgeoprof} and Figure~\ref{fig:eval-2b} show, the CloudSat
+$\sigma$ specifically for the low clouds at the focus of the present work is
+likely greater than 240~\unit{m}, which corroborates the 480~\unit{m}
+uncertainty estimate of \cite{Kato2011}. To arrive at a conservative estimate of
+the improvement in \DLR{} uncertainty that might be possible by utilizing the
+CBASE predicted $\sigma$, we compare two \DLR{} uncertainty distributions: one
+based on a globally constant 400 m $\sigma$ (Figure~\ref{fig:dlr}a) and one with
+the CBASE $\sigma$ achievable by selecting the highest-quality percentile of the
+CBASE dataset (Figure~\ref{fig:dlr}b). This selection provides a $\sigma$ of
+approximately 250~\unit{m} in the extratropics as well as the nighttime tropical
+continents and SCu regions, and approximately 400~\unit{m} throughout the
+tropics during daytime, according to Figure~\ref{fig:uncert-quantiles}.
+Globally, the \DLR{} uncertainty is reduced from 3.1~\unit{W~m^{-2}} to
+1.8~\unit{W~m^{-2}}, assuming that the \CBH{} uncertainty contribution to the
+\DLR{} uncertainty is dominated by low clouds.  Improvements are especially
+large in the marine stratocumulus regions and the extratropical oceans, where
+extensive low cloud often overlies cool air with relatively low longwave
+emission by water vapor. The selection reduces the available statistics by a
+factor of 100, but analyses based on A-Train data are usually not
+statistics-limited.
+
+\commentjm{In an earlier draft, I wrote, ``Globally, the DLR uncertainty under
+  low cloud is reduced from 3.1~\unit{W~m^{-2}} to 1.8~\unit{W~m^{-2}}''.  As
+  Dave points out, ``the uncertainties we provided for radiation were for all
+  clouds so what do you mean by low cloud here?''  What I meant is that we only
+  know for sure that the uncertainty for low clouds is large when we consider all
+  profiles, and smaller when we consider ``good'' profiles.  Medium- and high-level
+  clouds could have a lower \CBH{} uncertainty (less likely to attenuate CALIOP, more
+  likely to show up in CloudSat all the way to the base because they contain
+  ice, etc.), so reducing the \CBH{} uncertainty by the same amount as for the
+  low clouds would give an overly optimistic estimate of the \DLR{} uncertainty
+  reduction.  So I changed the sentence to ``Globally, the \DLR{} uncertainty
+  is reduced from 3.1~\unit{W~m^{-2}} to 1.8~\unit{W~m^{-2}}, assuming that the
+  \CBH{} uncertainty contribution to the \DLR{} uncertainty is dominated by low
+  clouds''.  Let me know if you think that works}
 
 The CBASE \CBH{} and $\sigma$ dataset \citep{cbase} is freely available at
 Deutsches Klimarechenzentrum (DKRZ) under doi:10.123/456789.  \commentjm{Add DOI
