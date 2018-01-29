@@ -272,6 +272,7 @@ res <- df.2bgeoprof %>%
 res$ggplot
 
 ## ---- eval-2bgeoprof-tbl --------------------
+res$stats %<>% rename("Base type" = flag.base)
 regression_table(res)
 
 ## ---- eval-tune-setup --------------------
@@ -419,7 +420,12 @@ res <- combo %>%
     regression_plot(title = NULL, xlab = "CBASE cloud base height (km)")
 ## res$ggplot
 
+## ---- combo-tbl-qa --------------------
+res$stats %<>% rename("QA flag" = feature.qa.lowest.cloud)
+regression_table(res)
+
 ## ---- combo-tbl-rmseclass --------------------
+res$stats %<>% rename("Predicted $\\sigma$ (m)" = pred.rmse)
 regression_table(res)
 
 ## ---- combo-lays ---------------------

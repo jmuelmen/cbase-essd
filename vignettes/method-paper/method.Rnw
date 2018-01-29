@@ -81,6 +81,7 @@
 
 <<setup, include=FALSE, cache=FALSE>>=
 library(knitr)
+library(magrittr)
 library(plyr)
 library(dplyr)
 library(ggplot2)
@@ -765,7 +766,7 @@ work.
     and ceilometer \CBH{}, the RMSE, bias, and linear least-squares
     fit parameters.}
   \label{tab:quality-qa}
-  <<combo-tbl-rmseclass,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  <<combo-tbl-qa,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
   @
 \end{table*}
 
