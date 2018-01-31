@@ -186,7 +186,7 @@ profile can be used to convert $T_b$ to \CBH{}.  Using an empirical relationship
 between geometric and optical thickness, \cite{Fitch2016} have obtained \CBH{} from
 VIIRS.  Cloud geometric thickness (and therefore \CBH{} if the cloud top height is
 known) can be inferred from increased spectral absorption by O$_2$ within cloud
-due to multiple scattering \citep{Kokhanovsky2005}.  Stereoscopic determination of
+due to multiple scattering \citep{Kokhanovsky2005,Lelli2018}.  Stereoscopic determination of
 the height of the most reflective layer \citep{Naud2005,Naud2007} in Multiangle
 Imaging Spectroradiometer data \citep[MISR,][]{Diner1998} yields information on
 \CBH{}, as the lowest layer heights within a cloud cluster may correspond to the
