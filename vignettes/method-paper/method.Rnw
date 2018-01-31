@@ -564,7 +564,7 @@ representative of clouds elsewhere in a way that is not accounted for by the
 cloud properties considered by the uncertainty estimate.  Since the validation
 sample spans an entire year on a continental scale, we expect that most cloud
 morphologies are included.
-%\commentjm{does anyone have a citation for this assertion?} 
+\commentjm{does anyone have a citation for this assertion?} 
 However, cloud types that occur predominantly over ocean
 present a particular challenge to the method, namely marine stratocumulus with
 horizontally extensive but vertically thin liquid-phase anvils.  Due to the
@@ -683,15 +683,16 @@ However, the validated \CBH{} uncertainty provided by CBASE allows for selection
 of only accurate cloud base heights or for statistically weighting of \CBH{}
 according to expected uncertainty.  This, in turn, makes the CBASE \CBH{} useful
 for pressing problems in climate research that require accurate knowledge of
-cloud geometry, such as cloud subadiabaticity, which will be presented in future
-work. 
+cloud geometry, such as surface downwelling longwave radiation or cloud
+subadiabaticity, which will be presented in future work.
 
 \begin{acknowledgements}
-  We thank ICARE for hosting the CALIOP VFM dataset, which was originally
-  obtained from the NASA Langley Research Center Atmospheric Science Data
-  Center.  We thank the Deutsches Klimarechenzentrum (DKRZ) for computing and
-  data hosting.  This research was funded by the European Union under grant
-  agreement 306284 ERC Starting grant QUAERERE.
+  We thank Patric Seifert and Albert Ansmann for valuable suggestions on the
+  algorithm.  We thank ICARE for hosting the CALIOP VFM dataset, which was
+  originally obtained from the NASA Langley Research Center Atmospheric Science
+  Data Center.  We thank DKRZ for computing and data hosting.  This research was
+  funded by the European Union under grant agreement 306284 ERC Starting grant
+  QUAERERE.
 \end{acknowledgements}
 
 \bibliographystyle{copernicus}
@@ -969,7 +970,7 @@ data(cbase)
   \label{fig:dlr}
 \end{figure}
 
-<<glorious-victory,cache=FALSE,echo=FALSE>>=
-@ 
+%% <<glorious-victory,cache=FALSE,echo=FALSE>>=
+%% @ 
 
 \end{document}
