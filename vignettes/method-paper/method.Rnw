@@ -185,7 +185,7 @@ lowest cloud top temperature within a cloud cluster; a reanalysis temperature
 profile can be used to convert $T_b$ to \CBH{}.  Using an empirical relationship
 between geometric and optical thickness, \cite{Fitch2016} have obtained \CBH{} from
 VIIRS.  Cloud geometric thickness (and therefore \CBH{} if the cloud top height is
-known) can be inferred from increased spectral absorption by O$_2$ within cloud
+known) can be inferred from increased spectral absorption by \chem{O_2} within cloud
 due to multiple scattering \citep{Kokhanovsky2005,Lelli2018}.  Stereoscopic determination of
 the height of the most reflective layer \citep{Naud2005,Naud2007} in Multiangle
 Imaging Spectroradiometer data \citep[MISR,][]{Diner1998} yields information on
@@ -301,7 +301,7 @@ system; see, e.g., \cite{An2017,Ikeda2017} for recent examples of ASOS
 application to deriving cloud climatologies or NWP model evaluation.  In other
 parts of the world, the cloud bases may be estimated by human observers or may
 be omitted under certain conditions when the lowest cloud base is higher than
-5000~feet, complicating objective comparison to satellite \CBH{}.  To ensure that
+5000~\unit{feet}, complicating objective comparison to satellite \CBH{}.  To ensure that
 the ceilometer \CBH{} are of high and spatially uniform quality, we restrict
 ourselves to METARs from the contiguous continental United States.
 
@@ -586,7 +586,7 @@ over land, daytime \CBH{} is higher than nighttime \CBH{}, consistent with the
 diurnal deepening of the planetary boundary layer.
 Figures~\ref{fig:uncertainty} and \ref{fig:uncert-quantiles} show the
 distribution of \CBH{} uncertainties.  A larger fraction of nighttime cloud
-bases falls into the lowest uncertainty range (200 to 350~m), while the the
+bases falls into the lowest uncertainty range (200 to 350~\unit{m}), while the the
 nighttime uncertainty distribution peaks slightly higher than the daytime
 uncertainty distribution and features a substantial tail above 500~\unit{m} that
 is not present in the daytime distribution.  CALIOP benefits from higher signal
@@ -615,27 +615,27 @@ application.
 As an example application, we consider the surface downwelling longwave
 radiation \DLR{}, which is strongly affected by cloud base temperature.
 \cite{Henderson2013} derive a global \DLR{} sensitivity to \CBH{} of
-1.5~\unit{W~m^{-2}} for a \CBH{} perturbation of one CloudSat height bin (240
-m); as Table~\ref{tab:2bgeoprof} and Figure~\ref{fig:eval-2b} show, the CloudSat
-$\sigma$ specifically for the low clouds at the focus of the present work is
-likely greater than 240~\unit{m}, which corroborates the 480~\unit{m}
-uncertainty estimate of \cite{Kato2011}. To arrive at a conservative estimate of
-the improvement in \DLR{} uncertainty that might be possible by utilizing the
-CBASE predicted $\sigma$, we compare two \DLR{} uncertainty distributions: one
-based on a globally constant 400 m $\sigma$ (Figure~\ref{fig:dlr}a) and one with
-the CBASE $\sigma$ achievable by selecting the highest-quality percentile of the
-CBASE dataset (Figure~\ref{fig:dlr}b). This selection provides a $\sigma$ of
-approximately 250~\unit{m} in the extratropics as well as the nighttime tropical
-continents and SCu regions, and approximately 400~\unit{m} throughout the
-tropics during daytime, according to Figure~\ref{fig:uncert-quantiles}.
-Globally, the \DLR{} uncertainty is reduced from 3.1~\unit{W~m^{-2}} to
-1.8~\unit{W~m^{-2}}, assuming that the \CBH{} uncertainty contribution to the
-\DLR{} uncertainty is dominated by low clouds.  Improvements are especially
-large in the marine stratocumulus regions and the extratropical oceans, where
-extensive low cloud often overlies cool air with relatively low longwave
-emission by water vapor. The selection reduces the available statistics by a
-factor of 100, but analyses based on A-Train data are usually not
-statistics-limited.
+1.5~\unit{W~m^{-2}} for a \CBH{} perturbation of one CloudSat height bin
+(240~\unit{m}); as Table~\ref{tab:2bgeoprof} and Figure~\ref{fig:eval-2b} show,
+the CloudSat $\sigma$ specifically for the low clouds at the focus of the
+present work is likely greater than 240~\unit{m}, which corroborates the
+480~\unit{m} uncertainty estimate of \cite{Kato2011}. To arrive at a
+conservative estimate of the improvement in \DLR{} uncertainty that might be
+possible by utilizing the CBASE predicted $\sigma$, we compare two \DLR{}
+uncertainty distributions: one based on a globally constant 400~\unit{m} $\sigma$
+(Figure~\ref{fig:dlr}a) and one with the CBASE $\sigma$ achievable by selecting
+the highest-quality percentile of the CBASE dataset
+(Figure~\ref{fig:dlr}b). This selection provides a $\sigma$ of approximately
+250~\unit{m} in the extratropics as well as the nighttime tropical continents
+and SCu regions, and approximately 400~\unit{m} throughout the tropics during
+daytime, according to Figure~\ref{fig:uncert-quantiles}.  Globally, the \DLR{}
+uncertainty is reduced from 3.1~\unit{W~m^{-2}} to 1.8~\unit{W~m^{-2}}, assuming
+that the \CBH{} uncertainty contribution to the \DLR{} uncertainty is dominated
+by low clouds.  Improvements are especially large in the marine stratocumulus
+regions and the extratropical oceans, where extensive low cloud often overlies
+cool air with relatively low longwave emission by water vapor. The selection
+reduces the available statistics by a factor of 100, but analyses based on
+A-Train data are usually not statistics-limited.
 
 \commentjm{In an earlier draft, I wrote, ``Globally, the DLR uncertainty under
   low cloud is reduced from 3.1~\unit{W~m^{-2}} to 1.8~\unit{W~m^{-2}}''.  As
@@ -775,7 +775,7 @@ subadiabaticity, which will be presented in future work.
   \caption{Scatter plot of CBASE versus ceilometer \CBH{} for all A-Train
     overpasses over the CONUS available for 2007; for description of the
   plot elements, see Figure~\ref{fig:quality-qa}.  The linear fit has slope
-  \Sexpr{res$stats$slope * 1e-3} and intercept $\Sexpr{res$stats$icpt}$~m.}
+  \Sexpr{res$stats$slope * 1e-3} and intercept $\Sexpr{res$stats$icpt}$~\unit{m}.}
   \label{fig:eval}
 \end{figure*}
 
