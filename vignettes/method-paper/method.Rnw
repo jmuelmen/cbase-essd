@@ -102,7 +102,8 @@ read_chunk("../vis.R")
 
 %% \linenumbers
 
-\title{Using CALIOP to estimate cloud-field base height and its uncertainty}
+\title{Using CALIOP to estimate cloud-field base height and its uncertainty: the
+  Cloud Base Altitude Spatial Extrapolator (CBASE) algorithm and dataset}
 
 
 % \Author[affil]{given_name}{surname}
@@ -111,7 +112,6 @@ read_chunk("../vis.R")
 \Author[1]{Odran}{Sourdeval}
 \Author[2]{David S.}{Henderson}
 \Author[2]{Tristan S.}{L'Ecuyer}
-%%\Author[1]{Edward}{Gryspeerdt}
 \Author[1]{Claudia}{Unglaub}
 \Author[1]{Leonore}{Jungandreas}
 \Author[3]{Christoph}{B\"ohm}
@@ -211,17 +211,15 @@ the thinnest clouds \citep[$\tau < 5$,][]{Mace2014}; frequently, it is desirable
 to know the base height of thick clouds as well.
 
 In this paper, we revisit the CALIOP cloud base determination.  This relies on
-one central assumption, namely that, because the
-lifting condensation level is approximately homogeneous within an airmass, the
-cloud bases retrieved by CALIOP for thin clouds may be a good proxy for the cloud
-base heights of an entire cloud field, including the optically thicker clouds
-within the field.  
-We have designed an algorithm that extrapolates the CALIOP
-cloud-base measurements into locations where CALIOP attenuates before reaching
-cloud base.  This algorithm is called CBASE (Cloud Base Altitude Spatial
-Extrapolator).  In this paper we evaluate its performance by comparing CBASE
-\CBH{} against \CBH{} observed by ground-based
-ceilometers.
+one central assumption, namely that, because the lifting condensation level is
+approximately homogeneous within an airmass, the cloud bases retrieved by CALIOP
+for thin clouds may be a good proxy for the cloud base heights of an entire
+cloud field, including the optically thicker clouds within the field.  We have
+designed an algorithm that extrapolates the CALIOP cloud-base measurements into
+locations where CALIOP attenuates before reaching cloud base.  This algorithm is
+called Cloud Base Altitude Spatial Extrapolator (CBASE).  In this paper we
+evaluate its performance by comparing CBASE \CBH{} against \CBH{} observed by
+ground-based ceilometers.
 
 The cloud base of interest in this analysis is the base of the lowest cloud in
 each column. Even if it CALIOP can also detect the base heights of other layers
