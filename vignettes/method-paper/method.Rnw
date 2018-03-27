@@ -652,11 +652,12 @@ subadiabaticity, which will be presented in future work.
 
 \begin{acknowledgements}
   We thank Patric Seifert and Albert Ansmann for valuable suggestions on the
-  algorithm.  We thank ICARE for hosting the CALIOP VFM dataset, which was
+  algorithm; ICARE for hosting the CALIOP VFM dataset, which was
   originally obtained from the NASA Langley Research Center Atmospheric Science
-  Data Center.  We thank DKRZ for computing and data hosting.  This research was
-  funded by the European Union under grant agreement 306284 ERC Starting Grant
-  QUAERERE \commentjm{and E-PEACE funding information}.
+  Data Center; and DKRZ for computing and data hosting.  This research was
+  funded by the European Union under ERC Starting Grant
+  QUAERERE, grant agreement 306284, and by the United States National Science
+  Foundation under grant agreements AGS-1013423 and AGS-1048995.
 \end{acknowledgements}
 
 \bibliographystyle{copernicus}
