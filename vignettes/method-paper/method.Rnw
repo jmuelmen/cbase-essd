@@ -250,7 +250,7 @@ reference measurements of \CBH{} to train and evaluate the algorithm by which
 \subsection{CALIOP VFM}
 
 The input satellite data to our analysis is from the Cloud--Aerosol Lidar with
-Orthogoncal Polarization \cite[CALIOP][]{Winker2007} on board the Cloud--Aerosol Lidar and Infrared Pathfinder
+Orthogoncal Polarization \citep[CALIOP,][]{Winker2007} on board the Cloud--Aerosol Lidar and Infrared Pathfinder
 Satellite Observation (CALIPSO) satellite that is part of the A-Train
 satellite constellation \citep{Stephens2002} on a
 sun-synchronous low-Earth orbit with equator crossings at approximately 1330 hours local
@@ -372,7 +372,7 @@ The sum runs over all CALIOP profiles containing at least one cloud layer and a
 surface return that are within 100~km horizontal distance of the ceilometer,
 occurred within 3600~s of a ceilometer observation, and have their lowest CALIOP
 cloud feature within 3~km of the surface.  Ceilometer observations are only used
-if the observation closest in time to the Calipso overpass contains a cloud
+if the observation closest in time to the CALIPSO overpass contains a cloud
 within 3~km of the surface.  This height limit is imposed because a subset of
 the ceilometers has a range limit of 12500~feet, and all ceilometers report
 ceilings above 10000~feet with reduced granularity (500~feet); the 3~km
@@ -629,11 +629,11 @@ profiles.  This algorithm produces \CBH{} not only for thin clouds but also for
 clouds thick enough to attenuate the lidar (optical thickness $\tau \gtrsim 5$),
 based on the assumed mesoscale homogeneity of cloud base height within an
 airmass.  In addition to the \CBH{} estimate, the CBASE algorithm supplies an
-expected uncertainty $\sigma$ on the \CBH{}.  The CBASE data is available for the years 2007
+expected uncertainty $\sigma$ on the \CBH{}.  The CBASE dataset is available for the years 2007
 and 2008 at \commentjm{insert DOI}.
 
 CBASE \CBH{} and $\sigma$ have been evaluated using
-ground-based airport ceilometer data over the contiguous United States using a
+ground-based airport ceilometers over the contiguous United States using a
 data sample unbiased by the training of the algorithm.  The evaluation showed that
 \CBH{} and $\sigma$ are unbiased at the better
 than 10\% level: the bias on the \CBH{} is %
