@@ -786,9 +786,9 @@ data(cbase)
 
 \begin{figure*}
   \centering
-  <<cbase-uncert-quantiles,dev='tikz',fig.width=7,fig.height=9,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+<<cbase-uncert-quantiles,dev='tikz',fig.width=7,fig.height=8,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
   vis.quantiles(cbase %>% filter(dist == 40), 14)
-  @
+@
   \caption{Cloud base uncertainty quantiles.  Statistics are calculated within
     each $5\degree\times 5\degree$ latitude--longitude box.  The left (right)
     column shows statistics of daytime (nighttime) retrievals; daytime and
