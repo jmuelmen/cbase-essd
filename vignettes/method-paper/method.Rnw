@@ -155,7 +155,8 @@ read_chunk("../vis.R")
 
 \begin{abstract}
   A technique is presented that uses attenuated backscatter profiles from the
-  CALIOP satellite lidar to estimate cloud base heights.  Even when clouds are
+  CALIOP satellite lidar to estimate cloud base heights of lower-troposphere
+  liquid clouds (cloud base height below approximately 3~\unit{km}).  Even when clouds are
   thick enough to attenuate the lidar beam (optical thickness $\tau \gtrsim 5$),
   the technique provides cloud base heights by treating the cloud base height of
   nearby thinner clouds as representative of the surrounding cloud field.  Using
@@ -165,11 +166,11 @@ read_chunk("../vis.R")
   base heights and their predicted uncertainty using a second, statistically
   independent, ceilometer dataset shows that cloud base heights and
   uncertainties are biased by less than 10\%.  Geographic distributions of cloud
-  base height and its uncertainty are presented.  Regionally, the uncertainty is
-  found to be substantially smaller than the 480~\unit{m} uncertainty assumed in
-  the A-Train surface downwelling longwave estimate, potentially permitting the
-  most uncertain of the radiative fluxes in the climate system to be better
-  constrained.
+  base height and its uncertainty are presented.  In some regions, the
+  uncertainty is found to be substantially smaller than the 480~\unit{m}
+  uncertainty assumed in the A-Train surface downwelling longwave estimate,
+  potentially permitting the most uncertain of the radiative fluxes in the
+  climate system to be better constrained.
 \end{abstract}
 
 \introduction  %% \introduction[modified heading if necessary]
