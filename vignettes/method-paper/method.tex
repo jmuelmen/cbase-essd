@@ -147,11 +147,15 @@
 \Author[1]{Claudia}{Unglaub}
 \Author[1]{Leonore}{Jungandreas}
 \Author[3]{Christoph}{B\"ohm}
+\Author[4]{Lynn M.}{Russell}
 \Author[1]{Johannes}{Quaas}
 
 \affil[1]{Institute of Meteorology, Universit\"at Leipzig, Leipzig, Germany}
-\affil[2]{University of Wisconsin, Madison, USA}
-\affil[3]{Institute for Geophysics and Meteorology, Universit\"at zu K\"oln, K\"oln, Germany}
+\affil[2]{University of Wisconsin at Madison, Madison, Wisconsin, USA}
+\affil[3]{Institute for Geophysics and Meteorology, Universit\"at zu K\"oln,
+  K\"oln, Germany}
+\affil[4]{Scripps Institution of Oceanography, University of California, San
+  Diego, San Diego, California, USA}
 
 %% The [] brackets identify the author with the corresponding affiliation. 1, 2, 3, etc. should be inserted.
 
@@ -183,7 +187,8 @@
 
 \begin{abstract}
   A technique is presented that uses attenuated backscatter profiles from the
-  CALIOP satellite lidar to estimate cloud base heights.  Even when clouds are
+  CALIOP satellite lidar to estimate cloud base heights of lower-troposphere
+  liquid clouds (cloud base height below approximately 3~\unit{km}).  Even when clouds are
   thick enough to attenuate the lidar beam (optical thickness $\tau \gtrsim 5$),
   the technique provides cloud base heights by treating the cloud base height of
   nearby thinner clouds as representative of the surrounding cloud field.  Using
@@ -193,11 +198,11 @@
   base heights and their predicted uncertainty using a second, statistically
   independent, ceilometer dataset shows that cloud base heights and
   uncertainties are biased by less than 10\%.  Geographic distributions of cloud
-  base height and its uncertainty are presented.  Regionally, the uncertainty is
-  found to be substantially smaller than the 480~\unit{m} uncertainty assumed in
-  the A-Train surface downwelling longwave estimate, potentially permitting the
-  most uncertain of the radiative fluxes in the climate system to be better
-  constrained.
+  base height and its uncertainty are presented.  In some regions, the
+  uncertainty is found to be substantially smaller than the 480~\unit{m}
+  uncertainty assumed in the A-Train surface downwelling longwave estimate,
+  potentially permitting the most uncertain of the radiative fluxes in the
+  climate system to be better constrained.
 \end{abstract}
 
 \introduction  %% \introduction[modified heading if necessary]
@@ -277,7 +282,7 @@ reference measurements of \CBH{} to train and evaluate the algorithm by which
 \subsection{CALIOP VFM}
 
 The input satellite data to our analysis is from the Cloud--Aerosol Lidar with
-Orthogoncal Polarization \cite[CALIOP][]{Winker2007} on board the Cloud--Aerosol Lidar and Infrared Pathfinder
+Orthogoncal Polarization \citep[CALIOP,][]{Winker2007} on board the Cloud--Aerosol Lidar and Infrared Pathfinder
 Satellite Observation (CALIPSO) satellite that is part of the A-Train
 satellite constellation \citep{Stephens2002} on a
 sun-synchronous low-Earth orbit with equator crossings at approximately 1330 hours local
@@ -396,7 +401,7 @@ The sum runs over all CALIOP profiles containing at least one cloud layer and a
 surface return that are within 100~km horizontal distance of the ceilometer,
 occurred within 3600~s of a ceilometer observation, and have their lowest CALIOP
 cloud feature within 3~km of the surface.  Ceilometer observations are only used
-if the observation closest in time to the Calipso overpass contains a cloud
+if the observation closest in time to the CALIPSO overpass contains a cloud
 within 3~km of the surface.  This height limit is imposed because a subset of
 the ceilometers has a range limit of 12500~feet, and all ceilometers report
 ceilings above 10000~feet with reduced granularity (500~feet); the 3~km
@@ -653,11 +658,11 @@ profiles.  This algorithm produces \CBH{} not only for thin clouds but also for
 clouds thick enough to attenuate the lidar (optical thickness $\tau \gtrsim 5$),
 based on the assumed mesoscale homogeneity of cloud base height within an
 airmass.  In addition to the \CBH{} estimate, the CBASE algorithm supplies an
-expected uncertainty $\sigma$ on the \CBH{}.  The CBASE data is available for the years 2007
+expected uncertainty $\sigma$ on the \CBH{}.  The CBASE dataset is available for the years 2007
 and 2008 at \commentjm{insert DOI}.
 
 CBASE \CBH{} and $\sigma$ have been evaluated using
-ground-based airport ceilometer data over the contiguous United States using a
+ground-based airport ceilometers over the contiguous United States using a
 data sample unbiased by the training of the algorithm.  The evaluation showed that
 \CBH{} and $\sigma$ are unbiased at the better
 than 10\% level: the bias on the \CBH{} is %
@@ -676,11 +681,12 @@ subadiabaticity, which will be presented in future work.
 
 \begin{acknowledgements}
   We thank Patric Seifert and Albert Ansmann for valuable suggestions on the
-  algorithm.  We thank ICARE for hosting the CALIOP VFM dataset, which was
+  algorithm; ICARE for hosting the CALIOP VFM dataset, which was
   originally obtained from the NASA Langley Research Center Atmospheric Science
-  Data Center.  We thank DKRZ for computing and data hosting.  This research was
-  funded by the European Union under grant agreement 306284 ERC Starting Grant
-  QUAERERE.
+  Data Center; and DKRZ for computing and data hosting.  This research was
+  funded by the European Union under ERC Starting Grant
+  QUAERERE, grant agreement 306284, and by the United States National Science
+  Foundation under grant agreements AGS-1013423 and AGS-1048995.
 \end{acknowledgements}
 
 \bibliographystyle{copernicus}
@@ -750,7 +756,7 @@ subadiabaticity, which will be presented in future work.
     fit parameters.}
   \label{tab:quality-qa}
 % latex table generated in R 3.4.3 by xtable 1.8-2 package
-% Tue Feb  6 11:14:47 2018
+% Tue Mar 27 16:23:16 2018
 \begin{tabular}{lrrrrl}
   \hline
 \hline
