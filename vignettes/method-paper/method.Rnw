@@ -115,11 +115,15 @@ read_chunk("../vis.R")
 \Author[1]{Claudia}{Unglaub}
 \Author[1]{Leonore}{Jungandreas}
 \Author[3]{Christoph}{B\"ohm}
+\Author[4]{Lynn M.}{Russell}
 \Author[1]{Johannes}{Quaas}
 
 \affil[1]{Institute of Meteorology, Universit\"at Leipzig, Leipzig, Germany}
-\affil[2]{University of Wisconsin, Madison, USA}
-\affil[3]{Institute for Geophysics and Meteorology, Universit\"at zu K\"oln, K\"oln, Germany}
+\affil[2]{University of Wisconsin at Madison, Madison, Wisconsin, USA}
+\affil[3]{Institute for Geophysics and Meteorology, Universit\"at zu K\"oln,
+  K\"oln, Germany}
+\affil[4]{Scripps Institution of Oceanography, University of California, San
+  Diego, San Diego, California, USA}
 
 %% The [] brackets identify the author with the corresponding affiliation. 1, 2, 3, etc. should be inserted.
 
@@ -652,7 +656,7 @@ subadiabaticity, which will be presented in future work.
   originally obtained from the NASA Langley Research Center Atmospheric Science
   Data Center.  We thank DKRZ for computing and data hosting.  This research was
   funded by the European Union under grant agreement 306284 ERC Starting Grant
-  QUAERERE.
+  QUAERERE \commentjm{and E-PEACE funding information}.
 \end{acknowledgements}
 
 \bibliographystyle{copernicus}
