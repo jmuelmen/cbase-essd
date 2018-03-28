@@ -37,7 +37,7 @@ cbase.create.nc <- function(df, out.fname,
     ncdf4::ncatt_put(nc.out, "latitude", "standard_name", "latitude")
     ncdf4::ncatt_put(nc.out, "longitude", "standard_name", "longitude")
 
-    ncdf4::ncatt_put(nc.out, var.cbh, "source", "CBASE algorithm Version 1.0")
+    ncdf4::ncatt_put(nc.out, var.cbh, "source", "CBASE algorithm Version 1.00")
     ncdf4::ncatt_put(nc.out, var.cbh, "standard_name", "cloud_base_altitude")
     ncdf4::ncatt_put(nc.out, var.cbh, "units", "m")
     ncdf4::ncatt_put(nc.out, var.cbh, "description",
@@ -58,7 +58,7 @@ cbase.create.nc <- function(df, out.fname,
     
     ncdf4::ncatt_put(nc.out, 0, "Conventions", "CF-1.6")
     ncdf4::ncatt_put(nc.out, 0, "title", title)
-    ncdf4::ncatt_put(nc.out, 0, "references", "Muelmenstaedt et al., doi:10.5194/essd-xxxx, 2017")
+    ncdf4::ncatt_put(nc.out, 0, "references", "Muelmenstaedt et al., https://doi.org/10.5194/essd-2018-43, 2018")
     ncdf4::ncatt_put(nc.out, 0, "source",
                      "satellite, CALIOP Vertical Feature Mask processed by CBASE algorithm")
     ncdf4::ncatt_put(nc.out, 0, "institution", "University of Leipzig")

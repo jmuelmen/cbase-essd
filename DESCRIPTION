@@ -1,6 +1,6 @@
 Package: cbasetools
 Title: Cloud-base Tools
-Version: 1.00
+Version: 1.00.01
 Authors@R: person("Johannes", "Muelmenstaedt", email = "johannes.muelmenstaedt@uni-leipzig.de", role = c("aut", "cre"))
 Description: Retrieve and evaluate cloud bases from various satellite-borne instruments.
 Depends:
