@@ -664,6 +664,8 @@ subadiabaticity, which will be presented in future work.
 \bibliographystyle{copernicus}
 \bibliography{method.bib}
 
+\clearpage
+
 \begin{figure}
   \centering
   <<eval-asos,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=TRUE>>=
