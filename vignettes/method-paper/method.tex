@@ -279,6 +279,8 @@ intend to derive a global \CBH{} dataset; and ground-based observations used as
 reference measurements of \CBH{} to train and evaluate the algorithm by which
 \CBH{} is determined from the satellite data.
 
+Table~\ref{tab:data} lists the URLs for all datasets used in this paper.
+
 \subsection{CALIOP VFM}
 
 The input satellite data to our analysis is from the Cloud--Aerosol Lidar with
@@ -300,7 +302,7 @@ average to identify a feature above noise and molecular atmospheric scattering
 
 In the present analysis, we use VFM version 4.10 \citep{vfm}, the current
 ``standard'' release, for the years 2007 and 2008.  The VFM files are obtained
-from ICARE (\url{https://www.icare.univ-lille1.fr/catalogue/}).
+from ICARE (\url{http://www.icare.univ-lille1.fr/}).
 
 \subsection{Airport ceilometers}
 
@@ -322,7 +324,7 @@ minutes) and then objectively grouped into cloud layers and their respective
 fractional coverages, using the temporal variation at a fixed point under an
 advected cloud field as a proxy for spatial variability of the cloud field
 \citep[e.g.,][]{Heese2010}.  METAR data is widely distributed and archived; the
-data for the present analysis was downloaded from the Weather Underground
+data for the present analysis was downloaded from the Wunderground
 archive (\url{https://www.wunderground.com/history/airport/}).
 
 In the United States, \CBH{} is mostly derived automatically by laser ceilometers
@@ -506,7 +508,7 @@ CALIOP \CBH{} only exists sporadically,
 when CALIOP happens to hit a sufficiently thin cloud.  To infer the \CBH{} at a
 point of interest (POI) that does not necessarily coincide with the location of
 a thin-cloud CALIOP profile, we proceed as follows.  We first select all local
-CALIOP \CBH{} measurements within a horizontal distance $D_\text{max} = 100$~km of
+CALIOP \CBH{} measurements within a horizontal distance $D_\text{max} = 100$~\unit{km} of
 the POI that satisfy the additional quality cuts described in
 Section~\ref{sec:algorithm:qual}. 
 
@@ -644,11 +646,26 @@ cool air with relatively low longwave emission by water vapor. The selection
 reduces the available statistics by a factor of 100, but analyses based on
 A-Train data are usually not statistics-limited.
 
-The CBASE \CBH{} and $\sigma$ dataset \citep{cbase} is freely available at
-Deutsches Klimarechenzentrum (DKRZ) under doi:10.123/456789.  \commentjm{Add DOI
-once it is available.}  Following publication, the source code used to produce
-the dataset and evaluation plots will be made public at
-\url{https://github.com/jmuelmen}. 
+The CBASE \CBH{} and $\sigma$ dataset \citep{cbase} spanning the years 2007 and
+2008 is freely available at Deutsches Klimarechenzentrum (DKRZ) under the DOI
+\url{https://doi.org/10.1594/WDCC/CBASE}.  The dataset is provided in two
+spatial resolutions corresponding to different window sizes within which CALIOP
+profiles are combined: $D_\text{max} = 40$~\unit{km} and
+$D_\text{max} = 100$~\unit{km}.  CBASE provides two files for each CALIOP VFM
+input file: one using a 40 km window to detect the cloud field base height, and
+one using a 100 km window. (The input CALIOP VFM dataset is organized by the
+daytime (D)/nighttime (N) half of each orbit.) The file name pattern is
+\verb+CBASE-{40|100}.<date>T<time>{D|N}.nc+ (identical to the input CALIOP VFM
+file name with the exception of the product name and file-type extension). Files
+are organized into subdirectories by half-orbit start date.  In case no cloud
+base heights are detected within a half-orbit, no output file is
+produced. Otherwise, each CALIOP VFM input file results in a 40 km-resolution
+and a 100-km resolution CBASE file. The measurement quality is reported as a
+quantitative uncertainty estimate for each cloud field.
+
+Following publication of the final paper, the
+source code used to produce the dataset and evaluation plots will be made public
+at \url{https://github.com/jmuelmen}.
 
 \conclusions
 \label{sec:conclusions}
@@ -659,7 +676,7 @@ clouds thick enough to attenuate the lidar (optical thickness $\tau \gtrsim 5$),
 based on the assumed mesoscale homogeneity of cloud base height within an
 airmass.  In addition to the \CBH{} estimate, the CBASE algorithm supplies an
 expected uncertainty $\sigma$ on the \CBH{}.  The CBASE dataset is available for the years 2007
-and 2008 at \commentjm{insert DOI}.
+and 2008 at \url{https://doi.org/10.1594/WDCC/CBASE}.
 
 CBASE \CBH{} and $\sigma$ have been evaluated using
 ground-based airport ceilometers over the contiguous United States using a
@@ -692,6 +709,26 @@ subadiabaticity, which will be presented in future work.
 \bibliographystyle{copernicus}
 \bibliography{method.bib}
 
+\clearpage
+
+\begin{table}
+  \centering
+  \caption{Data sources used in this analysis}
+  \begin{tabular}{ll}
+    \hline\hline
+    Data product & URL  \\\hline
+    CALIOP VFM & \url{http://www.icare.univ-lille1.fr/archive?dir=CALIOP/VFM.v4.10/} \\
+    ASOS locations & \url{http://www.rap.ucar.edu/weather/surface/stations.txt}\\
+    METAR data & \url{https://www.wunderground.com/history/airport/}\footnotemark[1] \\
+    CBASE & \url{https://doi.org/10.1594/WDCC/CBASE} \\
+    \hline\hline
+  \end{tabular}
+  \belowtable{\footnotemark[1] As a first step, ASOS station identifiers within 100~\unit{km}
+    great-circle distance of a CALIOP footprint are identified; as a second
+    step, the ICAO identifier of the ASOS station is then used to query the
+    Wunderground METAR database.}
+  \label{tab:data}
+\end{table}
 \begin{figure}
   \centering
 \begin{knitrout}
@@ -756,7 +793,7 @@ subadiabaticity, which will be presented in future work.
     fit parameters.}
   \label{tab:quality-qa}
 % latex table generated in R 3.4.3 by xtable 1.8-2 package
-% Tue Mar 27 16:23:16 2018
+% Tue Apr 17 18:24:45 2018
 \begin{tabular}{lrrrrl}
   \hline
 \hline
