@@ -247,6 +247,8 @@ intend to derive a global \CBH{} dataset; and ground-based observations used as
 reference measurements of \CBH{} to train and evaluate the algorithm by which
 \CBH{} is determined from the satellite data.
 
+Table~\ref{tab:data} lists the URLs for all datasets used in this paper.
+
 \subsection{CALIOP VFM}
 
 The input satellite data to our analysis is from the Cloud--Aerosol Lidar with
@@ -268,7 +270,7 @@ average to identify a feature above noise and molecular atmospheric scattering
 
 In the present analysis, we use VFM version 4.10 \citep{vfm}, the current
 ``standard'' release, for the years 2007 and 2008.  The VFM files are obtained
-from ICARE (\url{https://www.icare.univ-lille1.fr/catalogue/}).
+from ICARE (\url{http://www.icare.univ-lille1.fr/}).
 
 \subsection{Airport ceilometers}
 
@@ -293,7 +295,7 @@ minutes) and then objectively grouped into cloud layers and their respective
 fractional coverages, using the temporal variation at a fixed point under an
 advected cloud field as a proxy for spatial variability of the cloud field
 \citep[e.g.,][]{Heese2010}.  METAR data is widely distributed and archived; the
-data for the present analysis was downloaded from the Weather Underground
+data for the present analysis was downloaded from the Wunderground
 archive (\url{https://www.wunderground.com/history/airport/}).
 
 In the United States, \CBH{} is mostly derived automatically by laser ceilometers
@@ -477,7 +479,7 @@ CALIOP \CBH{} only exists sporadically,
 when CALIOP happens to hit a sufficiently thin cloud.  To infer the \CBH{} at a
 point of interest (POI) that does not necessarily coincide with the location of
 a thin-cloud CALIOP profile, we proceed as follows.  We first select all local
-CALIOP \CBH{} measurements within a horizontal distance $D_\text{max} = 100$~km of
+CALIOP \CBH{} measurements within a horizontal distance $D_\text{max} = 100$~\unit{km} of
 the POI that satisfy the additional quality cuts described in
 Section~\ref{sec:algorithm:qual}. 
 
@@ -681,6 +683,24 @@ subadiabaticity, which will be presented in future work.
 
 \clearpage
 
+\begin{table}
+  \centering
+  \caption{Data sources used in this analysis}
+  \begin{tabular}{ll}
+    \hline\hline
+    Data product & URL  \\\hline
+    CALIOP VFM & \url{http://www.icare.univ-lille1.fr/archive?dir=CALIOP/VFM.v4.10/} \\
+    ASOS locations & \url{http://www.rap.ucar.edu/weather/surface/stations.txt}\\
+    METAR data & \url{https://www.wunderground.com/history/airport/}\footnotemark[1] \\
+    CBASE & \url{https://doi.org/10.1594/WDCC/CBASE} \\
+    \hline\hline
+  \end{tabular}
+  \belowtable{\footnotemark[1] As a first step, ASOS station identifiers within 100~\unit{km}
+    great-circle distance of a CALIOP footprint are identified; as a second
+    step, the ICAO identifier of the ASOS station is then used to query the
+    Wunderground METAR database.}
+  \label{tab:data}
+\end{table}
 \begin{figure}
   \centering
   <<eval-asos,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=TRUE>>=
