@@ -170,7 +170,8 @@ read_chunk("../vis.R")
   uncertainty is found to be substantially smaller than the 480~\unit{m}
   uncertainty assumed in the A-Train surface downwelling longwave estimate,
   potentially permitting the most uncertain of the radiative fluxes in the
-  climate system to be better constrained.
+  climate system to be better constrained.  The cloud base dataset is available
+  at \url{https://doi.org/10.1594/WDCC/CBASE}.
 \end{abstract}
 
 \introduction  %% \introduction[modified heading if necessary]
