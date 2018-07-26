@@ -4,7 +4,7 @@
 \alias{vis.mean}
 \title{Visualization of geographical distribution of cloud base heights}
 \usage{
-vis.mean(df, base_size)
+vis.mean(df, base_size, portrait = TRUE)
 }
 \arguments{
 \item{df}{data.frame.  Result of \code{bases.cbase()}}
