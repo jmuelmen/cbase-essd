@@ -1,0 +1,199 @@
+\documentclass[12pt,a4paper]{responses}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\newcommand\degree{\ensuremath{{}^\circ}}
+%%\pagestyle{empty}
+%%\renewcommand\caption[1]{}
+%%\linenumbers
+\setlength{\parskip}{12pt}
+\setlength{\parindent}{0pt}
+
+\renewcommand{\sfdefault}{pfu}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{sfmath}
+
+\begin{document}
+Dear Dr.~Carlson,
+
+we would like to thank the reviewers for pointing out opportunities for
+clarification in the manuscript.  
+
+Sincerely,
+
+Johannes M\"ulmenst\"adt for the authors
+
+\section{}
+
+\textit{The manuscript is well organized and well written, and the data product is of interest
+for the scientific community.  This manuscript is suitable for publication in this journal.
+However, I have several comments that should be addressed before the manuscript
+can be published.}
+
+
+
+\textit{\#1: Figure 3: I suggest to give explanations and to add discussions: a) What is CALIOP
+cloud base height in the X-axis?  Is it the mean value of the N relevant local CALIOP
+zi? Please clarify. b) Please specify whether height is above sea level or above ground
+level.  c) I don’t see the 95\% confidence intervals shaded in light red and in light blue.
+d) Looking at the contours of the joint probability density for instance in the right hand-
+side plot (high), it looks like the agreement between ceilometer and CALIOP cloud base
+heights for bases larger than 1.5 km is better than indicated by the red and blue lines.
+Can you comment?  e) It looks like Fig.  3 (high) has been obtained before discarding
+the classes of CALIOP profiles listed page 6, lines 1 to 9.  If this is correct, it would
+be very informative to show scatter plots as in Fig. 3 (high), but after discarding these
+profiles.}
+
+\textit{\#2: Page 4, Eq. (1): why are the authors using a new notation “E” for
+  RMSE?}
+
+\textit{\#3:  Page 6, lines 22-28:  a) Please explain how CALIOP z is converted to “z Above
+Ground” (which reference for the elevation maps?).  b) For more clarity,  it would be
+useful  to  use  different  notations  for  “Above  Sea  Level  z”  and  “Above  Ground  Level
+z”, for both the ceilometer and CALIOP. c) I am not sure why the satellite z estimate
+is intrinsically biased high “due to this boundary”.   Do you mean that the technique
+requires the local CALIOP “Above Ground Level” zi to be positive? d) I could not figure
+out how these biases are corrected (lines 26-28). Please develop and quantify. These
+bias corrections seem to be an important part of the algorithm training.}
+
+\#4: Page 6, lines 29-30: a) Do you confirm that you are introducing a new notation for
+RMSE, which is now "sigma"? b) Can you elaborate? For instance: what is the range
+of values for sigma(D,n,Dz)? What is the sensitivity of sigma to D, n, and Dz?
+
+\#5: Page 7, Equations 3 and 4: a) If I understand correctly, “z” in Eq. (3) is CBASE\_z.
+Please clarify and use a specific notation for the different quantities. Indeed, “z” is used
+several times throughout the manuscript, but with different meanings. b) Please define
+“n” in Eq.  (3).  c) In Eq.  (4), is sigma-i actually sigma-i(Di,ni,Dzi), with Di, ni, and Dzi
+associated to CALIOP local zi? How is ni defined for a local zi? d) Can you discuss the
+impact of the training? For instance: how do CBASE\_z and CALIOP mean base height
+compare for the year 2008 used to train the algorithm? How did you train the algorithm
+to have mean (CBASE\_z -ceilometer $\hat{z}$) equal to zero (as suggested by statement
+line 23, page 7)?
+
+\#6:  Page 8, lines 12-18:  My understanding is that the algorithm training and the veri-
+fication presented in Sect.  3.4 using the 2007 data set have been carried out with no
+distinction between nighttime and daytime data.  Did you investigate whether sigma-i
+(Di,ni,Dzi) are the same for nighttime and daytime data?  I wonder whether the differ-
+ences between the nighttime and daytime CBASE\_z highlighted here could be due in
+part to the fact that the algorithm training combines daytime and nighttime data.
+
+\#7: Page 8, lines 19-25: a) Figure 9 seems out of place. In my opinion, this discussion
+could be earlier in the manuscript.   However,  comparisons of 2B-GEOPROF-LIDAR
+and CBASE base altitudes would be informative.  b) Please describe the “underlying
+physical measurement” in 2B-GEOPROF-LIDAR that explain the similarity of lidar-only
+2B-GEOPROF-LIDAR and CBASE cloud bases. c) Are you implying that for lidar-only
+cases, cloud bases reported in 2B-GEOPROF-LIDAR differ from those reported in the
+V4.10 CALIOP VFM and are in better agreement with CBASE? Does 2B-GEOPROF-
+LIDAR use V4.10 CALIOP data?
+
+\#8: Page 9, lines 20-21: did the authors investigate how CBASE\_z and CALIOP base
+altitude compare for clouds that are thick enough to attenuate the lidar laser beam?
+
+\#9 Page 9, line 27: was stated but not shown.
+
+\textit{}
+
+\section{}
+
+\textit{In summary, I do not recommend this paper for publication in its current state.  The
+methodology is questionable. The conclusions are highly qualified, and its not clear to
+me what exactly the authors have contributed to the science. In fact, its not clear to me
+at all why this methodology is even needed.  Let me summarize my primary scientific
+concerns:}
+
+The reason this methodology is needed is that all existing satellite cloud base
+products have significant limitations.  We do not claim that our product is
+flawless (and in fact a large fraction of the effort behind this product is
+dedicated to characterizing the errors); but science is an incremental endeavor,
+and the product incorporates enough features beyond existing products to make it
+a significant advance: cloud base heights, validated against ground
+observations, along the A-Train, for optically thick clouds, including validated
+point-by-point uncertainty estimates.  We address the reviewer's specific
+concerns below.
+
+\textit{Its not clear why you’d need to resolve cloud base from CALIOP when CloudSat can
+do it. That’s the whole point of the synergy between the lidar/radar.} 
+
+
+As we point out in the introduction, CloudSat is limited in its ability to
+detect cloud base because (a) the droplet size and thus radar reflectivity tends
+to decrease towards cloud base and (b) the lowest km of the profile tends to be
+affected by ground clutter.  We were under the impression that these limitations
+of CloudSat are well known, and the manuscript includes a plot and a table
+documenting that CloudSat cloud base estimates perform worse than Calipso
+estimates even absent any attempts to correct or select high-quality lidar
+estimates.  At the suggestion of Reviewer 1, the discussion of CloudSat cloud
+bases has been moved upward in the manuscript; we have also expanded upon the
+description of the CloudSat cloud base shortcomings in the introduction.  We
+hope that this makes it clearer to the reader why we do not use CloudSat.
+
+\textit{Further, its not clear to me why, if you can resolve cloud base with
+  CALIOP for an optically-tenuous clouds, why you’d need an algorithm to
+  understand potential correlation and uncertainty, and thus who’d even use it?}
+
+As we state at the beginning of the abstract (l.~2--4 of the manuscript), in the
+introduction, and again in the conclusions, we are not content to know the cloud
+base of optically tenuous clouds, but rather want to know the cloud base of
+optically thick clouds.  We list several potential applications in the
+conclusions that indicate who potential users would be.  As to why we would want
+to understand the uncertainty of a new product, we presumed that required no
+justification among quantitative scientists. 
+
+\textit{If this paper is going to be publishable, the reviewers needs
+to go back and very considerately make the case that answers these questions. In my
+opinion, they have not done so beyond a threshold necessary for publication.}
+
+In our opinion, the manuscript was already quite clear about why CloudSat and
+CALIOP without further processing are unsatisfactory for cloud base height.  We
+have nevertheless tried to make it even clearer in the revised manuscript.
+
+\textit{Training of your dataset relative to ground-based ceilometers, as you
+  even state, limits your application to a very small set of cloud types. The
+  authors seem aware of this, but only speculate as to its impact.}
+
+From the standpoint of knowing the true cloud base with the maximum spatial
+coverage achievable, if not ceilometers, then what?  
+
+It would be desirable to have a validation dataset for oceanic cloud in addition
+to continental, and we are very upfront about this in the manuscipt.  That said,
+the range of cloud types observable over a year across the contiguous United
+States is not ``very small''.  In our judgment, releasing a dataset with
+documented imperfections was preferable to polishing the apple forever.  In
+particular, releasing the dataset makes it possible for others in the community
+to validate its performance for oceanic cloud if they are aware of a suitable
+validation dataset that we do not know of.  (We note that such a validation
+exercise would be meaningful even if we did not retrain the algorithm on an
+oceanic dataset.)
+
+\textit{I ask again, who is the customer for this dataset, and how will it
+  advance any scientific interest? How was the 100 km threshold for collocating
+with ceilometers chosen?  What is the correlation length of cloud base spatially so as
+to justify such a choice? What is the impact on your results if you vary that threshold?
+There have been efforts (Omar et al. 2013 for aerosols...JGR-A) to collocate CALIOP
+with ground-based sun photmeters.  They came up with something like 1500 suitable
+collocations under a much more stringent set of temporal and spatial thresholds. What
+you’re trying to do requires far more justification and scientific basis, as it goes against
+conventional/proven thinking otherwise.}
+
+The spatial decorrelation of the cloud base height is already taken into account
+by the algorithm, as the RMSE increases with collocation distance, penalizing
+more distant measurements when CALIOP columns are combined and increasing the
+predicted uncertainty.  In principle, we could have chosen any collocation
+distance threshold.  In practice, we provide cloud base estimates with two
+collocation distance thresholds: 40~km and 100~km; the reason for this is to
+allow the user to make the tradeoff between increased probability that we can
+provide an estimate at a given location (the 100~km dataset) and lower cloud
+base uncertainty (the 40~km dataset).  We note that there is nothing
+controversial about a 40~km collocation distance, and this is in fact the
+threshold Omar et al.~(2013) recommend.  The reason we have a larger number of
+collocations is that airport ceilometers vastly outnumber AeroNet stations.
+
+\textit{I recognize that as this is a Discussions page, that the likelihood is that the authors will
+be afforded opportunity to respond.  That’s fine.  I caution, however, that if this were a
+more standard journal, I would be recommending an outright rejection.}
+
+We are grateful for the opportunity to respond.  Beyond that, we cannot claim to
+understand this comment.
+
+\end{document}
