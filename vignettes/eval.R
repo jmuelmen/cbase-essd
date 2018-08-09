@@ -439,6 +439,21 @@ res$ggplot
 ## ---- combo-lays-tbl ---------------------
 regression_table(res)
 
+## ---- 2bgeoprof-cbase-comparison ----------
+df.2bgeoprof.cbase <- inner_join(combo.self,
+                                 df.2bgeoprof %>% filter(flag.base == "Lidar"),
+                                 by = c("station.icao", "date", "episode")) %>%
+    ungroup()
+
+res <- df.2bgeoprof.cbase %>%
+    mutate(ceilo = caliop * 1e3,
+           caliop = pred.ceilo * 1e-3) %>%
+    group_by(dummy, dummy2) %>%
+    regression_plot(title = NULL,
+                    xlab = "CBASE cloud base height (km AGL)",
+                    ylab = "2B-GEOPROF-LIDAR lidar cloud base height (km AGL)",
+                    include.lm = FALSE, base_size = 14)
+res$ggplot
 
 ## ---- glorious-victory ---------------------
 library(beepr)
