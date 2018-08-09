@@ -67,7 +67,7 @@ statistify.df <- function(df) {
 #'
 #' @examples
 #' 
-regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)",
+regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km AGL)",
                             base_size = 11) {
     stats <- statistify(df)
     stats.n <- summarize(df, n = n())
@@ -98,7 +98,7 @@ regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km)",
         ## ggplot2::coord_cartesian(ylim = c(-500,5500)) +
         ggplot2::coord_fixed(1e-3, xlim = c(0,3), ylim = c(0,3000), expand = FALSE) +
         (if (any(grepl("[A-Za-z0-9]", gr))) ggplot2::facet_grid(gr)) +
-        ggplot2::labs(title = title, x = xlab, y = "Ceilometer base (m)") +
+        ggplot2::labs(title = title, x = xlab, y = "Ceilometer base (m AGL)") +
         (if (0) {
             ggplot2::geom_text(data = stats,
                                ggplot2::aes(x = 3, y = 0,

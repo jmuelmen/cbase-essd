@@ -268,7 +268,7 @@ res <- df.2bgeoprof %>%
     dplyr::group_by(dummy, ## dummy2) %>%
         ## lays,
                     flag.base) %>%
-    regression_plot(title = NULL, xlab = "2B-GEOPROF-LIDAR cloud base height (km)", base_size = 14)
+    regression_plot(title = NULL, xlab = "2B-GEOPROF-LIDAR cloud base height (km AGL)", base_size = 14)
 res$ggplot
 
 ## ---- eval-2bgeoprof-tbl --------------------
@@ -396,7 +396,7 @@ res <- combo %>%
     filter(pred.ceilo > 0, pred.ceilo < 3e3) %>%
     mutate(caliop = pred.ceilo * 1e-3, caliop.local = caliop) %>%
     group_by(dummy, dummy2) %>%
-    regression_plot(title = NULL, xlab = "CBASE cloud base height (km)", base_size = 14)
+    regression_plot(title = NULL, xlab = "CBASE cloud base height (km AGL)", base_size = 14)
 res$ggplot
 
 ## ---- combo-qq --------------------
@@ -417,7 +417,7 @@ res <- combo %>%
     ## select(-caliop) %>%
     mutate(caliop = pred.ceilo * 1e-3, caliop.local = caliop) %>%
     group_by(dummy, pred.rmse) %>%
-    regression_plot(title = NULL, xlab = "CBASE cloud base height (km)")
+    regression_plot(title = NULL, xlab = "CBASE cloud base height (km AGL)")
 ## res$ggplot
 
 ## ---- combo-tbl-qa --------------------
