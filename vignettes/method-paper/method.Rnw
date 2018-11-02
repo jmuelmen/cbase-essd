@@ -197,30 +197,30 @@ the height of the most reflective layer \citep{Naud2005,Naud2007} in Multiangle
 Imaging Spectroradiometer data \citep[MISR,][]{Diner1998} yields information on
 \CBH{}, as the lowest layer heights within a cloud cluster may correspond to the
 base of a cloud seen from its side.  An evaluation of MISR
-  techniques is in progress \citep{Boehm2017}.
-
+techniques is in progress \citep{Boehm2017}.
+  
 For analyses wishing to combine cloud base information with other cloud
-properties retrieved by A-Train satellites, these methods share the disadvantage
-that the required instruments are not part of the A-Train.  Methods that are
-applicable to A-Train satellites are based on MODerate-resolution Imaging
-Spectroradiometer \citep[MODIS,][]{Platnick2017} cloud properties retrieved near
-cloud top and integrated along moist adiabats to determine the cloud thickness
-\citep{Meerkoetter2007} or on active remote sensing by CloudSat
-\citep[2B-GEOPROF,][]{Marchand2008} or a combination of CloudSat and CALIOP
-\citep[2B-GEOPROF-LIDAR,][]{Mace2014}.  Each of these has drawbacks.  The
-MODIS-derived cloud thickness assumes adiabatic cloud profiles and therefore
-cannot be used to constrain subadiabaticity; the use of ancillary temperature
-profile estimates may also be problematic in many cases.  CloudSat misses the
-small droplets at the base of nonprecipitating clouds, and retrievals are
-further degraded in the ground clutter region.  CALIOP detects the bases of only
-the thinnest clouds \citep[$\tau < 5$,][]{Mace2014}; frequently, it is desirable
-to know the base height of thick clouds as well.
-
-In this paper, we revisit the CALIOP cloud base determination.  This relies on
+properties retrieved by A-Train satellites, these methods share the
+disadvantage that the required instruments are not part of the A-Train.
+Methods that are applicable to A-Train satellites are based on
+MODerate-resolution Imaging Spectroradiometer \citep[MODIS,][]{Platnick2017}
+cloud properties retrieved near cloud top and integrated along moist adiabats
 to determine the cloud thickness \citep{Meerkoetter2007,Goren2018} or on active remote
+sensing by CloudSat \citep[2B-GEOPROF,][]{Marchand2008} or a combination of
+CloudSat and CALIOP \citep[2B-GEOPROF-LIDAR,][]{Mace2014}.  Each of these has
+drawbacks.  The MODIS-derived cloud thickness assumes adiabatic cloud profiles
+and therefore cannot be used to constrain subadiabaticity; the use of
+ancillary temperature profile estimates may also be problematic in many cases.
+CloudSat misses the small droplets at the base of nonprecipitating clouds
+\citep{Sassen2008}, and retrievals are further degraded in the ground clutter
+region \citep{Tanelli2008, Marchand2008}.  CALIOP detects the bases of only
+the thinnest clouds \citep[$\tau < 5$,][]{Mace2014}; frequently, it is
+desirable to know the base height of thick clouds as well.
+
+In this paper, we revisit the CALIOP cloud base determination.  We rely on
 one central assumption, namely that, because the lifting condensation level is
 approximately homogeneous within an airmass, the cloud bases retrieved by CALIOP
-for thin clouds may be a good proxy for the cloud base heights of an entire
+for thin clouds is a good proxy for the cloud base heights of an entire
 cloud field, including the optically thicker clouds within the field.  We have
 designed an algorithm that extrapolates the CALIOP cloud base measurements into
 locations where CALIOP attenuates before reaching cloud base.  This algorithm is
