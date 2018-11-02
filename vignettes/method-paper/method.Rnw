@@ -458,17 +458,32 @@ satellite and ceilometer \CBH{} due to the varying terrain height, which would l
 to an unrealistically positive assessment.
 
 When calculating aggregate statistics such as the RMSE, a further consideration
-comes into play.  \CBH{} above ground is positive-definite, which imposes a
-physical phase-space boundary.  Due to this boundary, the satellite \CBH{} estimate
-is intrinsically biased high (negative excursions may be removed by the
-phase-space boundary, but positive excursions are not), and the bias decreases
-with increasing satellite \CBH{} estimate (when true \CBH{} is high, it is less likely
-that measurement error would lead to a negative AGL \CBH{}).  Since this effect
-constitutes a bias rather than a random error, it cannot be eliminated by
-averaging over large sample sizes, but instead needs to be corrected for.  Since
-the effect is nonlinear in \CBH{}, a nonlinear correction method is required; our
-choice of nonlinear bias correction is an $\epsilon$-regression support vector
-machine \citep[SVM,][]{svm}.
+comes into play.  \CBHc{} above ground is positive-definite, which imposes a
+physical phase-space boundary.  Due to this boundary, the satellite \CBHc{}
+estimate is intrinsically biased high (negative excursions due to symmetric
+random error may be removed by the phase-space boundary, but positive excursions
+are not), and the bias decreases with increasing satellite \CBHc{} estimate
+(when true \CBHc{} is high, it is less likely that measurement error would lead
+to a negative AGL \CBHc{}).  Since this effect constitutes a bias rather than a
+random error, it cannot be eliminated by averaging over large sample sizes, but
+instead needs to be corrected for.  Since the effect is nonlinear in \CBHc{}, a
+nonlinear correction method is required.  Our choice of nonlinear bias
+correction is the support vector machine \citep[SVM;][]{Cortes1995}.  The SVM is
+a machine-learning algorithm formulated to learn classification
+\citep{Cortes1995} or regression \citep{Vapnik1995} tasks from a training
+dataset, discarding outliers and accommodating nonlinear functions
+\citep[e.g.,][]{Smola2004}.  We train an $\epsilon$-regression SVM, implemented
+as an R package \citep{e1071} using the libsvm library \citep{svm}, separately
+for each $D$, $n$, and $\Delta z$ category, using the 2008 ceilometer overpass
+training dataset.  The correction function is not trivial to represent because
+of its dependence on $z_\text{c}$, $D$, $n$, and $\Delta z$ (which can be
+correlated).  To reduce the dimensionality of this multivariate correction, we
+have used the training dataset (with its joint distribution of $z_\text{c}$,
+$D$, $n$, and $\Delta z$) to calculate an ensemble of correction factors that
+can be expected in a realistic sample of clouds, shown in
+Figure~\ref{fig:svm-correction}.  The full multivariate correction function,
+implemented in R, will be released to \url{https://github.com/jmuelmen}
+concurrently with the publication of this manuscript.
 
 Following bias correction, the sample RMSE is calculated for each combination of
 $D$, $n$, and $\Delta z$.  The sample RMSE is taken as an estimate of the
