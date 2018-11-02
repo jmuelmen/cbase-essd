@@ -500,9 +500,18 @@ concurrently with the publication of this manuscript.
 
 Following bias correction, the sample RMSE is calculated for each combination of
 $D$, $n$, and $\Delta z$.  The sample RMSE is taken as an estimate of the
-statistical uncertainty $\sigma(D,n,\Delta z)$ on the CALIOP \CBH{}.
+statistical uncertainty $\sigmac(D,n,\Delta z)$ on the CALIOP profile \CBHc{}.
+Note that $D$ and $\Delta z$ exist for each profile, whereas $n$ is defined for
+the group of suitable profiles around the point of interest.  Since the
+predicted uncertainty is multivariate, it is also nontrivial to visualize.  We
+again use the training dataset as an ensemble on which to perform
+one-dimensional projections of $\sigmac(D,n,\Delta z)$ onto each of the
+predictor variables.  These projected $\sigmac$ density estimates are shown in
+Figure~\ref{fig:eval-uncertainty}.  The full multivariate $\sigmac$ prediction
+function, implemented in R, will be released to
+\url{https://github.com/jmuelmen} concurrently with the publication of this
+manuscript.
 
-\subsection{Combination of local cloud bases}
 \label{sec:algorithm:combination}
 CALIOP \CBH{} only exists sporadically, 
 when CALIOP happens to hit a sufficiently thin cloud.  To infer the \CBH{} at a
@@ -783,6 +792,17 @@ subadiabaticity, which will be presented in future work.
 
 \begin{figure*}
   \centering
+\begin{figure*}
+  \centering
+  <<eval-uncertainty,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  @
+  \caption{Density estimates of the projection of
+    $\sigmac(D, n, \Delta z)$ onto each of the uncertainty
+    predictor variables.  The training dataset (ceilometer overpasses in 2008)
+    is used as the ensemble for performing the projection.}
+  \label{fig:eval-uncertainty}
+\end{figure*}
+
   <<combo-plot,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
   @
   \caption{Scatter plot of CBASE versus ceilometer \CBH{} for all A-Train
