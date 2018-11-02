@@ -67,7 +67,10 @@ statistify.df <- function(df) {
 #'
 #' @examples
 #' 
-regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km AGL)",
+regression_plot <- function(df, title,
+                            xlab = "CALIOP cloud base height (km AGL)",
+                            ylab = "Ceilometer base (m AGL)",
+                            include.lm = TRUE,
                             base_size = 11) {
     stats <- statistify(df)
     stats.n <- summarize(df, n = n())
@@ -92,13 +95,13 @@ regression_plot <- function(df, title, xlab = "CALIOP cloud base height (km AGL)
          else
              ggplot2::stat_bin2d(geom = "raster", binwidth = c(0.1, 100))) +
         ggplot2::stat_density2d(geom = "density2d", col = "black") +
-        ggplot2::stat_smooth(method = "lm", col = "red", fill = "red", formula = y ~ x) +
+        (if (include.lm) ggplot2::stat_smooth(method = "lm", col = "red", fill = "red", formula = y ~ x)) +
         ggplot2::stat_smooth(method = "auto", col = "blue", fill = "blue", formula = y ~ x) +
         ggplot2::geom_abline(intercept = 0, slope = 1000, lty = "dashed", col = "lightgrey") +
         ## ggplot2::coord_cartesian(ylim = c(-500,5500)) +
         ggplot2::coord_fixed(1e-3, xlim = c(0,3), ylim = c(0,3000), expand = FALSE) +
         (if (any(grepl("[A-Za-z0-9]", gr))) ggplot2::facet_grid(gr)) +
-        ggplot2::labs(title = title, x = xlab, y = "Ceilometer base (m AGL)") +
+        ggplot2::labs(title = title, x = xlab, y = ylab) +
         (if (0) {
             ggplot2::geom_text(data = stats,
                                ggplot2::aes(x = 3, y = 0,
