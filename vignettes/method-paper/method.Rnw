@@ -462,10 +462,13 @@ following boundaries:
 
 We can now consider the joint distribution of CALIOP and ceilometer cloud bases
 for each combination of the above variables to derive the RMSE of each
-combination.  For this comparison, we use \CBH{} above ground level (AGL); using
-\CBH{} above mean sea level (MSL) would introduce an intrinsic correlation between
-satellite and ceilometer \CBH{} due to the varying terrain height, which would lead
-to an unrealistically positive assessment.
+combination.  Throughout this work, we use cloud base height above ground level
+(AGL); using height above mean sea level (MSL) would introduce an intrinsic
+correlation between satellite and ceilometer cloud base height due to the
+varying terrain height, which would lead to an unrealistically positive
+assessment.  To convert cloud base heights to AGL height, we subtract the
+surface elevation contained in the CALIOP VFM data files, which in turn comes
+from the CloudSat R05 surface digital elevation model. 
 
 When calculating aggregate statistics such as the RMSE, a further consideration
 comes into play.  \CBHc{} above ground is positive-definite, which imposes a
