@@ -217,6 +217,7 @@ the thinnest clouds \citep[$\tau < 5$,][]{Mace2014}; frequently, it is desirable
 to know the base height of thick clouds as well.
 
 In this paper, we revisit the CALIOP cloud base determination.  This relies on
+to determine the cloud thickness \citep{Meerkoetter2007,Goren2018} or on active remote
 one central assumption, namely that, because the lifting condensation level is
 approximately homogeneous within an airmass, the cloud bases retrieved by CALIOP
 for thin clouds may be a good proxy for the cloud base heights of an entire
