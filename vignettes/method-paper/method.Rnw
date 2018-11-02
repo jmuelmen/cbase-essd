@@ -74,6 +74,8 @@
 \newcommand\comment[2]{\{\hlnum{ \textit{#1}: #2}\}}
 \newcommand\commentjm[1]{\comment{$j_\mu$}{#1}}
 \newcommand\CBH{\ensuremath{z}}
+\newcommand\CBHc{\ensuremath{z_\text{c}}}
+\newcommand\sigmac{\ensuremath{\sigma_\text{c}}}
 \newcommand\DLR{\ensuremath{F_\text{surf}^\downarrow}}
 
 \usepackage[percent]{overpic}
@@ -328,23 +330,27 @@ closest co-location distance during the year 2007.
 
 The CBASE algorithm and evaluation proceed in four steps:
 \begin{enumerate}
-\item We determine \CBH{} from all CALIOP profiles where the
+\item We determine the cloud base height from all CALIOP profiles where the
   surface generates a return, indicating that the lidar is not completely
-  attenuated by cloud.  We refer to this as the \textit{local
-    \CBH{}} in the sense that it is local to the CALIOP profile.
+  attenuated by cloud.  We refer to this as the \textit{column
+    \CBHc{}} in the sense that it is local to the CALIOP column.
 \item Using ground-based ceilometer data, we determine quality of cloud base
   height depending on a number of properties of the CALIOP profile.  Assuming
-  those properties suffice to determine the quality of the \CBH{} estimate, we
+  those properties suffice to determine the quality of the \CBHc{} estimate, we
   can then predict the quality of a cloud base as a function of those factors.
   The quality metric we use is the root mean square error (RMSE); the category
-  RMSE determined from comparison to ceilometer \CBH{} then serves as the predicted
-  \CBH{} uncertainty $\sigma$.  In the language of machine learning, we refer to this step
-  as \textit{training} the algorithm on the ceilometer data to predict \CBH{} and
-  $\sigma$.
-\item Based on the predicted quality of each local cloud base, we either reject
-  the local cloud base or combine it with other local cloud bases within a
-  distance $D_\text{max}$ of the point of interest (POI) to arrive at an 
-  estimate of \CBH{} and $\sigma$ at the POI.
+  RMSE determined from comparison to ceilometer \CBHc{} then serves as the
+  (sample) estimate of the predicted (population) standard deviation of the
+  measurement error $\CBHc - \hat{z}$, i.e., the predicted \CBHc{}
+  uncertainty.  We denote this column uncertainty as $\sigmac$.  In the language
+  of machine learning, we refer to this step 
+  as \textit{training} the algorithm on the ceilometer data to predict \CBHc{} and
+  $\sigmac$.
+\item Based on the predicted quality of each profile cloud base, we either reject
+  the column cloud base or combine it with other cloud cloud bases within a
+  distance $D_\text{max}$ of the point of interest to arrive at an 
+  estimate of \CBH{} and $\sigma$ at that point.  We refer to \CBH{} and $\sigma$
+  as the CBASE cloud base height and cloud base height uncertainty.
 \item Using a statistically independent validation dataset, we verify that the
   predicted \CBH{} and $\sigma$ are correct.
 \end{enumerate}
@@ -352,25 +358,24 @@ The CBASE algorithm and evaluation proceed in four steps:
 This section is divided into four subsections, one for each algorithm step
 enumerated above.
 
-\subsection{Determination of local \CBH{}}
+\subsection{Determination of CALIOP column \CBH{}}
 \label{sec:algorithm:local}
-Local \CBH{} is determined from the CALIOP VFM for each profile with a surface
+Profile \CBHc{} is determined from the CALIOP VFM for each profile with a surface
 return.  The rationale is that a surface return indicates that the lidar did not
 attenuate within the cloud, and that the lower limit of the layer identified as
 cloud therefore corresponds to the cloud base; Figure~\ref{fig:method}
-illustrates the idea.  For these profiles, the location, \CBH{}, cloud top height,
+illustrates the idea.  For these profiles, the location, \CBHc{}, cloud top height,
 feature type between the cloud base and the surface,
 cloud thermodynamic phase, and associated quality assurance flags from the VFM
 algorithm are recorded.
 
-\subsection{Determination of local cloud base quality}
+\subsection{Determination of CALIOP column cloud base quality}
 \label{sec:algorithm:qual}
-We assess the quality of the CALIOP \CBH{} using the root mean square error
-(RMSE) with respect to the
+We assess the quality of the CALIOP \CBHc{} using the RMSE with respect to the
 ceilometer-observed $\hat{z}$.  The RMSE is defined as
 \begin{equation}
   \label{eq:rmse}
-  E = \sqrt{\frac{1}{N}\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right)^2}.
+  \text{RMSE} = \sqrt{\frac{1}{N}\sum\limits_{i = 1}^{N}\left(\CBHc^i - \hat{z}\right)^2}.
 \end{equation}
 The sum runs over all CALIOP profiles containing at least one cloud layer and a
 surface return that are within 100~km horizontal distance of the ceilometer,
@@ -395,14 +400,14 @@ quantitative role in the algorithm:
 \item[Retrieval bias,] defined as
   \begin{equation}
     \label{eq:bias}
-    \mbox{bias} = \frac{1}{N}\sum\limits_{i = 1}^{N}\left(z_i - \hat{z}\right),
+    \mbox{bias} = \frac{1}{N}\sum\limits_{i = 1}^{N}\left(\CBHc^i - \hat{z}\right),
   \end{equation}(ideally 0)
 \end{description}
 
 CALIOP's ability to detect cloud base depends on the properties of the cloud.
-Therefore, we expect that the \CBH{} quality will vary between
-different cloud profiles.  Measuring the quality as a function of various
-properties of the CALIOP column may allow us to predict the quality of other
+Therefore, we expect that the \CBHc{} quality will vary between
+different cloud profiles.  We expect that measuring the quality as a function of various
+properties of the CALIOP column will allow us to predict the quality of other
 columns with the same combination of properties.  The properties that are easily
 accessible in a single column and have substantial effects on quality are:
 \begin{itemize}
@@ -415,9 +420,9 @@ accessible in a single column and have substantial effects on quality are:
 \item horizontal averaging distance required for CALIOP cloud feature
   detection.
 \end{itemize}
-For illustrative purposes, Figure~\ref{fig:quality-qa} shows the joint
-distribution of CALIOP and ceilometer \CBH{} faceted by the CALIOP
-VFM feature quality assurance flag.  
+For illustrative purposes, Figure~\ref{fig:quality-qa} and
+Table~\ref{tab:quality-qa} summarize the joint distribution of CALIOP and
+ceilometer \CBHc{} faceted by the CALIOP VFM feature quality assurance flag.
 
 Based on determining the retrieval quality as a function of one variable at a
 time (integrating over the sample distribution of the remaining variables), the
@@ -437,6 +442,10 @@ following classes of CALIOP profiles are discarded:
   columns exist to determine the RMSE reliably in each of the categories defined
   below).
 \end{itemize}
+Figure~\ref{fig:quality-qa-other-cuts} and Table~\ref{tab:quality-qa-other-cuts}
+summarize the joint distribution of CALIOP profile \CBHc{} and ceilometer
+$\hat{z}$ after these selection criteria for comparison with the unfiltered
+joint distributions in Figure~\ref{fig:quality-qa}.
 
 The remaining variables are discretized roughly into quintiles of their
 distribution within the VFM dataset with the
