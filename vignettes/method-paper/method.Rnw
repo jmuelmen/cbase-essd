@@ -512,28 +512,31 @@ function, implemented in R, will be released to
 \url{https://github.com/jmuelmen} concurrently with the publication of this
 manuscript.
 
+\subsection{Combination of column cloud bases}
 \label{sec:algorithm:combination}
 CALIOP \CBH{} only exists sporadically, 
 when CALIOP happens to hit a sufficiently thin cloud.  To infer the \CBH{} at a
-point of interest (POI) that does not necessarily coincide with the location of
-a thin-cloud CALIOP profile, we proceed as follows.  We first select all local
-CALIOP \CBH{} measurements within a horizontal distance $D_\text{max} = 100$~\unit{km} of
-the POI that satisfy the additional quality cuts described in
+point of interest that does not necessarily coincide with the location of
+a thin-cloud CALIOP column, we proceed as follows.  We first select all CALIOP
+column \CBHc{} measurements within a horizontal distance $D_\text{max} = 100$~\unit{km} of
+the point that satisfy the additional quality cuts described in
 Section~\ref{sec:algorithm:qual}. 
 
-For each remaining local $\CBH{}_i$, we determine the predicted
-uncertainty $\sigma_i$ based on the categories established in the previous
+For each remaining column $\CBH{}_{\text{c},i}$, we determine the predicted
+uncertainty $\sigma_{\text{c},i}$ based on the categories established in the previous
 section.  We determine a combined \CBH{}
 \begin{equation}
   \label{eq:combo-z}
-  \CBH = \frac{\sum\limits_i^n w_i z_i}{\sum\limits_i^n w_i}
+  \CBH = \frac{\sum\limits_i^n w_i \CBHc^i}{\sum\limits_i^n w_i}
 \end{equation}
 with weights
 \begin{equation}
   \label{eq:weights}
-  w_i = \frac 1 {\sigma_i^2}
+  w_i = \frac 1 {\sigma_{\text{c},i}^2}
 \end{equation}
-(optimal weights for uncorrelated least-squares).  In practice, the individual
+(optimal weights for uncorrelated least-squares).  The sum is calculated over
+the $n$ \CBHc{} estimates within $D_\text{max}$ that satisfy all criteria listed
+in the previous subsection.  In practice, the individual
 measurements of cloud base are highly correlated with fairly similar
 $\sigma_i$.  The cloud base estimate by Eq.~(\ref{eq:combo-z}) with weights
 given by Eq.~(\ref{eq:weights}) remains unbiased even in the presence of
@@ -542,10 +545,10 @@ the uncorrelated weights would yield a biased estimate in the presence of
 correlations.  The expression
 \begin{equation}
   \label{eq:combo-sigma}
-  \sigma^2 = \frac 1 n \sum\limits_i^n \sigma_i^2
+  \sigma^2 = \frac 1 n \sum\limits_i^n \sigma_{\text{c},i}^2
 \end{equation}
 yields acceptable results, as would be expected for highly correlated and fairly
-similar $\sigma_i$.  
+similar $\sigma_{\text{c},i}$.  
 
 \subsection{Evaluation of CBASE \CBH{} and $\sigma$}
 \label{sec:algorithm:eval}
@@ -765,16 +768,18 @@ subadiabaticity, which will be presented in future work.
   \centering
   <<eval-qual,dev='tikz',fig.width=7,fig.height=3.2,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=TRUE>>=
   @
-  \caption{Scatter plots of CALIOP versus ceilometer local cloud base height
-    faceted by the CALIOP VFM QA flag.  Color indicates the number of CALIOP
-    profiles within each bin of ceilometer and CALIOP \CBH{}; black
-    lines are contours of the empirical joint probability density; the red line
-    is a linear least-squares fit, with 95\% confidence interval shaded in light
-    red; the blue line is a generalized additive model regression
-    \citep{Wood2011}, with 95\% confidence interval shaded in light
-    blue; the dashed gray line is the one-to-one line.  Statistics of the
-    relationship between CALIOP and ceilometer base heights are provided in
-    Table~\ref{tab:quality-qa}.}
+  \caption{Scatter plots of CALIOP versus ceilometer cloud base height faceted
+    by the CALIOP VFM QA flag; all CALIOP profiles meeting the temporal and
+    spatial collocation requirements with a METAR enter into this plot.  Color
+    indicates the number of CALIOP profiles within each bin of ceilometer and
+    CALIOP \CBH{}; black lines are contours of the empirical joint probability
+    density; the red line is a linear least-squares fit, with 95\% confidence
+    interval shaded in light red; the blue line is a generalized additive model
+    regression \citep{Wood2011}, with 95\% confidence interval shaded in light
+    blue (due to the large data set, the line width exceeds the confidence
+    intervals in these plots); the dashed gray line is the one-to-one line.
+    Statistics of the relationship between CALIOP and ceilometer base heights
+    are provided in Table~\ref{tab:quality-qa}.}
   \label{fig:quality-qa}
 \end{figure*}
 
@@ -792,6 +797,22 @@ subadiabaticity, which will be presented in future work.
 
 \begin{figure*}
   \centering
+  <<eval-qual-after-other-cuts,dev='tikz',fig.width=7,fig.height=3.2,out.width='0.95\\textwidth',message=FALSE,echo=FALSE,results='hide',cache=TRUE>>=
+  @
+  \caption{As in Figure~\ref{fig:quality-qa}, but applying all 
+    requirements listed in Section~\ref{sec:algorithm:combination}.}
+  \label{fig:quality-qa-other-cuts}
+\end{figure*}
+
+\begin{table*}
+  \centering
+  \caption{As in Table \ref{tab:quality-qa}, but applying all 
+    requirements listed in Section~\ref{sec:algorithm:combination}.}
+  \label{tab:quality-qa-other-cuts}
+  <<combo-tbl-qa,message=FALSE,cache=FALSE,echo=FALSE,results='asis'>>=
+  @
+\end{table*}
+
 \begin{figure*}
   \centering
   <<eval-uncertainty,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
@@ -803,6 +824,8 @@ subadiabaticity, which will be presented in future work.
   \label{fig:eval-uncertainty}
 \end{figure*}
 
+\begin{figure*}
+  \centering
   <<combo-plot,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
   @
   \caption{Scatter plot of CBASE versus ceilometer \CBH{} for all A-Train
