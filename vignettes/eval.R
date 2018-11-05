@@ -35,6 +35,18 @@ gc()
 ## ---- eval-qual-tbl ---------------------
 regression_table(res)
 
+## ---- eval-qual-after-other-cuts ---------------------
+res <- df %>%
+    dplyr::filter(phase.lowest.cloud == "water",
+                  !(feature.above.surface %in% c("invalid", "no signal")),
+                  horizontal.averaging.lowest.cloud.min < "5 km") %>%
+    ## filter(lays == 1) %>%
+    dplyr::group_by(dummy, feature.qa.lowest.cloud) %>%
+    regression_plot(title = NULL, base_size = 14)
+print(res$ggplot)
+res$ggplot <- NULL
+gc()
+
 ## ---- eval-dist ---------------------
 res <- df %>%
     ## filter(lays == 1) %>%
