@@ -100,8 +100,20 @@ introduce new notation.  We have changed $E$ to RMSE in the equation.
 \textit{\#3:  Page 6, lines 22-28:  a) Please explain how CALIOP z is converted to “z Above
 Ground” (which reference for the elevation maps?).}
 
-\commentjm{As of V4 of the CALIOP VFM, it uses the ``CloudSat DEM'', but I could
-  not find a reference for that.  Does anyone know?}
+We subtract the elevation provided in the CALIOP VFM data files from the MSL
+cloud height.  As of V4.10 (the version used here), the CALIOP L2 products use
+the ``CloudSat DEM'', according to
+\url{https://eosweb.larc.nasa.gov/news/caliop-v410-l1-l2-release-announcement},
+which contains reduced artifacts compared to GTOPO30.  This DEM is also
+mentioned in the CloudSat R05 1A-AUX description
+(\url{ftp://ftp.cira.colostate.edu/ftp/Partain/1A-AUX_PDICD_5.0.doc}), but we
+could not find a reference for it.  We note that DEM errors may spuriously
+increase the apparent disagreement between satellite and ceilometer cloud base,
+but this effect should be very small to the spurious correlation enhancement
+that would occur if we used MSL heights.  We have added the following passage to
+the manuscript: ``To convert cloud base heights to AGL height, we subtract the
+surface elevation contained in the CALIOP VFM data files, which in turn comes
+from the CloudSat R05 surface digital elevation model.''
 
 \textit{b) For more clarity,  it would be
 useful  to  use  different  notations  for  “Above  Sea  Level  z”  and  “Above  Ground  Level
