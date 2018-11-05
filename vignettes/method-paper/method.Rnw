@@ -282,6 +282,10 @@ from ICARE (\url{http://www.icare.univ-lille1.fr/}).
 @ 
 <<eval-tune-setup,cache=TRUE,results='hide',echo=FALSE>>=
 @ 
+%% the next setup is needed to get the corrected combined 2008 data for
+%% comparison to 2B-GEOPROF-LIDAR
+<<eval-tune-setup-self,cache=TRUE,results='hide',echo=FALSE>>=
+@ 
 <<eval-asos-setup,cache=TRUE,results='hide',echo=FALSE>>=
 @ 
 

@@ -316,6 +316,11 @@ dddf <- correct.cbase.lm(df.val, ddf)
 combo <- cbase.combine.station(dddf)
 gc()
 
+## ---- eval-tune-setup-self --------------------
+dddf.self <- correct.cbase.lm(df, ddf)
+combo.self <- cbase.combine.station(dddf.self)
+gc()
+
 ## ---- eval-asos-setup --------------------
 df.asos <- df.val %>%
     filter(substr(station.icao, 1, 1) == "K") %>%
