@@ -601,6 +601,34 @@ characterize; or available only over a limited duration at limited
 locations, resulting in a severely statistics-limited set of coincidences with
 the CALIOP track.
 
+\subsection{Comparative evaluation of CBASE and 2B-GEOPROF-LIDAR}
+
+Comparison with 2B-GEOPROF-LIDAR cloud bases (version P2\_R04\_E02, based on the
+2B-GEOPROF and CALIOP VFM products) is shown in Figure~\ref{fig:eval-2b}.
+2B-GEOPROF-LIDAR distinguishes between radar-only, lidar-only, and radar--lidar
+combined cloud bases; the latter category is rare for warm clouds and is not
+shown.  For radar-only clouds, the mean error is large because the radar \CBH{}
+predominantly clusters around the top of the ground clutter region with little
+dependence on the actual \CBH{}.  
+
+Lidar-only 2B-GEOPROF-LIDAR cloud base performs comparably to the CBASE cloud
+base on average; this is to be expected, as the underlying physical measurement
+(the CALIOP attenuated backscatter) is the same for all three products
+considered (2B-GEOPROF-LIDAR, CALIOP VFM, and CBASE).
+Figure~\ref{fig:comp-2b-cbase} shows the relationship between CBASE \CBH{} and
+the 2B-GEOPROF-LIDAR cloud base closest to the ceilometer for each overpass.
+The CBASE \CBH{} for low clouds tends to be higher than the 2B-GEOPROF-LIDAR
+estimate because the CBASE algorithm has been designed to agree with ceilometer
+heights, which also tend to be higher than the 2B-GEOPROF-LIDAR estimate (see
+Figure~\ref{fig:eval-2b}).  Otherwise, the relationship is fairly close (linear
+correlation coefficient of 0.79), again as expected due to the similarity in the
+underlying measurement.
+
+Unlike 2B-GEOPROF-LIDAR and the CALIOP VFM, CBASE provides a validated
+point-by-point uncertainty estimate, which allows an analysis to select only
+low-uncertainty cases or to statistically weight \CBH{} according to
+uncertainty, as appropriate for the application.
+
 \section{Results and data product availability}
 \label{sec:results}
 
@@ -885,6 +913,21 @@ subadiabaticity, which will be presented in future work.
   <<eval-2bgeoprof-tbl,message=FALSE,cache=TRUE,echo=FALSE,results='asis'>>=
   @
 \end{table*}
+
+\begin{figure*}
+  \centering
+  <<2bgeoprof-cbase-comparison,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  @
+  \caption{Scatter plot of 2B-GEOPROF-LIDAR lidar-only versus CBASE \CBH{}.  For
+    description of the plot elements, see Figure~\ref{fig:quality-qa}; because
+    both cloud base measures have comparable uncertainty, linear regression is a
+    misleading diagnostic \citep{Pitkanen2016} and has not been included.  The mean
+    difference between 2B-GEOPROF-LIDAR and CBASE is \Sexpr{abs(res$stats$bias * 1e-3)}~\unit{km},
+    the root mean square difference is \Sexpr{res$stats$rmse * 1e-3}~\unit{km}, and the
+    correlation coefficient is \Sexpr{res$stats$cor}.}
+  \label{fig:comp-2b-cbase}
+\end{figure*}
+
 <<cbase-uncert-setup,cache=TRUE,echo=FALSE,results='hide'>>=
 data(cbase)
 @
