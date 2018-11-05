@@ -3,6 +3,7 @@
 \usepackage{fullpage}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{hyperref}
 \newcommand\degree{\ensuremath{{}^\circ}}
 %%\pagestyle{empty}
 %%\renewcommand\caption[1]{}
@@ -92,7 +93,7 @@ criteria are introduced.
   RMSE?}
 
 We defined $E$ out of a general aversion to multiletter variable names.
-However, since we so not use $E$ again (and use ``RMSE'' as column heading in
+However, since we do not use $E$ again (and use ``RMSE'' as column heading in
 the tables), we agree with the reviewer that it would be preferable not to
 introduce new notation.  We have changed $E$ to RMSE in the equation.
 
@@ -155,8 +156,8 @@ Yes, for the reason hopefully now better stated in the manuscript: ``The quality
 metric we use is the root mean square error (RMSE); the category RMSE determined
 from comparison to ceilometer $z$ then serves as the (sample) estimate of the
 predicted (population) standard deviation of the measurement error
-$z - \hat{z}$, i.e., the predicted CBASE $z$ uncertainty.  We denote this
-uncertainty as $\sigma$.''
+$z - \hat{z}$, i.e., the predicted column $z$ uncertainty.  We denote this
+uncertainty as $\sigma_\text{c}$.''
 
 \textit{b) Can you elaborate? For instance: what is the range
 of values for sigma(D,n,Dz)? What is the sensitivity of sigma to D, n, and Dz?}
@@ -176,21 +177,21 @@ $\Delta z$ is available.
 Please clarify and use a specific notation for the different quantities. Indeed, “z” is used
 several times throughout the manuscript, but with different meanings.}
 
-Good point.  We now consistently use $z$ for the CBASE combined cloud base, $z_\text{l}$ for the local
-profile cloud base from CALIOP, and $\hat{z}$ for the ceilometer cloud
-base. \commentjm{\dots once I change the manuscript.}
+Good point.  We now consistently use $z$ for the CBASE combined cloud base,
+$z_\text{c}$ for the local column cloud base from CALIOP, and $\hat{z}$ for the
+ceilometer cloud base.
 
 \textit{b) Please define “n” in Eq.  (3).}
 
-Done \commentjm{\dots once I change the manuscript.}
+Done; thanks for pointing out the oversight.
 
 \textit{c) In Eq.  (4), is sigma-i actually sigma-i(Di,ni,Dzi), with Di, ni, and Dzi
 associated to CALIOP local zi? How is ni defined for a local zi?}
 
-Thank you for pointing out this confusing notation, which we have made more
-precise.  $D_i$ and $\Delta z_i$ are indeed properties of the individual
-profiles, but $n$ is a property of the group (and therefore carries no
-subscript).  \commentjm{Still need to update the manuscript.}
+Thank you for pointing out this source of confusion, which we have corrected.
+The revised manuscript notes that $D_i$ and $\Delta z_i$ are indeed properties
+of the individual profiles, but $n$ is a property of the group (and therefore
+carries no subscript).
 
 \textit{ d) Can you discuss the impact of the training? For instance: how do
   CBASE\_z and CALIOP mean base height compare for the year 2008 used to train

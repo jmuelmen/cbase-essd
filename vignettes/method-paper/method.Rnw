@@ -562,8 +562,8 @@ statistically independent dataset from the year 2007.  In the evaluation
 dataset, the ``true'' (i.e., ceilometer-measured) $\hat{z}$ is known in
 addition to the estimated \CBH{} and the estimated cloud base uncertainty $\sigma$,
 determined according to the procedure described in the previous section.
-Figure~\ref{fig:eval} shows the joint distribution of CBASE and
-ceilometer-observed \CBH{}.  
+Figure~\ref{fig:eval} shows the joint distribution of CBASE \CBH{} and
+ceilometer-observed $\hat{z}$.  
 
 For satellite-derived measurements of \CBH{} that are unbiased with respect
 to the ceilometer-observed $\hat{\CBH}$ and have correctly estimated
