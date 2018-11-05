@@ -486,6 +486,26 @@ res <- svm.eval %>%
 
 res$ggplot
 
+## ---- eval-uncertainty --------------------
+dddf %>%
+    select(dist, resolution.out, thickness, pred.rmse) %>%
+    tidyr::gather(predictor, val, dist:thickness) %>%
+    mutate(predictor = factor(predictor)) %>%
+    mutate(predictor = revalue(predictor,
+                               c("dist" = "$D$~(km)",
+                                 "resolution.out" = "$n$",
+                                 "thickness" = "$\\Delta z$~(km)"))) %>%
+    mutate(val = revalue(val,
+                         c("(1,1e+09]" = "$>1$",
+                           "(400,1e+09]" = "$>400$"))) %>%
+    ggplot(aes(y = pred.rmse, x = val)) +
+    geom_violin(adjust = 4, trim = FALSE, fill = "grey92") +
+    facet_grid(. ~ predictor, scales = "free_x") +
+    labs(x = "Uncertainty predictor category",
+         y = "Predicted uncertainty $\\sigmac(D, n, \\Delta z)$ (m)") +
+    theme_bw(14) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
 ## ---- glorious-victory ---------------------
 library(beepr)
 beep(0)
