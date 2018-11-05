@@ -54,9 +54,10 @@ figures.
 
 Thanks for pointing this out.  Due to the essentially infinite A-Train
 statistics, the width of the confidence intervals is smaller than the line
-width.  Since this type of plot appears several times, we would like to keep the
-full description in the first caption, but we have added a note that the
-confidence intervals are not visible.
+width.  Since this type of plot appears several times and we refer to the first
+instance's caption for a full description, we would like to keep the full
+description here.  We have added a note that the confidence intervals are
+narrower than the line width in this figure.
 
 \textit{d) Looking at the contours of the joint probability density for instance
   in the right hand- side plot (high), it looks like the agreement between
@@ -67,15 +68,15 @@ The straight-line fit that tries to accommodate high and low cloud bases at the
 same time is problematic when there is curvature in the relationship between
 satellite and ceilometer cloud base.  This is why we also include the GAM
 regression (blue line), whose slope and intercept need not be constant.  The GAM
-regression is still below the 1-to-1 line because there is a nonnegligible
-population of clouds with low ceilometer base and high CALIOP base (see the
-bulge in the outermost density contour near 0 ceilometer base height and 1.5~km
-CALIOP base height).  These cases mostly occur when the ceilometer reports
-multiple layers of fractional cloudiness, where the satellite perspective may
-select one of the higher layers as the ``base'' because they obscure the
-lowermost layer.  We are investigating whether the number of layers reported by
-2B-GEOPROF-LIDAR can be used as another predictor variable for cloud base
-uncertainty as a future improvement to CBASE.
+regression is still below the 1-to-1 line at $z_\text{c} \approx 1.5$~km because
+there is a nonnegligible population of clouds with low ceilometer base and high
+CALIOP base (see the bulge in the outermost density contour near 0 ceilometer
+base height and 1.5~km CALIOP base height).  These cases mostly occur when the
+ceilometer reports multiple layers of fractional cloudiness, where the satellite
+perspective may cause the algorithm to select one of the higher layers as the
+``base'' because they obscure the lowermost layer.  We are investigating whether
+the number of layers reported by 2B-GEOPROF-LIDAR can be used as another
+predictor variable for cloud base uncertainty as a future improvement to CBASE.
 
 \textit{e) It looks like Fig.  3 (high) has been obtained before discarding the
   classes of CALIOP profiles listed page 6, lines 1 to 9.  If this is correct,
@@ -127,8 +128,8 @@ manuscript''.
 is intrinsically biased high “due to this boundary”.   Do you mean that the technique
 requires the local CALIOP “Above Ground Level” zi to be positive?} 
 
-Not the technique, but rather the physics, because the lidar will not detect a
-cloud below the surface.  Consider the idealized case where the
+Not the technique, but rather the physics, because there are no
+clouds below the surface.  Consider the idealized case where the
 satellite provides an unbiased estimate of cloud base height with random error
 $\epsilon$ symmetric about 0.  When $z\gg\epsilon$, the average of many satellite profiles will
 converge to the true cloud base height.  However, when $z$ is comparable to
@@ -205,7 +206,7 @@ The revised manuscript notes that $D_i$ and $\Delta z_i$ are indeed properties
 of the individual profiles, but $n$ is a property of the group (and therefore
 carries no subscript).
 
-\textit{ d) Can you discuss the impact of the training? For instance: how do
+\textit{d) Can you discuss the impact of the training? For instance: how do
   CBASE\_z and CALIOP mean base height compare for the year 2008 used to train
   the algorithm? How did you train the algorithm to have mean (CBASE\_z
   -ceilometer $\hat{z}$) equal to zero (as suggested by statement line 23, page
