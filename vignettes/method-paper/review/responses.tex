@@ -323,15 +323,16 @@ do it. That’s the whole point of the synergy between the lidar/radar.}
 
 As we point out in the introduction, CloudSat is limited in its ability to
 detect cloud base because (a) the droplet size and thus radar reflectivity tends
-to decrease towards cloud base and (b) the lowest km of the profile tends to be
-affected by ground clutter.  We have included references to these
-limitations of CloudSat in the introduction, and the manuscript includes a plot
-and a table documenting that CloudSat cloud base estimates perform worse than
-Calipso estimates even absent any attempts to correct or select high-quality
-lidar estimates.  At the suggestion of Reviewer 1, the discussion of CloudSat
-cloud bases has been moved upward in the manuscript; we have also expanded upon
-the description of the CloudSat cloud base shortcomings in the introduction.  We
-hope that this makes it clearer to the reader why we do not use CloudSat.
+to decrease towards cloud base, frequently below the CloudSat detection limit,
+and (b) the lowest km of the profile tends to be affected by ground clutter.  We
+have included references to these limitations of CloudSat in the introduction,
+and the manuscript includes a plot and a table documenting that CloudSat cloud
+base estimates perform worse than Calipso estimates even absent any attempts to
+correct or select high-quality lidar estimates.  At the suggestion of Reviewer
+1, the discussion of CloudSat cloud bases has been moved upward in the
+manuscript; we have also expanded upon the description of the CloudSat cloud
+base shortcomings in the introduction.  We hope that this makes it clearer to
+the reader why we do not use CloudSat.
 
 \textit{Further, its not clear to me why, if you can resolve cloud base with
   CALIOP for an optically-tenuous clouds, why you’d need an algorithm to
@@ -342,8 +343,10 @@ introduction, and again in the conclusions, we are not content to know the cloud
 base of optically tenuous clouds, but rather want to know the cloud base of
 optically thick clouds.  We list several potential applications in the
 conclusions that indicate who potential users would be.  As to why we would want
-to understand the uncertainty of a new product, we presumed that required no
-justification among quantitative scientists. 
+to understand the uncertainty of a new product, we agree that not all new
+satellite products include a rigorous uncertainty analysis; however, we feel
+that this is important information to allow users to judge the quality of the
+product.
 
 \textit{If this paper is going to be publishable, the reviewers needs
 to go back and very considerately make the case that answers these questions. In my
@@ -351,20 +354,16 @@ opinion, they have not done so beyond a threshold necessary for publication.}
 
 In our opinion, the manuscript was already quite clear about why CloudSat and
 CALIOP without further processing are unsatisfactory for cloud base height.  We
-have nevertheless tried to make it even clearer in the revised manuscript.
+have nevertheless tried to make the explanations even clearer in the revised manuscript.
 
 \textit{Training of your dataset relative to ground-based ceilometers, as you
   even state, limits your application to a very small set of cloud types. The
   authors seem aware of this, but only speculate as to its impact.}
 
-From the standpoint of knowing the true cloud base with the maximum spatial
-coverage achievable, if not ceilometers, then what?  
-
 It would be desirable to have a validation dataset for oceanic cloud in addition
 to continental, and we are very upfront about this in the manuscipt.  That said,
 the range of cloud types observable over a year across the contiguous United
-States is not ``very small'' \commentjm{if anyone has a good citation here, that
-  would be great}.  In our judgment, releasing a dataset with documented
+States is not ``very small''.  In our judgment, releasing a dataset with documented
 imperfections was preferable to polishing the apple forever.  In particular,
 releasing the dataset makes it possible for others in the community to validate
 its performance for oceanic cloud if they are aware of a suitable validation
@@ -381,24 +380,28 @@ collocations under a much more stringent set of temporal and spatial thresholds.
 you’re trying to do requires far more justification and scientific basis, as it goes against
 conventional/proven thinking otherwise.}
 
-The spatial decorrelation of the cloud base height is already taken into account
-by the algorithm, as the RMSE increases with collocation distance, penalizing
-more distant measurements when CALIOP columns are combined and increasing the
-predicted uncertainty.  In principle, we could have chosen any collocation
-distance threshold.  In practice, we provide cloud base estimates with two
-collocation distance thresholds: 40~km and 100~km; the reason for this is to
+The spatial decorrelation of the cloud base height is a good point.  In
+principle, the algorithm learns in the training stage to give reduced weight to
+more distant measurements, as the RMSE increases with collocation distance, and
+increases the predicted uncertainty accordingly.  In the revised manuscript, we
+have included a figure on the increase in predicted uncertainty as a function of
+distance (Figure~6).  We find that that the lowest-uncertainty measurements do
+in fact come from the closest measurements ($D < 40$~km).  Interestingly, 40~km
+is in fact the collocation threshold Omar et al.~(2013) recommend (and the
+reason we have a larger number of collocations is that airport ceilometers
+vastly outnumber AeroNet stations).
+
+We also note that we provide cloud base estimates with two collocation distance
+thresholds: 40~km and 100~km (stated in Section 4); the reason for this is to
 allow the user to make the tradeoff between increased probability that we can
-provide an estimate at a given location (the 100~km dataset) and lower cloud
-base uncertainty (the 40~km dataset).  We note that there is nothing
-controversial about a 40~km collocation distance, and this is in fact the
-threshold Omar et al.~(2013) recommend.  The reason we have a larger number of
-collocations is that airport ceilometers vastly outnumber AeroNet stations.
+provide an estimate at a given location (the 100~km dataset; the smaller
+collocation threshold provides only approximately 1/5 as many collocations as
+the larger threshold) and lower cloud base uncertainty (the 40~km dataset).
 
 \textit{I recognize that as this is a Discussions page, that the likelihood is that the authors will
 be afforded opportunity to respond.  That’s fine.  I caution, however, that if this were a
 more standard journal, I would be recommending an outright rejection.}
 
-We are grateful for the opportunity to respond.  Beyond that, we cannot claim to
-understand this comment.
+We are grateful for the opportunity to respond.  
 
 \end{document}
