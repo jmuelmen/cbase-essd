@@ -71,8 +71,9 @@
 \usepackage{mathptmx}
 %% \usepackage[T1]{fontenc}
 
-\newcommand\comment[2]{\{\hlnum{ \textit{#1}: #2}\}}
-\newcommand\commentjm[1]{\comment{$j_\mu$}{#1}}
+\usepackage[textsize=11pt]{todonotes}
+\usepackage{wasysym}
+\newcommand{\commentjm}[1]{\todo[inline, color=red!50]{$j_\mu$: #1}}
 \newcommand\CBH{\ensuremath{z}}
 \newcommand\CBHc{\ensuremath{z_\text{c}}}
 \newcommand\sigmac{\ensuremath{\sigma_\text{c}}}
