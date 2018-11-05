@@ -847,6 +847,16 @@ subadiabaticity, which will be presented in future work.
 
 \begin{figure*}
   \centering
+  <<eval-svm-corr,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
+  @
+  \caption{Density estimates of the projection of the SVM correction function.
+    The training dataset (ceilometer overpasses in 2008) is used as the ensemble
+    for performing the projection.}
+  \label{fig:svm-correction}
+\end{figure*}
+
+\begin{figure*}
+  \centering
   <<eval-uncertainty,dev='tikz',fig.width=7,fig.height=5,out.width='0.95\\textwidth',message=FALSE,cache=TRUE,echo=FALSE,results='hide'>>=
   @
   \caption{Density estimates of the projection of

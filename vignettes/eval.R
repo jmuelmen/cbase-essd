@@ -460,6 +460,32 @@ res <- df.2bgeoprof.cbase %>%
                     include.lm = FALSE, base_size = 14)
 res$ggplot
 
+## ---- eval-svm-corr-setup --------------------
+## combine cbases without SVM correction for later evaluation
+dddfi.self <- correct.cbase.ident(df, ddf)
+combo.selfi <- cbase.combine.station(dddfi.self %>%
+                                     mutate(pred.ceilo.msl = pred.ceilo + surface.elevation * 1e3))
+
+## ---- eval-svm-corr --------------------
+svm.eval <- inner_join(combo.self, combo.selfi, by = c("station.icao", "date", "episode")) %>%
+    ungroup() %>%
+    mutate(pred.ceilo.cor = pred.ceilo.x,
+           pred.ceilo.uncor = pred.ceilo.y)
+
+res <- svm.eval %>%
+    mutate(ceilo = pred.ceilo.cor,
+           caliop = pred.ceilo.uncor * 1e-3,
+           caliop.local = caliop) %>%
+    mutate(dummy = "",
+           dummy2 = "") %>%
+    group_by(dummy, dummy2) %>%
+    regression_plot(title = NULL,
+                    xlab = "Uncorrected \\CBHc~(km AGL)",
+                    ylab = "Corrected \\CBHc~(m AGL)",
+                    include.lm = FALSE, base_size = 14)
+
+res$ggplot
+
 ## ---- glorious-victory ---------------------
 library(beepr)
 beep(0)
