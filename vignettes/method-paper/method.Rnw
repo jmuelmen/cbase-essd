@@ -642,15 +642,15 @@ over land, daytime \CBH{} is higher than nighttime \CBH{}, consistent with the
 diurnal deepening of the planetary boundary layer.
 Figures~\ref{fig:uncertainty} and \ref{fig:uncert-quantiles} show the
 distribution of \CBH{} uncertainties.  A larger fraction of nighttime cloud
-bases falls into the lowest uncertainty range (200 to 350~\unit{m}), while the the
-nighttime uncertainty distribution peaks slightly higher than the daytime
+bases falls into the lowest uncertainty range (200 to 350~\unit{m}), while the
+the nighttime uncertainty distribution peaks slightly higher than the daytime
 uncertainty distribution and features a substantial tail above 500~\unit{m} that
 is not present in the daytime distribution.  CALIOP benefits from higher signal
 to noise ratio during nighttime, which may lead to lower $\sigma$, but this
 effect would be convoluted with potential differences between daytime and
-nighttime clouds that can lead to different \CBH{}
-uncertainties.  
-
+nighttime clouds that can lead to different \CBH{} uncertainties.  Training a
+potential future update of the algorithm on daytime and nighttime profiles
+separately may reduce $\sigma$.
 
 As an example application, we consider the surface downwelling longwave
 radiation \DLR{}, which is strongly affected by cloud base temperature.
