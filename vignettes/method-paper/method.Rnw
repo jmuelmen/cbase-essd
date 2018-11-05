@@ -586,6 +586,12 @@ within 10\% of the expected uncertainty (with the exception of the highest-uncer
 decile) and that linear regressions within each
 decile are close to the one-to-one line.
 
+To check that the algorithm satisfies its design constraints (i.e., to ensure
+that we made no methodological when implementing the algorithm), we have also
+verified that linear regression between $z$ and $\hat{z}$ has zero intercept and
+unit slope, and that the quantity $(z - \hat{z})/\sigma$ has zero mean and unit
+standard deviation, when this validation is performed on the training dataset.
+
 It is possible that \CBH{} estimates outside North America could have greater
 biases or greater uncertainty than this evaluation leads us to believe.  This
 would be the case if continental clouds over North America are not
