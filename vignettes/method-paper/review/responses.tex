@@ -237,9 +237,14 @@ and CBASE base altitudes would be informative.}
 
 Agreed.  We have added a subsection to the validation section that focuses on
 radar and lidar cloud base heights in 2B-GEOPROF-LIDAR compared to the same set
-of ceilometer measurements used to validate CBASE.  \commentjm{Comparisons
-  2B-GEOPROF-LIDAR and CBASE explicitly also seems worthwhile.  I should have
-  that plotted shortly.}
+of ceilometer measurements used to validate CBASE.  We have also added a figure
+comparing the lidar-only 2B-GEOPROF-LIDAR and CBASE cloud bases explicitly.  Unlike the
+CBASE cloud bases (which have been corrected), the 2B-GEOPROF-LIDAR lidar-only
+cloud bases are, on average, underestimates of the ceilometer bases for very low
+clouds ($<0.5$~km).  The comparison of 2B-GEOPROF-LIDAR and CBASE similarly
+shows lower cloud base estimates by 2B-GEOPROF-LIDAR for very low clouds, and
+higher cloud base estimates for clouds above 1.5~km.  The linear correlation
+between 2B-GEOPROF-LIDAR and CBASE is fairly good ($r= 0.79$).
 
 \textit{b) Please describe the “underlying
 physical measurement” in 2B-GEOPROF-LIDAR that explain the similarity of lidar-only
@@ -255,9 +260,9 @@ cases, cloud bases reported in 2B-GEOPROF-LIDAR differ from those reported in th
 V4.10 CALIOP VFM and are in better agreement with CBASE? Does 2B-GEOPROF-
 LIDAR use V4.10 CALIOP data?}
 
-We did not intend to imply that; in fact, now that you point it out, we realize
-we implicitly assumed that the 2B-GEOPROF-LIDAR and V4.10 CALIOP VFM cloud bases
-would be the same.  We have amended the manuscript to remove pot
+We did not intend to imply that; in fact, now that the reviewer has pointed it
+out, we realize we implicitly assumed that the 2B-GEOPROF-LIDAR and V4.10 CALIOP
+VFM cloud bases would be the same.  
 
 The version of 2B-GEOPROF-LIDAR we use (P2\_R04\_E02) uses VFM version 3 ``or
 later'', according to Mace and Zhang (2014), but the data files predate version
@@ -269,19 +274,19 @@ version in the revised manuscript.  Characterizing the differences between
 altitude compare for clouds that are thick enough to attenuate the lidar laser
 beam?}
 
-No.  The 2B-GEOPROF-LIDAR cloud base is probably a pretty good proxy for the
-CALIOP VFM (potentially attenuated) cloud base.  \commentjm{See comment earlier
-  on comparing 2B-GEOPROF-LIDAR and CBASE point by point, which I will try to
-  get into the revised manuscript}
+At the suggestion of the reviewer, we have included and discussed this figure in
+the revised manuscript (Figure~10); see the answer above to the question about
+2B-GEOPROF-LIDAR and CBASE base altitudes would be informative.
 
 \textit{\#9 Page 9, line 27: was stated but not shown.}
 
 The statement in question is ``The performance of CBASE $z$ is similar to that
 of 2B-GEOPROF-LIDAR lidar-only $z$ \dots''.  We have clarified our intended
 meaning by adding ``when validated against the same collocated ceilometer
-measurements''.  However, we agree with the reviewer's suggestion to include a
-comparison of CBASE and 2B-GEOPROF-LIDAR.
+measurements''.  However, we agree with the reviewer's suggestion to include an
+explicit comparison of CBASE and lidar-only 2B-GEOPROF-LIDAR (see our answers above).
 
+\clearpage
 \section{}
 
 \textit{In summary, I do not recommend this paper for publication in its current state.  The

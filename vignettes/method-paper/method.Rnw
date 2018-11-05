@@ -726,7 +726,7 @@ and the bias on the uncertainty is %
   1))}\%, both relative to the expected uncertainty.
 
 The performance of CBASE \CBH{} is similar to that of 2B-GEOPROF-LIDAR
-lidar-only \CBH{}, which is based on the same underlying physical measurement.
+lidar-only \CBH{} when validated against the same collocated ceilometer measurements, which is based on the same underlying physical measurement.
 However, the validated \CBH{} uncertainty provided by CBASE allows for selection
 of only accurate cloud base heights or for statistically weighting of \CBH{}
 according to expected uncertainty.  This, in turn, makes the CBASE \CBH{} useful
