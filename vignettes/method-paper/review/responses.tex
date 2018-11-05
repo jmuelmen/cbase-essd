@@ -128,11 +128,19 @@ converge to the true cloud base height unless a correction is applied.
 out how these biases are corrected (lines 26-28). Please develop and quantify. These
 bias corrections seem to be an important part of the algorithm training.}
 
-We concede that the SVM-based correction is a black box.  We have attempted to
-explain the correction by analogy to a linear correction.  Quantification is
-nontrivial because the correction is a function of $z$, $D$, $n$, and
-$\Delta z$.  \commentjm{Maybe show the ratio of uncorrected to corrected?}  The
-correction is desirable because otherwise (a) the average over many CBASE
+We agree that the correction needs to be explained in greater detail.  We have
+added a brief description of support vector machines in general and attempted to
+explain the correction method by analogy to a linear correction.  
+
+Quantification is nontrivial because the correction is a function of $z_\text{c}$, $D$,
+$n$, and $\Delta z$ (and $D$, $n$, and $\Delta z$ can be correlated).  To
+reduce the dimensionality of this multivariate correction, we have used the
+training dataset (with its joint distribution of $z_\text{c}$, $D$, $n$, and
+$\Delta z$) to calculate an ensemble of correction factors that can be expected
+in a realistic sample of clouds.  We have added discussion and a plot of these
+correction factors to the manuscript.
+
+The correction is desirable because otherwise (a) the average over many CBASE
 estimates would not converge to the true cloud base height and (b) the bias
 would be a function of cloud base height, meaning a characterization of the bias
 based on one evaluation dataset would only apply to datasets with the same
