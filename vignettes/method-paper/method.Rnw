@@ -700,8 +700,8 @@ produced. Otherwise, each CALIOP VFM input file results in a 40 km-resolution
 and a 100-km resolution CBASE file. The measurement quality is reported as a
 quantitative uncertainty estimate for each cloud field.
 
-Following publication of the final paper, the
-source code used to produce the dataset and evaluation plots will be made public
+Concurrently with publication of the final paper, the
+source code used to produce the dataset and evaluation plots will be released
 at \url{https://github.com/jmuelmen}.
 
 \conclusions
