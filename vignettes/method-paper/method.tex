@@ -753,6 +753,8 @@ subadiabaticity, which will be presented in future work.
 
 \begin{figure}
   \centering
+% Note to self: for figure renaming, run:
+%  for i in {1..14} ; do ln -s $(head -n $((i + 1)) files.txt | tail -n 1 | sed -e 's/.*\(figure.*\)}/\1.pdf/') $(printf f%02d.pdf $i); done
   \includegraphics[width=0.5\linewidth,keepaspectratio=true]{f02}
   \caption{Schematic of CALIOP cloud base determination and evaluation strategy.
     In optically thick clouds (left and center), the lidar attenuates
