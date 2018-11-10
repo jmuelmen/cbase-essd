@@ -13,60 +13,7 @@
 
 
 %% 2-Column Papers and Discussion Papers
-\documentclass[essd,manuscript]{copernicus}\usepackage[]{graphicx}\usepackage[]{color}
-%% maxwidth is the original width if it is less than linewidth
-%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
-
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
-\let\hlipl\hlkwb
-
-\usepackage{framed}
-\makeatletter
-\newenvironment{kframe}{%
- \def\at@end@of@kframe{}%
- \ifinner\ifhmode%
-  \def\at@end@of@kframe{\end{minipage}}%
-  \begin{minipage}{\columnwidth}%
- \fi\fi%
- \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
- \colorbox{shadecolor}{##1}\hskip-\fboxsep
-     % There is no \\@totalrightmargin, so:
-     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
- \MakeFramed {\advance\hsize-\width
-   \@totalleftmargin\z@ \linewidth\hsize
-   \@setminipage}}%
- {\par\unskip\endMakeFramed%
- \at@end@of@kframe}
-\makeatother
-
-\definecolor{shadecolor}{rgb}{.97, .97, .97}
-\definecolor{messagecolor}{rgb}{0, 0, 0}
-\definecolor{warningcolor}{rgb}{1, 0, 1}
-\definecolor{errorcolor}{rgb}{1, 0, 0}
-\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
-
-\usepackage{alltt}
-
-
-
+\documentclass[essd,manuscript]{copernicus}
 %% Journal Abbreviations (Please use the same for Discussion Papers and Final Revised Papers)
 
 % Archives Animal Breeding (aab)
@@ -129,8 +76,6 @@
 \newcommand\sigmac{\ensuremath{\sigma_\text{c}}}
 \newcommand\DLR{\ensuremath{F_\text{surf}^\downarrow}}
 
-\usepackage[percent]{overpic}
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 
@@ -798,17 +743,9 @@ subadiabaticity, which will be presented in future work.
   \label{tab:data}
 \end{table}
 \begin{figure}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.95\textwidth]{f01} 
 
 }
-
-
-
-\end{knitrout}
   \caption{ASOS ceilometers used for CBASE \CBH{} evaluation.  The size of the
     marker indicates the number of satellite--ceilometer \CBH{} coincidences during
     the year 2007.  Color indicates the closest co-location distance achieved in
@@ -828,17 +765,9 @@ subadiabaticity, which will be presented in future work.
 \end{figure}
 
 \begin{figure*}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.95\textwidth]{f03} 
 
 }
-
-
-
-\end{knitrout}
   \caption{Scatter plots of CALIOP versus ceilometer cloud base height faceted
     by the CALIOP VFM QA flag; all CALIOP profiles meeting the temporal and
     spatial collocation requirements with a METAR enter into this plot.  Color
@@ -880,17 +809,9 @@ none & 1410553 & 0.192 & $1.05 \times 10^{3}$ & $-$471. & $\hat{z} = 0.193 z + \
 \end{table*}
 
 \begin{figure*}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.95\textwidth]{f04}
 
 }
-
-
-
-\end{knitrout}
   \caption{As in Figure~\ref{fig:quality-qa}, but applying all 
     requirements listed in Section~\ref{sec:algorithm:combination}.}
   \label{fig:quality-qa-other-cuts}
@@ -919,17 +840,9 @@ none & 189554 & 0.573 & 635. & $-$77.3 & $\hat{z} = 0.557 z + 549.$ m \\
 \end{table*}
 
 \begin{figure*}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.95\textwidth]{f05}
 
 }
-
-
-
-\end{knitrout}
   \caption{Density estimates of the projection of the SVM correction function.
     The training dataset (ceilometer overpasses in 2008) is used as the ensemble
     for performing the projection.}
@@ -937,17 +850,9 @@ none & 189554 & 0.573 & 635. & $-$77.3 & $\hat{z} = 0.557 z + 549.$ m \\
 \end{figure*}
 
 \begin{figure*}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.95\textwidth]{f06}
 
 }
-
-
-
-\end{knitrout}
   \caption{Density estimates of the projection of
     $\sigmac(D, n, \Delta z)$ onto each of the uncertainty
     predictor variables.  The training dataset (ceilometer overpasses in 2008)
@@ -956,17 +861,9 @@ none & 189554 & 0.573 & 635. & $-$77.3 & $\hat{z} = 0.557 z + 549.$ m \\
 \end{figure*}
 
 \begin{figure*}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.95\textwidth]{f07}
 
 }
-
-
-
-\end{knitrout}
   \caption{Scatter plot of CBASE versus ceilometer \CBH{} for all A-Train
     overpasses over the CONUS available for 2007; for description of the
   plot elements, see Figure~\ref{fig:quality-qa}.  The linear fit has slope
@@ -975,17 +872,9 @@ none & 189554 & 0.573 & 635. & $-$77.3 & $\hat{z} = 0.557 z + 549.$ m \\
 \end{figure*}
 
 \begin{figure}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.5\textwidth]{f08}
 
 }
-
-
-
-\end{knitrout}
   \caption{Distribution function of cloud base error divided by predicted
     uncertainty; for the ideal case of unbiased \CBH{} and unbiased
     uncertainty, the distribution would be Gaussian with zero mean and unit
@@ -1026,18 +915,9 @@ Predicted $\sigma$ (m) & $n$ & $r$ & RMSE (m) & bias (m) & fit \\
 \end{table*}
 
 \begin{figure*}
-  \centering
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.95\textwidth]{f09}
 
 }
-
-
-
-\end{knitrout}
   \caption{Scatter plot of 2B-GEOPROF-LIDAR versus ceilometer \CBH{}
     faceted by the source of the cloud base (radar-only or lidar-only; due to
     their rare occurrence, combined radar--lidar base heights are not shown).
@@ -1069,17 +949,9 @@ Radar & 15061 & 0.265 & 782. & 98.1 & $\hat{z} = 0.461 z + 466.$ m \\
 \end{table*}
 
 \begin{figure*}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.95\textwidth]{f10}
 
 }
-
-
-
-\end{knitrout}
   \caption{Scatter plot of 2B-GEOPROF-LIDAR lidar-only versus CBASE \CBH{}.  For
     description of the plot elements, see Figure~\ref{fig:quality-qa}; because
     both cloud base measures have comparable uncertainty, linear regression is a
@@ -1093,17 +965,9 @@ Radar & 15061 & 0.265 & 782. & 98.1 & $\hat{z} = 0.461 z + 466.$ m \\
 
 
 \begin{figure*}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.95\textwidth]{f11}
 
 }
-
-
-
-\end{knitrout}
   \caption{Geographic distribution of mean \CBH{} above ground
     level.  Statistics are calculated within each $5\degree\times 5\degree$
     latitude--longitude box, and separately for CALIOP daytime (top) and
@@ -1113,33 +977,17 @@ Radar & 15061 & 0.265 & 782. & 98.1 & $\hat{z} = 0.461 z + 466.$ m \\
 \end{figure*}
 
 \begin{figure}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.5\textwidth]{f12}
 
 }
-
-
-
-\end{knitrout}
   \caption{Distribution of predicted \CBH{} uncertainty $\sigma$.}
   \label{fig:uncertainty}
 \end{figure}
 
 \begin{figure*}
-  \centering
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
 {\centering \includegraphics[width=0.95\textwidth]{f13}
 
 }
-
-
-
-\end{knitrout}
   \caption{Cloud base uncertainty quantiles.  Statistics are calculated within
     each $5\degree\times 5\degree$ latitude--longitude box.  The left (right)
     column shows statistics of daytime (nighttime) retrievals; daytime and
